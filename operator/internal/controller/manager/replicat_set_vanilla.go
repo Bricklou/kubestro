@@ -9,8 +9,7 @@ import (
 )
 
 func rsForServerTypeVanilla(ctx context.Context, server *minecraftserverv1.MinecraftServer) (appsv1.ReplicaSet, error) {
-	// TODO: get the latest version if not specified
-	var minecraftVersion = *server.Spec.MinecraftVersion
+	var minecraftVersion = server.Spec.MinecraftVersion
 
 	versionManifest, err := vanilla.GetVersionManifest(minecraftVersion)
 	if err != nil {
@@ -21,7 +20,7 @@ func rsForServerTypeVanilla(ctx context.Context, server *minecraftserverv1.Minec
 		return appsv1.ReplicaSet{}, err
 	}
 
-	minecraftDownloadContainer := downloadContainer(url, sha1, "minecraft.jar", minecraftJarVolumeName)
+	minecraftDownloadContainer := downloadContainer(url, HashTypeSha1, sha1, "minecraft.jar", minecraftJarVolumeName)
 
 	initContainers := []corev1.Container{minecraftDownloadContainer}
 

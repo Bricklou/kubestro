@@ -67,7 +67,7 @@ type MinecraftServerSpec struct {
 	// The minecraft version that the server will run with. By default, the value will be "latest".
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:default:=latest
-	MinecraftVersion *string `json:"minecraftVersion,omitempty"`
+	MinecraftVersion string `json:"minecraftVersion"`
 	// Server Type that will run
 	Type ServerType `json:"type"`
 	// Message of the day

@@ -13,8 +13,7 @@ func rsForServerTypePaper(ctx context.Context, server *minecraftserverv1.Minecra
 	const configVolumeMountName = "config"
 	const pluginsMountName = "plugins"
 
-	// TODO: get the latest version if not specified
-	var minecraftVersion = *server.Spec.MinecraftVersion
+	var minecraftVersion = server.Spec.MinecraftVersion
 
 	latestBuild, err := paper.LatestBuildForVersion(minecraftVersion)
 	if err != nil {
@@ -25,7 +24,7 @@ func rsForServerTypePaper(ctx context.Context, server *minecraftserverv1.Minecra
 		return appsv1.ReplicaSet{}, err
 	}
 
-	paperDownloadContainer := downloadContainer(url, sha256, "paper.jar", minecraftJarVolumeName)
+	paperDownloadContainer := downloadContainer(url, HashTypeSha256, sha256, "paper.jar", minecraftJarVolumeName)
 	copyConfigContainer := copyConfigContainer(configVolumeMountName, minecraftWorkingDirVolumeName)
 
 	initContainers := []corev1.Container{paperDownloadContainer, copyConfigContainer}

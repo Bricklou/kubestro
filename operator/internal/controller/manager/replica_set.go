@@ -67,29 +67,33 @@ func copyConfigContainer(configVolumeMountName, paperWorkingDirVolumeName string
 	}
 }
 
-func downloadContainer(url, sha256, filename, volumeMountName string) corev1.Container {
+type HashType string
+
+const (
+	HashTypeSha256 HashType = "sha256"
+	HashTypeSha1   HashType = "sha1"
+)
+
+func downloadContainer(url string, hashType HashType, hash string, filename string, volumeMountName string) corev1.Container {
 	return corev1.Container{
 		Name:            "download-" + strings.Replace(filename, ".", "-", -1),
 		Image:           "ghcr.io/bricklou/kubestro-download:latest",
 		ImagePullPolicy: corev1.PullAlways,
+		Args: []string{
+			"downloader",
+			"--url",
+			url,
+			"--target",
+			filepath.Join("/download", filename),
+			"--hash-type",
+			string(hashType),
+			"--hash",
+			hash,
+		},
 		VolumeMounts: []corev1.VolumeMount{
 			{
 				Name:      volumeMountName,
 				MountPath: "/download",
-			},
-		},
-		Env: []corev1.EnvVar{
-			{
-				Name:  "DOWNLOAD_URL",
-				Value: url,
-			},
-			{
-				Name:  "DOWNLOAD_TARGET",
-				Value: filepath.Join("/download", filename),
-			},
-			{
-				Name:  "DOWNLOAD_SHA256",
-				Value: sha256,
 			},
 		},
 	}

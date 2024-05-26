@@ -47,12 +47,6 @@ var _ webhook.Defaulter = &MinecraftServer{}
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (r *MinecraftServer) Default() {
 	minecraftserverlog.Info("default", "name", r.Name)
-
-	if r.Spec.MinecraftVersion == nil {
-		r.Spec.MinecraftVersion = new(string)
-		*r.Spec.MinecraftVersion = "latest"
-	}
-
 }
 
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
@@ -63,15 +57,12 @@ var _ webhook.CustomValidator = &MinecraftServer{}
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (r *MinecraftServer) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	minecraftserverlog.Info("validate create", "name", r.Name)
-
 	return nil, r.validateMinecraftServer()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (r *MinecraftServer) ValidateUpdate(ctx context.Context, oldObj runtime.Object, newObj runtime.Object) (admission.Warnings, error) {
 	minecraftserverlog.Info("validate update", "name", r.Name)
-
-	// TODO(user): fill in your validation logic upon object update.
 	return nil, r.validateMinecraftServer()
 }
 
