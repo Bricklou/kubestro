@@ -73,6 +73,12 @@ func GetVersionManifest(version string) (SingleVersionManifest, error) {
 	// Search for the needed version
 	var foundVersion *VersionsManifestSingleVersion = nil
 
+	if version == "latest" {
+		version = manifestJson.Latest.Release
+	} else if version == "snapshot" {
+		version = manifestJson.Latest.Snapshot
+	}
+
 	for _, ver := range versions {
 		if ver.Id == version {
 			foundVersion = &ver

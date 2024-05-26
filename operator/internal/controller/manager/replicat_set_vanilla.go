@@ -14,7 +14,7 @@ func rsForServerTypeVanilla(ctx context.Context, server *minecraftserverv1.Minec
 
 	versionManifest, err := vanilla.GetVersionManifest(minecraftVersion)
 	if err != nil {
-		return appsv1.ReplicaSet{}, nil
+		return appsv1.ReplicaSet{}, err
 	}
 	url, sha1, err := vanilla.GetDownloadURLAndSHA1(versionManifest)
 	if err != nil {
