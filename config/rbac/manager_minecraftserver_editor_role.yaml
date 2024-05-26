@@ -1,0 +1,31 @@
+# permissions for end users to edit minecraftservers.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: minecraftserver-editor-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: kubestro
+    app.kubernetes.io/part-of: kubestro
+    app.kubernetes.io/managed-by: kustomize
+  name: minecraftserver-editor-role
+rules:
+- apiGroups:
+  - manager.bricklou.ovh
+  resources:
+  - minecraftservers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - manager.bricklou.ovh
+  resources:
+  - minecraftservers/status
+  verbs:
+  - get

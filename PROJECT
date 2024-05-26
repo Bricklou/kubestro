@@ -8,4 +8,23 @@ layout:
 multigroup: true
 projectName: kubestro
 repo: github.com/bricklou/kubestro
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: bricklou.ovh
+  group: manager
+  kind: MinecraftServer
+  path: github.com/bricklou/kubestro/api/manager/v1
+  version: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: bricklou.ovh
+  group: manager
+  kind: MinecraftBackup
+  path: github.com/bricklou/kubestro/api/manager/v1
+  version: v1
 version: "3"

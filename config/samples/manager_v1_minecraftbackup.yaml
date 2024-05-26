@@ -1,0 +1,12 @@
+apiVersion: manager.bricklou.ovh/v1
+kind: MinecraftBackup
+metadata:
+  labels:
+    app.kubernetes.io/name: minecraftbackup
+    app.kubernetes.io/instance: minecraftbackup-sample
+    app.kubernetes.io/part-of: kubestro
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: kubestro
+  name: minecraftbackup-sample
+spec:
+  # TODO(user): Add fields here
