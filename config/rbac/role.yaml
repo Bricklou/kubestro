@@ -7,6 +7,32 @@ rules:
 - apiGroups:
   - manager.bricklou.ovh
   resources:
+  - minecraftbackups
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - manager.bricklou.ovh
+  resources:
+  - minecraftbackups/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - manager.bricklou.ovh
+  resources:
+  - minecraftbackups/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - manager.bricklou.ovh
+  resources:
   - minecraftservers
   verbs:
   - create

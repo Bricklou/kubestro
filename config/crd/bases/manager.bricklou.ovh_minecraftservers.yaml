@@ -39,13 +39,91 @@ spec:
           spec:
             description: MinecraftServerSpec defines the desired state of MinecraftServer
             properties:
+              eula:
+                enum:
+                - Accepted
+                - NotAccepted
+                type: string
+              gameMode:
+                description: Default game mode when a player join
+                enum:
+                - Survival
+                - Creative
+                - Adventure
+                - Spectator
+                type: string
+              maxPlayers:
+                default: 10
+                description: Total number of players that can join the server
+                type: integer
               minecraftVersion:
+                default: latest
                 description: The minecraft version that the server will run with.
                   By default, the value will be "latest".
                 type: string
+              monitoring:
+                properties:
+                  type:
+                    enum:
+                    - Disabled
+                    - PrometheusServiceMonitor
+                    type: string
+                required:
+                - type
+                type: object
+              motd:
+                description: Message of the day
+                type: string
+              service:
+                description: ServiceSpec is very much like a corev1.ServiceSpec, but
+                  with only *some* fields.
+                properties:
+                  minecraftNodePort:
+                    description: Port to bind Minecraft to if using a NodePort or
+                      LoadBalancer service
+                    format: int32
+                    type: integer
+                  type:
+                    enum:
+                    - None
+                    - ClusterIP
+                    - NodePort
+                    - LoadBalancer
+                    type: string
+                required:
+                - type
+                type: object
+              type:
+                description: Server Type that will run
+                enum:
+                - Vanilla
+                - Paper
+                - Forge
+                type: string
+              viewDistance:
+                default: 10
+                description: Number of chunks a player will be able to load at the
+                  same time
+                type: integer
+            required:
+            - eula
+            - gameMode
+            - maxPlayers
+            - motd
+            - service
+            - type
             type: object
           status:
             description: MinecraftServerStatus defines the observed state of MinecraftServer
+            properties:
+              state:
+                enum:
+                - Pending
+                - Running
+                - Error
+                type: string
+            required:
+            - state
             type: object
         type: object
     served: true

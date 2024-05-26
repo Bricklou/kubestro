@@ -20,23 +20,100 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
+// +kubebuilder:validation:Enum=Vanilla;Paper;Forge
+// +kubebuilder:default:=Vanilla
+type ServerType string
+
+const (
+	ServerTypeVanilla ServerType = "Vanilla"
+	ServerTypePaper   ServerType = "Paper"
+	ServerTypeForge   ServerType = "Forge"
+)
+
+// +kubebuilder:validation:Enum=Accepted;NotAccepted
+type EulaAcceptance string
+
+const (
+	EulaAcceptanceAccepted    EulaAcceptance = "Accepted"
+	EulaAcceptanceNotAccepted EulaAcceptance = "NotAccepted"
+)
+
+// +kubebuilder:validation:Enum=Disabled;PrometheusServiceMonitor
+type MonitoringType string
+
+const (
+	MonitoringTypeDisabled                 MonitoringType = "Disabled"
+	MonitoringTypePrometheusServiceMonitor MonitoringType = "PrometheusServiceMonitor"
+)
+
+type MonitoringSpec struct {
+	Type MonitoringType `json:"type"`
+}
+
+// +kubebuilder:validation:Enum=Survival;Creative;Adventure;Spectator
+// +kubebuilder:default:=Survial
+type GameMode string
+
+const (
+	GameModeSurvival  GameMode = "Survival"
+	GameModeCreative  GameMode = "Creative"
+	GameModeAdventure GameMode = "adventure"
+	GameModeSpectator GameMode = "spectator"
+)
 
 // MinecraftServerSpec defines the desired state of MinecraftServer
 type MinecraftServerSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
+	EULA EulaAcceptance `json:"eula"`
 	// The minecraft version that the server will run with. By default, the value will be "latest".
-	// +optional
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:=latest
 	MinecraftVersion *string `json:"minecraftVersion,omitempty"`
+	// Server Type that will run
+	Type ServerType `json:"type"`
+	// Message of the day
+	MOTD string `json:"motd"`
+	// Default game mode when a player join
+	GameMode GameMode `json:"gameMode"`
+	// Total number of players that can join the server
+	// +kubebuilder:validation:min=0
+	// +kubebuilder:default:=10
+	MaxPlayers int `json:"maxPlayers"`
+	// Number of chunks a player will be able to load at the same time
+	// +kubebuilder:validation:min=1
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:default:=10
+	ViewDistance int             `json:"viewDistance"`
+	Service      *ServiceSpec    `json:"service"`
+	Monitoring   *MonitoringSpec `json:"monitoring,omitempty"`
 }
+
+// +kubebuilder:validation:Enum=None;ClusterIP;NodePort;LoadBalancer
+type ServiceType string
+
+const ServiceTypeNone ServiceType = "None"
+const ServiceTypeClusterIP ServiceType = "ClusterIP"
+const ServiceTypeNodePort ServiceType = "NodePort"
+const ServiceTypeLoadBalancer ServiceType = "LoadBalancer"
+
+// ServiceSpec is very much like a corev1.ServiceSpec, but with only *some* fields.
+type ServiceSpec struct {
+	Type ServiceType `json:"type"`
+	// Port to bind Minecraft to if using a NodePort or LoadBalancer service
+	MinecraftNodePort *int32 `json:"minecraftNodePort,omitempty"`
+}
+
+// +kubebuilder:validation:Enum=Pending;Running;Error
+type State string
+
+const (
+	StatePending State = "Pending"
+	StateRunning State = "Running"
+	StateError   State = "Error"
+)
 
 // MinecraftServerStatus defines the observed state of MinecraftServer
 type MinecraftServerStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	State State `json:"state"`
 }
 
 //+kubebuilder:object:root=true

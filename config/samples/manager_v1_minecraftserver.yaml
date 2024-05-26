@@ -9,4 +9,10 @@ metadata:
     app.kubernetes.io/created-by: kubestro
   name: minecraftserver-sample
 spec:
-  # TODO(user): Add fields here
+  eula: Accepted
+  gameMode: Survival
+  motd: Hello world!
+  type: Vanilla
+  maxPlayers: 10
+  service:
+    type: LoadBalancer

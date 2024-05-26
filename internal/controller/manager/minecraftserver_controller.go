@@ -18,7 +18,8 @@ package manager
 
 import (
 	"context"
-
+	appsv1 "k8s.io/api/apps/v1"
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -47,10 +48,63 @@ type MinecraftServerReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.17.0/pkg/reconcile
 func (r *MinecraftServerReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+	logger := log.FromContext(ctx).WithValues(
+		"name", req.Name,
+		"namespace", req.Namespace,
+		"controller", "MinecraftServer")
 
-	// TODO(user): your logic here
+	logger.Info("beginning reconciliation")
 
+	// Go back to the API server with a get to find the full definition of he MinecraftServer object (we're only given
+	// the name and namespace at this point). We also might fail to find it, as we might have been triggered to
+	// reconcile because the object was deleted. In this case, we don't need to do any cleanup, as we set the owner
+	// references on every other object we create so the API server's normal cascading delete behaviour will clean up
+	// everything
+	var server managerv1.MinecraftServer
+	if err := r.Get(ctx, req.NamespacedName, &server); err != nil {
+		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
+
+	// We'll now create each resource we need. In general, we'll "reconcile" each resource in turn. If there's work to be
+	// done, we'll do it an exit instantly. This is because this function is triggered on changes to owned resources, so
+	// the act of creating or modifying an owned resource will cause this function to be called anyway.
+
+	// ConfigMap
+	done, err := ConfigMap(ctx, r.Client, &server)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+	if done {
+		return ctrl.Result{}, nil
+	}
+
+	// Services
+	done, err = Service(ctx, r.Client, &server)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+	if done {
+		return ctrl.Result{}, nil
+	}
+	done, err = RCONService(ctx, r.Client, &server)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+	if done {
+		return ctrl.Result{}, nil
+	}
+
+	// Replicat Set
+	done, err = ReplicatSet(ctx, r.Client, &server)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+	if done {
+		return ctrl.Result{}, nil
+	}
+
+	// All good, return
+	logger.Info("All good")
 	return ctrl.Result{}, nil
 }
 
@@ -58,5 +112,8 @@ func (r *MinecraftServerReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 func (r *MinecraftServerReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&managerv1.MinecraftServer{}).
+		Owns(&corev1.ConfigMap{}).
+		Owns(&corev1.Service{}).
+		Owns(&appsv1.ReplicaSet{}).
 		Complete(r)
 }

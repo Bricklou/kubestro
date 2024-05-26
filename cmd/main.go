@@ -35,6 +35,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
 	managerv1 "github.com/bricklou/kubestro/api/manager/v1"
+	backupcontroller "github.com/bricklou/kubestro/internal/controller/backup"
 	managercontroller "github.com/bricklou/kubestro/internal/controller/manager"
 	//+kubebuilder:scaffold:imports
 )
@@ -130,7 +131,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&managercontroller.MinecraftBackupReconciler{
+	if err = (&backupcontroller.MinecraftBackupReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
@@ -138,6 +139,12 @@ func main() {
 		os.Exit(1)
 	}
 
+	if os.Getenv("ENABLE_WEBHOOKS") != "false" {
+		if err = (&managerv1.MinecraftServer{}).SetupWebhookWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create webhook", "webhook", "MinecraftServer")
+			os.Exit(1)
+		}
+	}
 	//+kubebuilder:scaffold:builder
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
