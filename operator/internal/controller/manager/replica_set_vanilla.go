@@ -9,6 +9,7 @@ import (
 )
 
 func rsForServerTypeVanilla(ctx context.Context, server *minecraftserverv1.MinecraftServer) (appsv1.ReplicaSet, error) {
+	const configVolumeMountName = "config"
 	var minecraftVersion = server.Spec.MinecraftVersion
 
 	versionManifest, err := vanilla.GetVersionManifest(minecraftVersion)
@@ -21,8 +22,9 @@ func rsForServerTypeVanilla(ctx context.Context, server *minecraftserverv1.Minec
 	}
 
 	minecraftDownloadContainer := downloadContainer(url, HashTypeSha1, sha1, "minecraft.jar", minecraftJarVolumeName)
+	copyConfigContainer := copyConfigContainer(configVolumeMountName, minecraftWorkingDirVolumeName)
 
-	initContainers := []corev1.Container{minecraftDownloadContainer}
+	initContainers := []corev1.Container{minecraftDownloadContainer, copyConfigContainer}
 
 	mainJavaContainer := baseMainJavaContainer(versionManifest.JavaVersion.MajorVersion)
 	mainJavaContainer.Args = []string{
@@ -40,9 +42,30 @@ func rsForServerTypeVanilla(ctx context.Context, server *minecraftserverv1.Minec
 		// Disable the GUI, no need in a container
 		"--nogui",
 	}
+	mainJavaContainer.VolumeMounts = append(
+		mainJavaContainer.VolumeMounts,
+		// This will mount config files like server.properties, under /etc/minecraft/server.properties
+		corev1.VolumeMount{
+			Name:      configVolumeMountName,
+			MountPath: "/etc/minecraft",
+		},
+	)
 
 	var replicas int32 = 1
 	rs := baseReplicatSet(server, mainJavaContainer, initContainers, replicas)
+	rs.Spec.Template.Spec.Volumes = append(
+		rs.Spec.Template.Spec.Volumes,
+		corev1.Volume{
+			Name: configVolumeMountName,
+			VolumeSource: corev1.VolumeSource{
+				ConfigMap: &corev1.ConfigMapVolumeSource{
+					LocalObjectReference: corev1.LocalObjectReference{
+						Name: ConfigMapNameForServer(server),
+					},
+				},
+			},
+		},
+	)
 
 	applySecurityContext(&rs)
 
