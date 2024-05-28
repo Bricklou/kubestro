@@ -24,4 +24,4 @@ WORKDIR /
 COPY --from=builder /downloader /usr/local/bin/downloader
 USER 65532:65532
 
-ENTRYPOINT ["/dowloader"]
+CMD ["dowloader"]
