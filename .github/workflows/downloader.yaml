@@ -46,7 +46,7 @@ jobs:
         env:
           BRANCH: ${{github.ref_name}}
         id: split
-        run: echo "::set-output name=branch::${BRANCH##*/v}"
+        run: echo "branch=${BRANCH##*/v}" >> $GITHUB_OUTPUT
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
