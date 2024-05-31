@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/created-by: kubestro
     app.kubernetes.io/part-of: kubestro
     app.kubernetes.io/managed-by: kustomize
-  name: minecraftserver-editor-role
+  name: manager-minecraftserver-editor-role
 rules:
 - apiGroups:
   - manager.bricklou.ovh
