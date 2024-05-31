@@ -18,7 +18,7 @@ jobs:
         with:
           kustomize-version: 5.4.2
       - name: Set Release Image
-        run: cd config/default && kustomize edit set image ghcr.io/bricklou/kubestro-operator:${GITHUB_REF_NAME}
+        run: make build-installer IMG=ghcr.io/bricklou/kubestro-operator:${GITHUB_REF_NAME}
         working-directory: operator
       - name: Build Kubernetes YAML
         run: kustomize build config/default > operator.yaml
@@ -28,4 +28,4 @@ jobs:
         with:
           files: |
             LICENSE
-            operator/operator.yaml
+            operator/dist/install.yaml
