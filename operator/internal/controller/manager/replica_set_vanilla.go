@@ -11,6 +11,7 @@ import (
 func rsForServerTypeVanilla(ctx context.Context, server *minecraftserverv1.MinecraftServer) (appsv1.ReplicaSet, error) {
 	const configVolumeMountName = "config"
 	var minecraftVersion = server.Spec.MinecraftVersion
+	const worldMountName = "world"
 
 	versionManifest, err := vanilla.GetVersionManifest(minecraftVersion)
 	if err != nil {
@@ -49,10 +50,17 @@ func rsForServerTypeVanilla(ctx context.Context, server *minecraftserverv1.Minec
 			Name:      configVolumeMountName,
 			MountPath: "/etc/minecraft",
 		},
+		// Mount the world directory under /var/minecraft
+		corev1.VolumeMount{
+			Name:      worldMountName,
+			MountPath: "/var/minecraft/world",
+		},
 	)
 
 	var replicas int32 = 1
 	rs := baseReplicatSet(server, mainJavaContainer, initContainers, replicas)
+	applySecurityContext(&rs)
+
 	rs.Spec.Template.Spec.Volumes = append(
 		rs.Spec.Template.Spec.Volumes,
 		corev1.Volume{
@@ -67,7 +75,19 @@ func rsForServerTypeVanilla(ctx context.Context, server *minecraftserverv1.Minec
 		},
 	)
 
-	applySecurityContext(&rs)
+	if false {
+		// TODO server world
+	} else {
+		// No World to persist, so mount EmptyDir volumes
+		rs.Spec.Template.Spec.Volumes = append(rs.Spec.Template.Spec.Volumes,
+			corev1.Volume{
+				Name: worldMountName,
+				VolumeSource: corev1.VolumeSource{
+					EmptyDir: &corev1.EmptyDirVolumeSource{},
+				},
+			},
+		)
+	}
 
 	return rs, nil
 }
