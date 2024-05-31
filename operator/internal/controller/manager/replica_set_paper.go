@@ -12,6 +12,9 @@ import (
 func rsForServerTypePaper(ctx context.Context, server *minecraftserverv1.MinecraftServer) (appsv1.ReplicaSet, error) {
 	const configVolumeMountName = "config"
 	const pluginsMountName = "plugins"
+	const overworldMountName = "world-overworld"
+	const netherMountName = "world-nether"
+	const theEndMountName = "world-the-end"
 
 	var minecraftVersion = server.Spec.MinecraftVersion
 
@@ -65,10 +68,24 @@ func rsForServerTypePaper(ctx context.Context, server *minecraftserverv1.Minecra
 			Name:      pluginsMountName,
 			MountPath: "/usr/local/minecraft/plugins",
 		},
+		// Mount the various world directories under /var/minecraft
+		corev1.VolumeMount{
+			Name:      overworldMountName,
+			MountPath: "/var/minecraft/world",
+		},
+		corev1.VolumeMount{
+			Name:      netherMountName,
+			MountPath: "/var/minecraft/world_nether",
+		},
+		corev1.VolumeMount{
+			Name:      theEndMountName,
+			MountPath: "/var/minecraft/world_the_end",
+		},
 	)
 
 	var replicas int32 = 1
 	rs := baseReplicatSet(server, mainJavaContainer, initContainers, replicas)
+	applySecurityContext(&rs)
 	rs.Spec.Template.Spec.Volumes = append(
 		rs.Spec.Template.Spec.Volumes,
 		corev1.Volume{
@@ -88,6 +105,32 @@ func rsForServerTypePaper(ctx context.Context, server *minecraftserverv1.Minecra
 			},
 		},
 	)
+
+	if false {
+		// TODO server world
+	} else {
+		// No World to persist, so mount EmptyDir volumes
+		rs.Spec.Template.Spec.Volumes = append(rs.Spec.Template.Spec.Volumes,
+			corev1.Volume{
+				Name: overworldMountName,
+				VolumeSource: corev1.VolumeSource{
+					EmptyDir: &corev1.EmptyDirVolumeSource{},
+				},
+			},
+			corev1.Volume{
+				Name: netherMountName,
+				VolumeSource: corev1.VolumeSource{
+					EmptyDir: &corev1.EmptyDirVolumeSource{},
+				},
+			},
+			corev1.Volume{
+				Name: theEndMountName,
+				VolumeSource: corev1.VolumeSource{
+					EmptyDir: &corev1.EmptyDirVolumeSource{},
+				},
+			},
+		)
+	}
 
 	// TODO Vanilla tweaks
 

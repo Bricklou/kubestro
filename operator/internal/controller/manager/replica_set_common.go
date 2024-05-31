@@ -7,14 +7,12 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/utils/pointer"
 )
 
 const minecraftJarVolumeName = "minecraft-jar"
 const minecraftWorkingDirVolumeName = "minecraft-workingdir"
-const overworldMountName = "world-overworld"
-const netherMountName = "world-nether"
-const theEndMountName = "world-the-end"
 const dataPacksMountName = "data-packs"
 
 func securityContext() *corev1.SecurityContext {
@@ -29,6 +27,7 @@ func securityContext() *corev1.SecurityContext {
 }
 
 func baseMainJavaContainer(javaVersion int) corev1.Container {
+	const minecraftPort int32 = 25565
 	return corev1.Container{
 		Name:  "minecraft",
 		Image: fmt.Sprintf("eclipse-temurin:%d", javaVersion),
@@ -46,11 +45,38 @@ func baseMainJavaContainer(javaVersion int) corev1.Container {
 				corev1.ResourceCPU:    resource.MustParse("2"),
 			},
 		},
+		TTY:   true,
+		Stdin: true,
 		Ports: []corev1.ContainerPort{
 			{
 				Name:          "minecraft",
-				ContainerPort: 25565,
+				ContainerPort: minecraftPort,
 				Protocol:      corev1.ProtocolTCP,
+			},
+		},
+		StartupProbe: &corev1.Probe{
+			InitialDelaySeconds: 10,
+			ProbeHandler: corev1.ProbeHandler{
+				TCPSocket: &corev1.TCPSocketAction{
+					Port: intstr.FromInt32(minecraftPort),
+				},
+			},
+		},
+		ReadinessProbe: &corev1.Probe{
+			InitialDelaySeconds: 10,
+			ProbeHandler: corev1.ProbeHandler{
+				TCPSocket: &corev1.TCPSocketAction{
+					Port: intstr.FromInt32(minecraftPort),
+				},
+			},
+		},
+		LivenessProbe: &corev1.Probe{
+			InitialDelaySeconds: 10,
+			PeriodSeconds:       20,
+			ProbeHandler: corev1.ProbeHandler{
+				TCPSocket: &corev1.TCPSocketAction{
+					Port: intstr.FromInt32(minecraftPort),
+				},
 			},
 		},
 		VolumeMounts: []corev1.VolumeMount{
@@ -63,19 +89,6 @@ func baseMainJavaContainer(javaVersion int) corev1.Container {
 			{
 				Name:      minecraftJarVolumeName,
 				MountPath: "/usr/local/minecraft",
-			},
-			// Mount the various world directories under /var/minecraft
-			{
-				Name:      overworldMountName,
-				MountPath: "/var/minecraft/world",
-			},
-			{
-				Name:      netherMountName,
-				MountPath: "/var/minecraft/world_nether",
-			},
-			{
-				Name:      theEndMountName,
-				MountPath: "/var/minecraft/world_the_end",
 			},
 			// Mount the datapacks at /var/minecraft/world/datapacks
 			{
@@ -127,32 +140,6 @@ func baseReplicatSet(server *minecraftserverv1.MinecraftServer, mainJavaContaine
 				},
 			},
 		},
-	}
-
-	if false {
-		// TODO server world
-	} else {
-		// No World to persist, so mount EmptyDir volumes
-		rs.Spec.Template.Spec.Volumes = append(rs.Spec.Template.Spec.Volumes,
-			corev1.Volume{
-				Name: overworldMountName,
-				VolumeSource: corev1.VolumeSource{
-					EmptyDir: &corev1.EmptyDirVolumeSource{},
-				},
-			},
-			corev1.Volume{
-				Name: netherMountName,
-				VolumeSource: corev1.VolumeSource{
-					EmptyDir: &corev1.EmptyDirVolumeSource{},
-				},
-			},
-			corev1.Volume{
-				Name: theEndMountName,
-				VolumeSource: corev1.VolumeSource{
-					EmptyDir: &corev1.EmptyDirVolumeSource{},
-				},
-			},
-		)
 	}
 
 	// TODO Vanilla tweaks
