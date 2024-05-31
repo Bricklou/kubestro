@@ -38,6 +38,15 @@ type MinecraftServerReconciler struct {
 //+kubebuilder:rbac:groups=manager.bricklou.ovh,resources=minecraftservers/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=manager.bricklou.ovh,resources=minecraftservers/finalizers,verbs=update
 
+// +kubebuilder:rbac:groups="",resources=configmaps,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups="",resources=configmaps/status,verbs=get
+
+// +kubebuilder:rbac:groups="",resources=services,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups="",resources=services/status,verbs=get
+
+// +kubebuilder:rbac:groups=apps,resources=replicasets,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=apps,resources=replicasets/status,verbs=get
+
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 // TODO(user): Modify the Reconcile function to compare the state specified by
