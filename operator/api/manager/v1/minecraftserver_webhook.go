@@ -75,6 +75,9 @@ func (r *MinecraftServer) validateMinecraftServer() error {
 	if err := r.validateMonitoring(); err != nil {
 		allErrs = append(allErrs, err)
 	}
+	if len(allErrs) == 0 {
+		return nil
+	}
 
 	return apierrors.NewInvalid(schema.GroupKind{
 		Group: "manager.bricklou.ovh",
