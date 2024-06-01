@@ -38,9 +38,7 @@ func (r *MinecraftServer) SetupWebhookWithManager(mgr ctrl.Manager) error {
 		Complete()
 }
 
-// TODO(user): EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-
-//+kubebuilder:webhook:path=/mutate-manager-bricklou-ovh-v1-minecraftserver,mutating=true,failurePolicy=fail,sideEffects=None,groups=manager.bricklou.ovh,resources=minecraftservers,verbs=create;update,versions=v1,name=mminecraftserver.kb.io,admissionReviewVersions=v1
+// +kubebuilder:webhook:path=/mutate-manager-bricklou-ovh-v1-minecraftserver,mutating=true,failurePolicy=fail,sideEffects=None,groups=manager.bricklou.ovh,resources=minecraftservers,verbs=create;update,versions=v1,name=mminecraftserver.kb.io,admissionReviewVersions=v1
 
 var _ webhook.Defaulter = &MinecraftServer{}
 
@@ -49,8 +47,9 @@ func (r *MinecraftServer) Default() {
 	minecraftserverlog.Info("default", "name", r.Name)
 }
 
-// TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
-//+kubebuilder:webhook:path=/validate-manager-bricklou-ovh-v1-minecraftserver,mutating=false,failurePolicy=fail,sideEffects=None,groups=manager.bricklou.ovh,resources=minecraftservers,verbs=create;update,versions=v1,name=vminecraftserver.kb.io,admissionReviewVersions=v1
+// NOTE: The 'path' attribute must follow a specific pattern and should not be modified directly here.
+// Modifying the path for an invalid path can cause API server errors; failing to locate the webhook.
+// +kubebuilder:webhook:path=/validate-manager-bricklou-ovh-v1-minecraftserver,mutating=false,failurePolicy=fail,sideEffects=None,groups=manager.bricklou.ovh,resources=minecraftservers,verbs=create;update,versions=v1,name=vminecraftserver.kb.io,admissionReviewVersions=v1
 
 var _ webhook.CustomValidator = &MinecraftServer{}
 
