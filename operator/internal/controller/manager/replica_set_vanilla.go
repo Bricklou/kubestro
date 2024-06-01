@@ -58,7 +58,10 @@ func rsForServerTypeVanilla(ctx context.Context, server *minecraftserverv1.Minec
 	)
 
 	var replicas int32 = 1
-	rs := baseReplicatSet(server, mainJavaContainer, initContainers, replicas)
+	rs, err := baseReplicatSet(ctx, server, mainJavaContainer, initContainers, replicas)
+	if err != nil {
+		return appsv1.ReplicaSet{}, err
+	}
 	applySecurityContext(&rs)
 
 	rs.Spec.Template.Spec.Volumes = append(
@@ -75,8 +78,15 @@ func rsForServerTypeVanilla(ctx context.Context, server *minecraftserverv1.Minec
 		},
 	)
 
-	if false {
-		// TODO server world
+	if server.Spec.World != nil {
+		// Persistent world, so mount so PVCs
+		rs.Spec.Template.Spec.Volumes = append(rs.Spec.Template.Spec.Volumes,
+			corev1.Volume{
+				Name: worldMountName,
+				VolumeSource: corev1.VolumeSource{
+					PersistentVolumeClaim: server.Spec.World.Overworld,
+				},
+			})
 	} else {
 		// No World to persist, so mount EmptyDir volumes
 		rs.Spec.Template.Spec.Volumes = append(rs.Spec.Template.Spec.Volumes,

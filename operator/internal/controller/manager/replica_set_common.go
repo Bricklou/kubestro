@@ -1,14 +1,18 @@
 package manager
 
 import (
+	"context"
 	"fmt"
 	minecraftserverv1 "github.com/bricklou/kubestro/api/manager/v1"
+	"github.com/bricklou/kubestro/internal/vanillatweaks"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/utils/pointer"
+	"path/filepath"
+	"strings"
 )
 
 const minecraftJarVolumeName = "minecraft-jar"
@@ -99,7 +103,7 @@ func baseMainJavaContainer(javaVersion int) corev1.Container {
 	}
 }
 
-func baseReplicatSet(server *minecraftserverv1.MinecraftServer, mainJavaContainer corev1.Container, initContainers []corev1.Container, replicas int32) appsv1.ReplicaSet {
+func baseReplicatSet(ctx context.Context, server *minecraftserverv1.MinecraftServer, mainJavaContainer corev1.Container, initContainers []corev1.Container, replicas int32) (appsv1.ReplicaSet, error) {
 	rs := appsv1.ReplicaSet{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:            server.Name,
@@ -142,7 +146,13 @@ func baseReplicatSet(server *minecraftserverv1.MinecraftServer, mainJavaContaine
 		},
 	}
 
-	// TODO Vanilla tweaks
+	if server.Spec.VanillaTweaks != nil {
+		vtDownloadContainer, err := vanillaTweaksDatapackContainer(ctx, dataPacksMountName, server.Spec.MinecraftVersion, server.Spec.VanillaTweaks)
+		if err != nil {
+			return appsv1.ReplicaSet{}, err
+		}
+		initContainers = append(initContainers, vtDownloadContainer)
+	}
 
 	rs.Spec.Template.Spec.InitContainers = initContainers
 	rs.Spec.Template.Spec.Containers = append(rs.Spec.Template.Spec.Containers, mainJavaContainer)
@@ -155,7 +165,82 @@ func baseReplicatSet(server *minecraftserverv1.MinecraftServer, mainJavaContaine
 		rs.Spec.Template.Spec.Containers[i].SecurityContext = securityContext()
 	}
 
-	return rs
+	return rs, nil
+}
+
+type HashType string
+
+const (
+	HashTypeSha256 HashType = "sha256"
+	HashTypeSha1   HashType = "sha1"
+)
+
+func downloadContainer(url string, hashType HashType, hash string, filename string, volumeMountName string) corev1.Container {
+	return corev1.Container{
+		Name:            "download-" + strings.Replace(filename, ".", "-", -1),
+		Image:           "ghcr.io/bricklou/kubestro-download:latest",
+		ImagePullPolicy: corev1.PullAlways,
+		Args: []string{
+			"downloader",
+			"--url",
+			url,
+			"--target",
+			filepath.Join("/download", filename),
+			"--hash-type",
+			string(hashType),
+			"--hash",
+			hash,
+		},
+		VolumeMounts: []corev1.VolumeMount{
+			{
+				Name:      volumeMountName,
+				MountPath: "/download",
+			},
+		},
+	}
+}
+
+// Spigot really, *really* wants to be able to write to its config files. So we copy them over from the configmap to
+// the Spigot server's working directory in /run/minecraft to let it run all over them.
+// TODO Handle live changes to these files, maybe with some kind of sidecar?
+func copyConfigContainer(configVolumeMountName, paperWorkingDirVolumeName string) corev1.Container {
+	return corev1.Container{
+		Name:  "copy-config",
+		Image: "busybox",
+		// We use sh here to get file globbing with the *.
+		Args: []string{"sh", "-c", "cp /etc/minecraft/* /run/minecraft/"},
+		VolumeMounts: []corev1.VolumeMount{
+			// This will mount config files, like server.properties, under /etc/minecraft/server.properties
+			{
+				Name:      configVolumeMountName,
+				MountPath: "/etc/minecraft",
+			},
+			// This gives paper a writeable runtime directory, this is used as the working directory.
+			{
+				Name:      paperWorkingDirVolumeName,
+				MountPath: "/run/minecraft",
+			},
+		},
+	}
+}
+
+func vanillaTweaksDatapackContainer(ctx context.Context, datapacksVolumeMountName string, version string, tweaks *minecraftserverv1.VanillaTweaks) (corev1.Container, error) {
+	url, err := vanillatweaks.GetDatapackDownloadURL(ctx, version, tweaks.Datapacks)
+	if err != nil {
+		return corev1.Container{}, err
+	}
+
+	return corev1.Container{
+		Name:  "install-vanillatweaks",
+		Image: "busybox",
+		Args:  []string{"sh", "-c", "cd /var/minecraft/world/datapacks && wget -O vt.zip '" + url + "' && unzip vt.zip && rm vt.zip"},
+		VolumeMounts: []corev1.VolumeMount{
+			{
+				Name:      datapacksVolumeMountName,
+				MountPath: "/var/minecraft/world/datapacks",
+			},
+		},
+	}, nil
 }
 
 func applySecurityContext(rs *appsv1.ReplicaSet) {

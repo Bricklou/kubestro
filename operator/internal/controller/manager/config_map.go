@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/bricklou/kubestro/internal/propertiesfile"
 	"gopkg.in/yaml.v2"
+	"k8s.io/apimachinery/pkg/util/json"
 	"strconv"
 	"strings"
 
@@ -80,6 +81,13 @@ func configMapData(server minecraftserverv1.MinecraftServer) (map[string]string,
 	if server.Spec.MaxPlayers > 0 {
 		props["max-players"] = strconv.Itoa(server.Spec.MaxPlayers)
 	}
+	if server.Spec.AccessMode == minecraftserverv1.AccessModeAllowListOnly {
+		props["enforce-whitelist"] = "true"
+		props["white-list"] = "true"
+	}
+	if server.Spec.World != nil && server.Spec.World.Seed != "" {
+		props["level-seed"] = server.Spec.World.Seed
+	}
 	config["server.properties"] = propertiesfile.Write(props)
 
 	// We always write a eula.txt, but we *only* put "true" in it if the MinecraftServer object has had the EULA
@@ -88,6 +96,41 @@ func configMapData(server minecraftserverv1.MinecraftServer) (map[string]string,
 		config["eula.txt"] = "eula=true"
 	} else {
 		config["eula.tx"] = "eula=false"
+	}
+
+	// Players Allow list
+	if len(server.Spec.AllowList) > 0 {
+		// We can directly marshall the Players objects
+		d, err := json.Marshal(server.Spec.AllowList)
+		if err != nil {
+			return nil, err
+		}
+		config["whitelist.json"] = string(d)
+	}
+
+	// OPs players list
+	if len(server.Spec.OpsList) > 0 {
+		type op struct {
+			UUID                string `json:"uuid,omitempty"`
+			Name                string `json:"name,omitempty"`
+			Level               int    `json:"level"`
+			BypassesPlayerLimit string `json:"bypassesPlayerLimit"`
+		}
+
+		ops := make([]op, len(server.Spec.OpsList))
+		for i, o := range server.Spec.OpsList {
+			ops[i] = op{
+				UUID:                o.UUID,
+				Name:                o.Name,
+				Level:               4,
+				BypassesPlayerLimit: "false",
+			}
+		}
+		d, err := json.Marshal(ops)
+		if err != nil {
+			return nil, err
+		}
+		config["ops.json"] = string(d)
 	}
 
 	if server.Spec.Monitoring != nil && server.Spec.Monitoring.Type == minecraftserverv1.MonitoringTypePrometheusServiceMonitor {

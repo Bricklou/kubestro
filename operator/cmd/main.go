@@ -50,6 +50,8 @@ func init() {
 
 	utilruntime.Must(managerv1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
+
+	// TODO add prometheus metrics
 }
 
 func main() {

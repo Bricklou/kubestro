@@ -39,7 +39,29 @@ spec:
           spec:
             description: MinecraftServerSpec defines the desired state of MinecraftServer
             properties:
+              accessMode:
+                description: The access mode determine if the whitelist is enabled
+                  or not
+                enum:
+                - Public
+                - AllowListOnly
+                type: string
+              allowList:
+                description: List of players allowed to connect when AccessMode is
+                  true
+                items:
+                  description: Player is a Minecraft player defined by a username
+                    or a UUID
+                  properties:
+                    name:
+                      type: string
+                    uuid:
+                      type: string
+                  type: object
+                type: array
               eula:
+                description: The EULA need to be accepted to allow the Minecraft server
+                  to boot.
                 enum:
                 - Accepted
                 - NotAccepted
@@ -62,6 +84,8 @@ spec:
                   By default, the value will be "latest".
                 type: string
               monitoring:
+                description: If specified, the server will be configured to be monitored
+                  by Prometheus
                 properties:
                   type:
                     enum:
@@ -74,9 +98,20 @@ spec:
               motd:
                 description: Message of the day
                 type: string
+              opsList:
+                description: List of players with OP permissions
+                items:
+                  description: Player is a Minecraft player defined by a username
+                    or a UUID
+                  properties:
+                    name:
+                      type: string
+                    uuid:
+                      type: string
+                  type: object
+                type: array
               service:
-                description: ServiceSpec is very much like a corev1.ServiceSpec, but
-                  with only *some* fields.
+                description: Service type used to expose the minecraft server
                 properties:
                   minecraftNodePort:
                     description: Port to bind Minecraft to if using a NodePort or
@@ -94,18 +129,102 @@ spec:
                 - type
                 type: object
               type:
-                description: Server Type that will run
+                description: Server type that will run
                 enum:
                 - Vanilla
                 - Paper
                 - Forge
                 type: string
+              vanillaTweaks:
+                description: Vanilla tweaks to enable when running the server
+                properties:
+                  datapacks:
+                    items:
+                      properties:
+                        category:
+                          type: string
+                        name:
+                          type: string
+                      required:
+                      - category
+                      - name
+                      type: object
+                    type: array
+                type: object
               viewDistance:
                 default: 10
                 description: Number of chunks a player will be able to load at the
                   same time
                 type: integer
+              world:
+                description: Worlds configuration, this will allow to specify custom
+                  volumes or particular seed
+                properties:
+                  nether:
+                    description: |-
+                      PersistentVolumeClaimVolumeSource references the user's PVC in the same namespace.
+                      This volume finds the bound PV and mounts that volume for the pod. A
+                      PersistentVolumeClaimVolumeSource is, essentially, a wrapper around another
+                      type of volume that is owned by someone else (the system).
+                    properties:
+                      claimName:
+                        description: |-
+                          claimName is the name of a PersistentVolumeClaim in the same namespace as the pod using this volume.
+                          More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
+                        type: string
+                      readOnly:
+                        description: |-
+                          readOnly Will force the ReadOnly setting in VolumeMounts.
+                          Default false.
+                        type: boolean
+                    required:
+                    - claimName
+                    type: object
+                  overworld:
+                    description: |-
+                      PersistentVolumeClaimVolumeSource references the user's PVC in the same namespace.
+                      This volume finds the bound PV and mounts that volume for the pod. A
+                      PersistentVolumeClaimVolumeSource is, essentially, a wrapper around another
+                      type of volume that is owned by someone else (the system).
+                    properties:
+                      claimName:
+                        description: |-
+                          claimName is the name of a PersistentVolumeClaim in the same namespace as the pod using this volume.
+                          More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
+                        type: string
+                      readOnly:
+                        description: |-
+                          readOnly Will force the ReadOnly setting in VolumeMounts.
+                          Default false.
+                        type: boolean
+                    required:
+                    - claimName
+                    type: object
+                  seed:seed:
+                    type: string
+                  theEnd:
+                    description: |-
+                      PersistentVolumeClaimVolumeSource references the user's PVC in the same namespace.
+                      This volume finds the bound PV and mounts that volume for the pod. A
+                      PersistentVolumeClaimVolumeSource is, essentially, a wrapper around another
+                      type of volume that is owned by someone else (the system).
+                    properties:
+                      claimName:
+                        description: |-
+                          claimName is the name of a PersistentVolumeClaim in the same namespace as the pod using this volume.
+                          More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
+                        type: string
+                      readOnly:
+                        description: |-
+                          readOnly Will force the ReadOnly setting in VolumeMounts.
+                          Default false.
+                        type: boolean
+                    required:
+                    - claimName
+                    type: object
+                type: object
             required:
+            - accessMode
             - eula
             - gameMode
             - maxPlayers

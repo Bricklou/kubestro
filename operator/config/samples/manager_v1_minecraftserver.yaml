@@ -16,3 +16,4 @@ spec:
   maxPlayers: 10
   service:
     type: LoadBalancer
+  accessMode: AllowListOnly

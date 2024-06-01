@@ -84,7 +84,10 @@ func rsForServerTypePaper(ctx context.Context, server *minecraftserverv1.Minecra
 	)
 
 	var replicas int32 = 1
-	rs := baseReplicatSet(server, mainJavaContainer, initContainers, replicas)
+	rs, err := baseReplicatSet(ctx, server, mainJavaContainer, initContainers, replicas)
+	if err != nil {
+		return appsv1.ReplicaSet{}, err
+	}
 	applySecurityContext(&rs)
 	rs.Spec.Template.Spec.Volumes = append(
 		rs.Spec.Template.Spec.Volumes,
@@ -106,8 +109,27 @@ func rsForServerTypePaper(ctx context.Context, server *minecraftserverv1.Minecra
 		},
 	)
 
-	if false {
-		// TODO server world
+	if server.Spec.World != nil {
+		// Persistent world, so mount so PVCs
+		rs.Spec.Template.Spec.Volumes = append(rs.Spec.Template.Spec.Volumes,
+			corev1.Volume{
+				Name: overworldMountName,
+				VolumeSource: corev1.VolumeSource{
+					PersistentVolumeClaim: server.Spec.World.Overworld,
+				},
+			},
+			corev1.Volume{
+				Name: netherMountName,
+				VolumeSource: corev1.VolumeSource{
+					PersistentVolumeClaim: server.Spec.World.Nether,
+				},
+			},
+			corev1.Volume{
+				Name: theEndMountName,
+				VolumeSource: corev1.VolumeSource{
+					PersistentVolumeClaim: server.Spec.World.TheEnd,
+				},
+			})
 	} else {
 		// No World to persist, so mount EmptyDir volumes
 		rs.Spec.Template.Spec.Volumes = append(rs.Spec.Template.Spec.Volumes,
@@ -131,8 +153,6 @@ func rsForServerTypePaper(ctx context.Context, server *minecraftserverv1.Minecra
 			},
 		)
 	}
-
-	// TODO Vanilla tweaks
 
 	// TODO dynmap ?
 

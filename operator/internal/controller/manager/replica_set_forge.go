@@ -7,5 +7,6 @@ import (
 )
 
 func rsForServerTypeForge(ctx context.Context, server *minecraftserverv1.MinecraftServer) (appsv1.ReplicaSet, error) {
+	// TODO implement forge server support
 	return appsv1.ReplicaSet{}, nil
 }
