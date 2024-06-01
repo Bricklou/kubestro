@@ -40,11 +40,12 @@ func (r *MinecraftServer) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 // +kubebuilder:webhook:path=/mutate-manager-bricklou-ovh-v1-minecraftserver,mutating=true,failurePolicy=fail,sideEffects=None,groups=manager.bricklou.ovh,resources=minecraftservers,verbs=create;update,versions=v1,name=mminecraftserver.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Defaulter = &MinecraftServer{}
+var _ webhook.CustomDefaulter = &MinecraftServer{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (r *MinecraftServer) Default() {
+func (r *MinecraftServer) Default(ctx context.Context, obj runtime.Object) error {
 	minecraftserverlog.Info("default", "name", r.Name)
+	return nil
 }
 
 // NOTE: The 'path' attribute must follow a specific pattern and should not be modified directly here.
