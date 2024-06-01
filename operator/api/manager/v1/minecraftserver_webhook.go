@@ -17,7 +17,6 @@ limitations under the License.
 package v1
 
 import (
-	"context"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -40,34 +39,33 @@ func (r *MinecraftServer) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 // +kubebuilder:webhook:path=/mutate-manager-bricklou-ovh-v1-minecraftserver,mutating=true,failurePolicy=fail,sideEffects=None,groups=manager.bricklou.ovh,resources=minecraftservers,verbs=create;update,versions=v1,name=mminecraftserver.kb.io,admissionReviewVersions=v1
 
-var _ webhook.CustomDefaulter = &MinecraftServer{}
+var _ webhook.Defaulter = &MinecraftServer{}
 
-// Default implements webhook.Defaulter so a webhook will be registered for the type
-func (r *MinecraftServer) Default(ctx context.Context, obj runtime.Object) error {
+// Default implements webhook.CustomDefaulter so a webhook will be registered for the type
+func (r *MinecraftServer) Default() {
 	minecraftserverlog.Info("default", "name", r.Name)
-	return nil
 }
 
 // NOTE: The 'path' attribute must follow a specific pattern and should not be modified directly here.
 // Modifying the path for an invalid path can cause API server errors; failing to locate the webhook.
 // +kubebuilder:webhook:path=/validate-manager-bricklou-ovh-v1-minecraftserver,mutating=false,failurePolicy=fail,sideEffects=None,groups=manager.bricklou.ovh,resources=minecraftservers,verbs=create;update,versions=v1,name=vminecraftserver.kb.io,admissionReviewVersions=v1
 
-var _ webhook.CustomValidator = &MinecraftServer{}
+var _ webhook.Validator = &MinecraftServer{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *MinecraftServer) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (r *MinecraftServer) ValidateCreate() (admission.Warnings, error) {
 	minecraftserverlog.Info("validate create", "name", r.Name)
 	return nil, r.validateMinecraftServer()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *MinecraftServer) ValidateUpdate(ctx context.Context, oldObj runtime.Object, newObj runtime.Object) (admission.Warnings, error) {
+func (r *MinecraftServer) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
 	minecraftserverlog.Info("validate update", "name", r.Name)
 	return nil, r.validateMinecraftServer()
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *MinecraftServer) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (r *MinecraftServer) ValidateDelete() (admission.Warnings, error) {
 	minecraftserverlog.Info("validate delete", "name", r.Name)
 	return nil, nil
 }
