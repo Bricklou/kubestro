@@ -19,13 +19,13 @@ jobs:
           kustomize-version: 5.4.2
       - name: Set Release Image
         run: make build-installer IMG=ghcr.io/bricklou/kubestro-operator:${GITHUB_REF_NAME}
-        working-directory: operator
+        working-directory: projects/operator
       - name: Build Kubernetes YAML
         run: kustomize build config/default > operator.yaml
-        working-directory: operator
+        working-directory: projects/operator
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
             LICENSE
-            operator/dist/install.yaml
+            projects/operator/dist/install.yaml
