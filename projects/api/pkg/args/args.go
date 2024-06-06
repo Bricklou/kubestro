@@ -13,7 +13,7 @@ var (
 	argNamespace   = pflag.String("namespace", helpers.GetEnv("POD_NAMESPACE", "kubestro-dashboard"), "Namespace to use when creating Dashboard specific resources, i.e. settings config map")
 	argBindAddress = pflag.IP("bind-address", net.IPv4(0, 0, 0, 0), "IP address on which to serve the --port, set to 0.0.0.0 for all interfaces")
 	argPort        = pflag.Int("port", 8001, "port to listen to for incoming HTTP requests")
-	argKubeconfig  = pflag.String("kubeconfig", "", "Path to kubeconfig file")
+	argKubeconfig  = pflag.String("kubeconfig", helpers.GetEnv("KUBECONFIG", ""), "Path to kubeconfig file")
 )
 
 func init() {
