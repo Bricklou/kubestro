@@ -1,4 +1,11 @@
-import { PropsWithChildren, ReactElement, useEffect, useRef } from "react";
+import {
+  ButtonHTMLAttributes,
+  HTMLAttributes,
+  PropsWithChildren,
+  ReactElement,
+  useEffect,
+  useRef,
+} from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
   GlobeIcon,
@@ -44,18 +51,21 @@ const SIDEBAR_POPOVER_ID = "sidebar-popover";
 
 export function SidebarToggle({
   toggleSidebar,
-}: {
+  className,
+  ...props
+}: ButtonHTMLAttributes<HTMLButtonElement> & {
   toggleSidebar: () => void;
 }): ReactElement {
   return (
     <Button
       variant="outline"
       size="icon"
-      className="md:hidden"
+      className={cn("md:hidden", className)}
       onClick={() => {
         toggleSidebar();
       }}
       popovertarget={SIDEBAR_POPOVER_ID}
+      {...props}
     >
       <MenuIcon className="size-4" />
     </Button>
@@ -77,7 +87,7 @@ export function Sidebar(): ReactElement {
       id={SIDEBAR_POPOVER_ID}
       popover="auto"
       className={cn(
-        "bg-background border-r w-full md:w-80 [&:popover-open]:flex md:flex md:m-0 md:static flex-col h-screen overflow-y-hidden",
+        "bg-background border-r w-full md:w-72 [&:popover-open]:flex md:flex md:m-0 md:static flex-col h-screen overflow-y-hidden",
       )}
     >
       <div className="flex item-center justify-between gap-2 p-6">

@@ -1,7 +1,13 @@
 import { Button } from "@/components/ui/button.tsx";
 import { HomeIcon, LogOutIcon, SearchIcon, SlashIcon } from "lucide-react";
 import { Input } from "@/components/ui/input.tsx";
-import { Fragment, ReactElement, ReactNode, useMemo } from "react";
+import {
+  Fragment,
+  HTMLAttributes,
+  ReactElement,
+  ReactNode,
+  useMemo,
+} from "react";
 import {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -38,7 +44,7 @@ function NavBreadcrumbItem({ crumb }: { crumb: CrumbItem }): ReactElement {
   );
 }
 
-function NavBreadcrumb(): ReactElement {
+function NavBreadcrumb(props: HTMLAttributes<HTMLElement>): ReactElement {
   const matches = useMatches() as UIMatch<unknown, Handle | undefined>[];
   const crumbs = useMemo<CrumbItem[]>(() => {
     const list: { type: "link"; name: string; href: string }[] = matches
@@ -78,7 +84,7 @@ function NavBreadcrumb(): ReactElement {
   }, [matches]);
 
   return (
-    <Breadcrumb>
+    <Breadcrumb {...props}>
       <BreadcrumbList>
         {crumbs.map((crumb, index) => (
           <Fragment key={index}>
@@ -101,24 +107,28 @@ interface NavbarProps {
 
 export function Navbar({ toggleSidebar }: NavbarProps) {
   return (
-    <header className="p-4 flex flex-row @container gap-x-2 items-center">
-      <div className="flex-1 px-4 flex flex-row gap-4 items-center">
-        <SidebarToggle toggleSidebar={toggleSidebar} />
-        <NavBreadcrumb />
+    <header className="p-4 grid grid-flow-row-dense grid-cols-[min-content_auto_min-content] lg:grid-cols-[auto_auto_min-content] auto-rows-auto gap-2 gap-y-4 items-center">
+      <SidebarToggle
+        toggleSidebar={toggleSidebar}
+        className="row-start-1 col-start-1"
+      />
+      <NavBreadcrumb className="inline-flex row-start-2 col-span-3 lg:row-start-1 lg:col-span-1 lg:col-start-1 px-4 py-2" />
+
+      <div className="relative inline-flex md:max-w-screen-sm row-start-1 md:col-span-2 lg:col-span-1 lg:col-start-2 w-full items-center justify-self-end">
+        <Input className="pl-9" placeholder="Search..." />
+        <SearchIcon
+          className="absolute left-0 mx-2 text-muted-foreground size-5"
+          aria-hidden={true}
+        />
       </div>
-      <div className="flex flex-1 flex-row gap-2 justify-end">
-        <div className="relative inline-flex @md:max-w-screen-sm w-full items-center">
-          <Input className="pl-9" placeholder="Search..." />
-          <SearchIcon
-            className="absolute left-0 mx-2 text-muted-foreground size-5"
-            aria-hidden={true}
-          />
-        </div>
-        <Button variant="secondary" size="sm" className="gap-x-2">
-          <LogOutIcon className="size-5" />
-          Logout
-        </Button>
-      </div>
+      <Button
+        variant="secondary"
+        size="sm"
+        className="gap-x-2 row-start-1 md:col-start-3 max-w-min col"
+      >
+        <LogOutIcon className="size-5" />
+        <div className="sr-only md:not-sr-only">Logout</div>
+      </Button>
     </header>
   );
 }

@@ -2,7 +2,7 @@ import { PropsWithChildren, ReactElement } from "react";
 
 export function PageHeader({ children }: PropsWithChildren): ReactElement {
   return (
-    <header className="p-8 md:px-12 flex row gap-2 items-end">
+    <header className="p-8 @md:px-12 flex flex-col gap-4 @lg:flex-row">
       {children}
     </header>
   );

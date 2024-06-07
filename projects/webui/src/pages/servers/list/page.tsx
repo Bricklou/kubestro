@@ -11,7 +11,7 @@ import { PackagePlusIcon } from "lucide-react";
 
 export function ServersList(): ReactElement {
   return (
-    <section>
+    <section className="@container">
       <PageHeader>
         <PageTitleContainer>
           <PageTitle>Servers list</PageTitle>
@@ -21,11 +21,16 @@ export function ServersList(): ReactElement {
         </PageTitleContainer>
 
         <PageActions>
-          <Button>
+          <Button className="gap-2 w-full @lg:w-auto">
             <PackagePlusIcon className="size-5" />
+            <span className="@lg:sr-only">Add server</span>
           </Button>
         </PageActions>
       </PageHeader>
+
+      <main className="p-8 @lg:px-12 flex flex-col">
+        <p>hello</p>
+      </main>
     </section>
   );
 }
