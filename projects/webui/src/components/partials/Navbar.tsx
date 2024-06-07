@@ -11,6 +11,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb.tsx";
 import { NavLink, UIMatch, useMatches } from "react-router-dom";
+import { SidebarToggle } from "@/components/partials/Sidebar.tsx";
 
 interface Handle {
   crumb: string;
@@ -94,10 +95,15 @@ function NavBreadcrumb(): ReactElement {
   );
 }
 
-export function Navbar() {
+interface NavbarProps {
+  toggleSidebar: () => void;
+}
+
+export function Navbar({ toggleSidebar }: NavbarProps) {
   return (
     <header className="p-4 flex flex-row @container gap-x-2 items-center">
-      <div className="flex-1 px-4">
+      <div className="flex-1 px-4 flex flex-row gap-4 items-center">
+        <SidebarToggle toggleSidebar={toggleSidebar} />
         <NavBreadcrumb />
       </div>
       <div className="flex flex-1 flex-row gap-2 justify-end">
