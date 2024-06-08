@@ -8,19 +8,7 @@ import {
 } from "@/components/partials/PageHeader.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { PackagePlusIcon, SearchXIcon } from "lucide-react";
-
-function ListContent(): ReactElement {
-  return (
-    <div className="flex flex-col items-center justify-center gap-4 flex-1">
-      <SearchXIcon className="size-20 text-muted-foreground" />
-      <p className="text-center text-muted-foreground">
-        There is no servers for now.
-        <br />
-        Please create one to continue.
-      </p>
-    </div>
-  );
-}
+import { Link } from "react-router-dom";
 
 export function ServersList(): ReactElement {
   return (
@@ -34,9 +22,11 @@ export function ServersList(): ReactElement {
         </PageTitleContainer>
 
         <PageActions>
-          <Button className="gap-2 w-full @lg:w-auto">
-            <PackagePlusIcon className="size-5" />
-            <span className="@lg:sr-only">Add server</span>
+          <Button className="gap-2 w-full @lg:w-auto" asChild>
+            <Link to="/servers/new">
+              <PackagePlusIcon className="size-5" />
+              <span className="@lg:sr-only">Add server</span>
+            </Link>
           </Button>
         </PageActions>
       </PageHeader>
@@ -45,5 +35,18 @@ export function ServersList(): ReactElement {
         <ListContent />
       </main>
     </section>
+  );
+}
+
+function ListContent(): ReactElement {
+  return (
+    <div className="flex flex-col items-center justify-center gap-4 flex-1">
+      <SearchXIcon className="size-20 text-muted-foreground" />
+      <p className="text-center text-muted-foreground">
+        There is no servers for now.
+        <br />
+        Please create one to continue.
+      </p>
+    </div>
   );
 }

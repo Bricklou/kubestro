@@ -69,7 +69,7 @@ function NavBreadcrumb(props: HTMLAttributes<HTMLElement>): ReactElement {
     if (list.length <= 3) {
       return [
         homeItem,
-        ...list.slice(0, list.length - 2),
+        ...list.slice(0, -1),
         { type: "text", name: list[list.length - 1].name },
       ];
     }

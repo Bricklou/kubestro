@@ -6,6 +6,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallback } from "@/components/ErrorFallback.tsx";
 import { Overview } from "@/pages/overview/page.tsx";
 import { ServersList } from "@/pages/servers/list/page.tsx";
+import { ServerCreate } from "@/pages/servers/create/page.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -33,10 +34,22 @@ export const router = createBrowserRouter([
           },
           {
             path: "/servers",
-            element: <ServersList />,
             handle: {
               crumb: "Servers",
             },
+            children: [
+              {
+                path: "/servers",
+                element: <ServersList />,
+              },
+              {
+                path: "/servers/new",
+                element: <ServerCreate />,
+                handle: {
+                  crumb: "Create",
+                },
+              },
+            ],
           },
         ],
       },
