@@ -101,17 +101,10 @@ function NavBreadcrumb(props: HTMLAttributes<HTMLElement>): ReactElement {
   );
 }
 
-interface NavbarProps {
-  toggleSidebar: () => void;
-}
-
-export function Navbar({ toggleSidebar }: NavbarProps) {
+export function Navbar() {
   return (
     <header className="p-4 grid grid-flow-row-dense grid-cols-[min-content_auto_min-content] lg:grid-cols-[auto_auto_min-content] auto-rows-auto gap-2 gap-y-4 items-center">
-      <SidebarToggle
-        toggleSidebar={toggleSidebar}
-        className="row-start-1 col-start-1"
-      />
+      <SidebarToggle className="row-start-1 col-start-1" />
       <NavBreadcrumb className="inline-flex row-start-2 col-span-3 lg:row-start-1 lg:col-span-1 lg:col-start-1 px-4 py-2" />
 
       <div className="relative inline-flex md:max-w-screen-sm row-start-1 md:col-span-2 lg:col-span-1 lg:col-start-2 w-full items-center justify-self-end">

@@ -22,6 +22,7 @@ import {
 import { cn } from "@/lib/utils.ts";
 import { FormControl } from "@/components/ui/form.tsx";
 import { useCommandState } from "cmdk";
+import {commandScore} from "cmdk/command-score";
 
 interface NamespaceComboProps {
   items: string[];
@@ -83,7 +84,18 @@ export function NamespaceCombo({
           </PopoverTrigger>
         </FormControl>
         <PopoverContent className="w-full p-0">
-          <Command>
+          <Command filter={(value, search, keywords) => {
+            const exists = Boolean(items.find(i=>i===search))
+            if (value === CREATE_NEW_KEY && !exists) {
+              return 1
+            }
+
+            if (value.toLowerCase().includes(search.trim().toLowerCase())) {
+              return commandScore(value, search, keywords??[]) as number
+            }
+
+            return 0
+          }}>
             <CommandInput placeholder="Search a namespace..." />
             <CommandList>
               <CommandGroup>

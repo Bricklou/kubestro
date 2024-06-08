@@ -1,0 +1,16 @@
+diff --git a/package.json b/package.json
+index 484d1eaf8ea5c39d5deef6141fa5a9e7a80c408e..63ead59db2d27d12141d273fb89123a09e82b97b 100755
+--- a/package.json
++++ b/package.json
+@@ -13,6 +13,11 @@
+       "types": "./dist/index.d.ts",
+       "import": "./dist/index.mjs",
+       "require": "./dist/index.js"
++    },
++    "./command-score": {
++      "types": "./dist/command-score.d.ts",
++      "import": "./dist/command-score.mjs",
++      "require": "./dist/command-score.js"
+     }
+   },
+   "peerDependencies": {

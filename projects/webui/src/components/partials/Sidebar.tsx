@@ -1,6 +1,5 @@
 import {
   ButtonHTMLAttributes,
-  HTMLAttributes,
   PropsWithChildren,
   ReactElement,
   useEffect,
@@ -50,21 +49,15 @@ function SidebarLabel({ children }: PropsWithChildren<object>) {
 const SIDEBAR_POPOVER_ID = "sidebar-popover";
 
 export function SidebarToggle({
-  toggleSidebar,
   className,
   ...props
-}: ButtonHTMLAttributes<HTMLButtonElement> & {
-  toggleSidebar: () => void;
-}): ReactElement {
+}: ButtonHTMLAttributes<HTMLButtonElement>): ReactElement {
   return (
     <Button
       variant="outline"
       size="icon"
       className={cn("md:hidden", className)}
-      onClick={() => {
-        toggleSidebar();
-      }}
-      popovertarget={SIDEBAR_POPOVER_ID}
+      popoverTarget={SIDEBAR_POPOVER_ID}
       {...props}
     >
       <MenuIcon className="size-4" />
@@ -96,8 +89,8 @@ export function Sidebar(): ReactElement {
           className="md:hidden"
           variant="ghost"
           size="icon"
-          popovertarget={SIDEBAR_POPOVER_ID}
-          popovertargetaction="hide"
+          popoverTarget={SIDEBAR_POPOVER_ID}
+          popoverTargetAction="hide"
         >
           <XIcon className="size-6" />
           <span className="sr-only">Close menu</span>
