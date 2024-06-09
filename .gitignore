@@ -22,3 +22,6 @@ go.work
 *.swp
 *.swo
 *~
+
+# taskfile cache
+.task

@@ -1,4 +1,4 @@
-import { ReactElement, useState } from "react";
+import { ReactElement, ReactNode, useState } from "react";
 import {
   Popover,
   PopoverContent,
@@ -22,12 +22,14 @@ import {
 import { cn } from "@/lib/utils.ts";
 import { FormControl } from "@/components/ui/form.tsx";
 import { useCommandState } from "cmdk";
-import {commandScore} from "cmdk/command-score";
+import { Badge } from "@/components/ui/badge.tsx";
+import { commandScore } from "cmdk/command-score";
 
 interface NamespaceComboProps {
   items: string[];
   value?: string;
   onChange: (item: string) => void;
+  onCreate: (item: string) => void;
   className?: string;
 }
 
@@ -42,16 +44,20 @@ const CommandCreateItem = ({
   if (!query) return null;
 
   return (
-    <CommandItem
-      forceMount
-      value={CREATE_NEW_KEY}
-      onSelect={() => {
-        onSelect(query);
-      }}
-    >
-      <PlusIcon className="mr-2 size-4" />
-      {query}
-    </CommandItem>
+    <>
+      <CommandGroup heading="Actions">
+        <CommandItem
+          value={CREATE_NEW_KEY}
+          onSelect={() => {
+            onSelect(query);
+          }}
+        >
+          <PlusIcon className="mr-2 size-4" />
+          {query}
+        </CommandItem>
+      </CommandGroup>
+      <CommandSeparator />
+    </>
   );
 };
 
@@ -59,9 +65,27 @@ export function NamespaceCombo({
   items,
   value,
   onChange,
+  onCreate,
   className,
 }: NamespaceComboProps): ReactElement {
   const [open, setOpen] = useState(false);
+
+  function displayNamespace(value?: string): ReactNode {
+    if (!value) {
+      return "Select a namespace";
+    }
+
+    const existingNamespace = items.find((ns) => ns === value);
+    if (existingNamespace) {
+      return existingNamespace;
+    }
+
+    return (
+      <span className="inline-flex items-center gap-2">
+        {value} <Badge className="px-1 py-0">New</Badge>
+      </span>
+    );
+  }
 
   return (
     <div className={cn("relative w-[200px]", className)}>
@@ -75,39 +99,37 @@ export function NamespaceCombo({
                 aria-expanded={open}
                 className="w-full justify-between"
               >
-                {value
-                  ? items.find((item) => item === value)
-                  : "Select a namespace"}
+                {displayNamespace(value)}
                 <ChevronsUpDownIcon className="ml-2 size-4 shrink-0 opacity-50" />
               </Button>
             </FormControl>
           </PopoverTrigger>
         </FormControl>
         <PopoverContent className="w-full p-0">
-          <Command filter={(value, search, keywords) => {
-            const exists = Boolean(items.find(i=>i===search))
-            if (value === CREATE_NEW_KEY && !exists) {
-              return 1
-            }
+          <Command
+            vimBindings={false}
+            filter={(item, query, keywords) => {
+              if (item === CREATE_NEW_KEY) {
+                const exists = items.find((ns) => ns === query);
+                if (query.length > 0 && !exists) {
+                  return 1;
+                }
+                return 0;
+              }
 
-            if (value.toLowerCase().includes(search.trim().toLowerCase())) {
-              return commandScore(value, search, keywords??[]) as number
-            }
-
-            return 0
-          }}>
+              return commandScore(item, query, keywords ?? []);
+            }}
+          >
             <CommandInput placeholder="Search a namespace..." />
             <CommandList>
-              <CommandGroup>
-                <CommandCreateItem
-                  onSelect={(currentValue) => {
-                    onChange(currentValue === value ? "" : currentValue);
-                    setOpen(false);
-                  }}
-                />
+              <CommandCreateItem
+                onSelect={(currentValue) => {
+                  onCreate(currentValue);
+                  setOpen(false);
+                }}
+              />
 
-                <CommandSeparator />
-
+              <CommandGroup heading="Existing namespaces">
                 {items.map((ns) => (
                   <CommandItem
                     key={ns}

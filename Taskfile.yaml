@@ -10,3 +10,7 @@ tasks:
     dir: ./projects/webui
     cmds:
       - pnpm run dev
+  build-ui:
+    dir: ./projects/webui
+    cmds:
+      - pnpm run build

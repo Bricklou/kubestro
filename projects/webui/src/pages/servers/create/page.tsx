@@ -95,6 +95,9 @@ function CreateServerForm(): ReactElement {
                     items={["aaa", "bbb", "ccc", "abb", "abc"]}
                     value={field.value}
                     onChange={field.onChange}
+                    onCreate={(value) => {
+                      field.onChange(value);
+                    }}
                   />
                 </ErrorBoundary>
                 <FormDescription>
