@@ -6,7 +6,11 @@ import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallback } from "@/components/ErrorFallback.tsx";
 import { Overview } from "@/pages/overview/page.tsx";
 import { ServersList } from "@/pages/servers/list/page.tsx";
-import { ServerCreate } from "@/pages/servers/create/page.tsx";
+import {
+  ServerCreate,
+  serverCreateLoader,
+} from "@/pages/servers/create/page.tsx";
+import { queryClient } from "@/api/fetcher.ts";
 
 export const router = createBrowserRouter([
   {
@@ -45,6 +49,7 @@ export const router = createBrowserRouter([
               {
                 path: "/servers/new",
                 element: <ServerCreate />,
+                loader: serverCreateLoader(queryClient),
                 handle: {
                   crumb: "Create",
                 },

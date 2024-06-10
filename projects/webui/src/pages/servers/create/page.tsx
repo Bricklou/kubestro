@@ -20,8 +20,22 @@ import { Input } from "@/components/ui/input.tsx";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { NamespaceCombo } from "@/pages/servers/create/namespaceCombo.tsx";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
+import { Button } from "@/components/ui/button.tsx";
+import { PackagePlusIcon } from "lucide-react";
+import { QueryClient } from "@tanstack/react-query";
+import { namespaceQuery } from "@/api/queries/namespaces.ts";
+import { getOrQuery, useLoaderQuery } from "@/api/fetcher.ts";
+
+export const serverCreateLoader = (queryClient: QueryClient) => async () => {
+  const query = namespaceQuery();
+  const gotData = getOrQuery(queryClient, query);
+  return gotData;
+};
 
 export function ServerCreate(): ReactElement {
+  const { data: namespaces } =
+    useLoaderQuery<typeof serverCreateLoader>(namespaceQuery());
+
   return (
     <section className="@container h-full flex flex-col">
       <PageHeader>
@@ -32,23 +46,30 @@ export function ServerCreate(): ReactElement {
       </PageHeader>
 
       <main className="p-8 @lg:px-12 flex-1 flex flex-col">
-        <CreateServerForm />
+        <CreateServerForm namespaces={namespaces} />
       </main>
     </section>
   );
 }
 
 const formSchema = z.object({
-  name: z.string().min(2).max(63),
+  name: z.string().min(2).max(100),
   namespace: z
     .string()
+    .min(2)
     .max(63)
-    .regex(/^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$/),
+    .regex(/^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$/, {
+      message: "Invalid namespace format",
+    }),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
 
-function CreateServerForm(): ReactElement {
+function CreateServerForm({
+  namespaces,
+}: {
+  namespaces: string[];
+}): ReactElement {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -92,7 +113,7 @@ function CreateServerForm(): ReactElement {
                 <ErrorBoundary fallbackRender={fallbackRender}>
                   <NamespaceCombo
                     className="w-auto"
-                    items={["aaa", "bbb", "ccc", "abb", "abc"]}
+                    items={namespaces}
                     value={field.value}
                     onChange={field.onChange}
                     onCreate={(value) => {
@@ -108,6 +129,13 @@ function CreateServerForm(): ReactElement {
               </FormItem>
             )}
           />
+        </div>
+
+        <div className="flex flex-col md:flex-row justify-end">
+          <Button type="submit">
+            <PackagePlusIcon className="mr-2 size-4" />
+            Create
+          </Button>
         </div>
       </form>
     </Form>
