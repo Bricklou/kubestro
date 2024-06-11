@@ -57,7 +57,7 @@ export function SidebarToggle({
       variant="outline"
       size="icon"
       className={cn("md:hidden", className)}
-      popoverTarget={SIDEBAR_POPOVER_ID}
+      popovertarget={SIDEBAR_POPOVER_ID}
       {...props}
     >
       <MenuIcon className="size-4" />
@@ -89,8 +89,8 @@ export function Sidebar(): ReactElement {
           className="md:hidden"
           variant="ghost"
           size="icon"
-          popoverTarget={SIDEBAR_POPOVER_ID}
-          popoverTargetAction="hide"
+          popovertarget={SIDEBAR_POPOVER_ID}
+          popovertargetaction="hide"
         >
           <XIcon className="size-6" />
           <span className="sr-only">Close menu</span>

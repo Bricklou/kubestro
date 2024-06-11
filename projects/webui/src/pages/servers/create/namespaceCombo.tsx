@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode, useState } from "react";
+import { ReactElement, ReactNode, useMemo, useState } from "react";
 import {
   Popover,
   PopoverContent,
@@ -39,6 +39,8 @@ const CommandCreateItem = ({
   onSelect,
 }: {
   onSelect: (value: string) => void;
+  selectedValue: string | undefined;
+  items: string[];
 }) => {
   const query = useCommandState((state) => state.search);
   if (!query) return null;
@@ -69,6 +71,7 @@ export function NamespaceCombo({
   className,
 }: NamespaceComboProps): ReactElement {
   const [open, setOpen] = useState(false);
+  const id = useMemo(() => window.crypto.randomUUID(), []);
 
   function displayNamespace(value?: string): ReactNode {
     if (!value) {
@@ -87,6 +90,11 @@ export function NamespaceCombo({
     );
   }
 
+  const isNewNamespace = useMemo(
+    () => value !== undefined && value.length > 0 && !items.includes(value),
+    [items, value],
+  );
+
   return (
     <div className={cn("relative w-[200px]", className)}>
       <Popover open={open} onOpenChange={setOpen}>
@@ -98,6 +106,7 @@ export function NamespaceCombo({
                 role="combobox"
                 aria-expanded={open}
                 className="w-full justify-between"
+                id={id}
               >
                 {displayNamespace(value)}
                 <ChevronsUpDownIcon className="ml-2 size-4 shrink-0 opacity-50" />
@@ -105,9 +114,10 @@ export function NamespaceCombo({
             </FormControl>
           </PopoverTrigger>
         </FormControl>
-        <PopoverContent className="w-full p-0">
+        <PopoverContent className="w-full p-0" avoidCollisions={true}>
           <Command
             vimBindings={false}
+            loop
             filter={(item, query, keywords) => {
               if (item === CREATE_NEW_KEY) {
                 const exists = items.find((ns) => ns === query);
@@ -123,11 +133,31 @@ export function NamespaceCombo({
             <CommandInput placeholder="Search a namespace..." />
             <CommandList>
               <CommandCreateItem
+                items={items}
+                selectedValue={value}
                 onSelect={(currentValue) => {
                   onCreate(currentValue);
                   setOpen(false);
                 }}
               />
+
+              {isNewNamespace && (
+                <CommandGroup heading="New namespace">
+                  <CommandItem
+                    key={value}
+                    value={value}
+                    onSelect={(currentValue) => {
+                      if (currentValue !== value) {
+                        onCreate(currentValue);
+                      }
+                      setOpen(false);
+                    }}
+                  >
+                    <CheckIcon className="mr-2 size-4" />
+                    {value}
+                  </CommandItem>
+                </CommandGroup>
+              )}
 
               <CommandGroup heading="Existing namespaces">
                 {items.map((ns) => (

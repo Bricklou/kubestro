@@ -28,8 +28,7 @@ import { getOrQuery, useLoaderQuery } from "@/api/fetcher.ts";
 
 export const serverCreateLoader = (queryClient: QueryClient) => async () => {
   const query = namespaceQuery();
-  const gotData = getOrQuery(queryClient, query);
-  return gotData;
+  return getOrQuery(queryClient, query);
 };
 
 export function ServerCreate(): ReactElement {
