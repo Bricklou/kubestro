@@ -1,0 +1,8 @@
+version: '3'
+
+tasks:
+  run:
+    cmds:
+      - KUBECONFIG=~/.kube/config go run . {{.CLI_ARGS}}
+    env:
+      CGO_ENABLED: "0"
