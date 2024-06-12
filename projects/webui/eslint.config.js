@@ -5,6 +5,8 @@ import eslint from "@eslint/js";
 import tseslint from "typescript-eslint";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import reactRefreshPlugin from "eslint-plugin-react-refresh";
+import pluginJsxA11y from "eslint-plugin-jsx-a11y";
+import eslintPluginStorybook from "eslint-plugin-storybook";
 
 import { FlatCompat } from "@eslint/eslintrc";
 import path from "path";
@@ -40,9 +42,11 @@ export default tseslint.config(
     plugins: {
       "react-hooks": reactHooksPlugin,
       "react-refresh": reactRefreshPlugin,
+      "jsx-a11y": pluginJsxA11y,
     },
     rules: {
       ...reactHooksPlugin.configs.recommended.rules,
+      ...pluginJsxA11y.configs.strict.rules,
       "react-refresh/only-export-components": [
         "warn",
         { allowConstantExport: true },
@@ -65,6 +69,25 @@ export default tseslint.config(
       },
       parserOptions: {
         project: true,
+      },
+    },
+  },
+  {
+    files: [".storybook/**/*.{ts,tsx}"],
+    languageOptions: {
+      parserOptions: {
+        project: "./tsconfig.storybook.json",
+      },
+    },
+    plugins: {
+      storybook: eslintPluginStorybook,
+    },
+  },
+  {
+    files: ["tests/**/*.{ts,tsx}"],
+    languageOptions: {
+      parserOptions: {
+        project: "./tsconfig.test.json",
       },
     },
   },

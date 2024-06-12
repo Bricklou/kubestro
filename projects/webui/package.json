@@ -12,7 +12,10 @@
     "preview": "vite preview",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "prepare": "cd ../.. && husky projects/webui/.husky"
+    "prepare": "cd ../.. && husky projects/webui/.husky",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "test-storybook": "test-storybook"
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -21,8 +24,21 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "^9.4.0",
+    "@storybook/addon-a11y": "^8.1.7",
+    "@storybook/addon-coverage": "^1.0.4",
+    "@storybook/addon-essentials": "^8.1.7",
+    "@storybook/addon-interactions": "^8.1.7",
+    "@storybook/addon-links": "^8.1.7",
+    "@storybook/addon-onboarding": "^8.1.7",
+    "@storybook/addon-viewport": "^8.1.7",
+    "@storybook/blocks": "^8.1.7",
+    "@storybook/react": "^8.1.7",
+    "@storybook/react-vite": "^8.1.7",
+    "@storybook/test": "^8.1.7",
+    "@storybook/test-runner": "^0.18.2",
     "@tailwindcss/container-queries": "^0.1.1",
     "@tanstack/eslint-plugin-query": "^5.43.1",
+    "@testing-library/react": "^16.0.0",
     "@types/eslint__js": "^8.42.3",
     "@types/node": "^20.14.2",
     "@types/react": "^18.3.3",
@@ -30,12 +46,16 @@
     "@vitejs/plugin-react-swc": "^3.7.0",
     "autoprefixer": "^10.4.19",
     "eslint": "^9.4.0",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-react-hooks": "5.1.0-beta-26f2496093-20240514",
     "eslint-plugin-react-refresh": "^0.4.7",
+    "eslint-plugin-storybook": "^0.8.0",
     "globals": "^15.4.0",
     "husky": "^9.0.11",
+    "jsdom": "^24.1.0",
     "lint-staged": "^15.2.7",
     "prettier": "^3.3.2",
+    "storybook": "^8.1.7",
     "stylelint": "^16.6.1",
     "stylelint-config-standard": "^36.0.0",
     "stylelint-config-tailwindcss": "^0.0.7",
@@ -57,5 +77,10 @@
       "stylelint --fix"
     ]
   },
-  "packageManager": "pnpm@9.2.0+sha512.98a80fd11c2e7096747762304106432b3ddc67dcf54b5a8c01c93f68a2cd5e05e6821849522a06fb76284d41a2660d5e334f2ee3bbf29183bf2e739b1dafa771"
+  "packageManager": "pnpm@9.2.0+sha512.98a80fd11c2e7096747762304106432b3ddc67dcf54b5a8c01c93f68a2cd5e05e6821849522a06fb76284d41a2660d5e334f2ee3bbf29183bf2e739b1dafa771",
+  "eslintConfig": {
+    "extends": [
+      "plugin:storybook/recommended"
+    ]
+  }
 }
