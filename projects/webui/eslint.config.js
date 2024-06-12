@@ -24,6 +24,9 @@ export default tseslint.config(
   ...tseslint.configs.stylisticTypeChecked,
   ...compat.plugins("@tanstack/eslint-plugin-query"),
   {
+    ignores: ["*.cjs"],
+  },
+  {
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
       parserOptions: {
