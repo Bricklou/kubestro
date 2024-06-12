@@ -26,7 +26,7 @@ func handleGetNamespaces(c *gin.Context) {
 		strNs[i] = nsList.Items[i].Name
 	}
 
-	c.JSON(http.StatusOK, map[string]any{
+	c.JSON(http.StatusOK, gin.H{
 		"message":    "Hello from golang! Here are your kubernetes namespaces.",
 		"namespaces": strNs,
 	})

@@ -26,6 +26,15 @@ export const getOrQuery = async <Result>(
   );
 };
 
+export const mutateQuery = async <Result>(
+  client: QueryClient,
+  options: QueryOptions<Result>,
+): Promise<Result> => {
+  const result = await options.queryFn();
+  await client.invalidateQueries({ queryKey: options.queryKey });
+  return result;
+};
+
 export const useLoaderQuery = <
   Loader extends LoaderFn,
   Result = Awaited<ReturnType<ReturnType<Loader>>>,

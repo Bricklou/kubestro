@@ -24,12 +24,28 @@ import { Button } from "@/components/ui/button.tsx";
 import { PackagePlusIcon } from "lucide-react";
 import { QueryClient } from "@tanstack/react-query";
 import { namespaceQuery } from "@/api/queries/namespaces.ts";
-import { getOrQuery, useLoaderQuery } from "@/api/fetcher.ts";
+import { getOrQuery, mutateQuery, useLoaderQuery } from "@/api/fetcher.ts";
+import { ActionFunction, redirect, useSubmit } from "react-router-dom";
+import { serverCreateFormTransformer } from "@/api/transformers/servers.ts";
+import { createServerMutation } from "@/api/queries/servers.ts";
 
 export const serverCreateLoader = (queryClient: QueryClient) => async () => {
   const query = namespaceQuery();
   return getOrQuery(queryClient, query);
 };
+
+export const serverCreateAction =
+  (queryClient: QueryClient): ActionFunction =>
+  async ({ params, request }) => {
+    console.log("action", params);
+    try {
+      const data = await serverCreateFormTransformer(request);
+      await mutateQuery(queryClient, createServerMutation(data));
+    } catch (error) {
+      console.error("Error creating server", error);
+    }
+    return redirect("/servers");
+  };
 
 export function ServerCreate(): ReactElement {
   const { data: namespaces } =
@@ -69,6 +85,7 @@ function CreateServerForm({
 }: {
   namespaces: string[];
 }): ReactElement {
+  const submit = useSubmit();
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -78,7 +95,11 @@ function CreateServerForm({
   });
 
   function onSubmit(value: FormSchema): void {
-    console.log(value);
+    console.log("submit", value);
+    submit(value, {
+      method: "post",
+      action: "/servers/new",
+    });
   }
 
   return (

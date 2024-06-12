@@ -8,6 +8,7 @@ import { Overview } from "@/pages/overview/page.tsx";
 import { ServersList } from "@/pages/servers/list/page.tsx";
 import {
   ServerCreate,
+  serverCreateAction,
   serverCreateLoader,
 } from "@/pages/servers/create/page.tsx";
 import { queryClient } from "@/api/fetcher.ts";
@@ -50,6 +51,7 @@ export const router = createBrowserRouter([
                 path: "/servers/new",
                 element: <ServerCreate />,
                 loader: serverCreateLoader(queryClient),
+                action: serverCreateAction(queryClient),
                 handle: {
                   crumb: "Create",
                 },
