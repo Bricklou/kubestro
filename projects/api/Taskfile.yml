@@ -1,7 +1,5 @@
-version: '3'
-
-dotenv:
-  - ".env"
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
 
 tasks:
   default:
@@ -14,6 +12,8 @@ tasks:
     cmds:
       - go mod download
       - go install github.com/air-verse/air@latest
+      - go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+      - go install github.com/swaggo/swag/cmd/swag@latest
 
   dev:
     desc: "Start development server"
@@ -32,6 +32,12 @@ tasks:
       vars:
         - APP_NAME
 
+  swag:
+    desc: "Generate swagger documentation"
+    cmds:
+      - swag fmt
+      - swag init -g ./cmd/http/main.go -o ./docs --parseInternal true
+
   start:
     desc: "Start binary"
     cmd: KUBECONFIG=~/.kube/config ./bin/{{APP_NAME}}
@@ -44,3 +50,7 @@ tasks:
     cmds:
       - go test -v ./... -race -cover -timeout 30s -count 1 -coverprofile=coverage.out
       - go tool cover -html=coverage.out -o coverage.html
+
+  fmt:
+    desc: Format files
+    cmd: go fmt ./...

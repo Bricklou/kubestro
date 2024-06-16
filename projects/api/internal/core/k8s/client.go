@@ -1,8 +1,8 @@
 package k8s
 
 import (
-	"github.com/bricklou/kubestro-api/internal/args"
-	"github.com/bricklou/kubestro-api/internal/environment"
+	"github.com/bricklou/kubestro-api/internal/adapter/config"
+	"github.com/bricklou/kubestro-api/internal/core/environment"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
@@ -11,14 +11,14 @@ import (
 
 var client *kubernetes.Clientset
 
-func Init() {
+func Init(k8sConfig *config.Kubernetes) {
 
 	var config *rest.Config
 	var err error
 
-	if args.KubeconfigPath() != "" {
-		klog.InfoS("Kube config path specified :", "kubeconfig", args.KubeconfigPath())
-		config, err = clientcmd.BuildConfigFromFlags("", args.KubeconfigPath())
+	if k8sConfig.KubeConfig != "" {
+		klog.InfoS("Kube config path specified :", "kubeconfig", k8sConfig.KubeConfig)
+		config, err = clientcmd.BuildConfigFromFlags("", k8sConfig.KubeConfig)
 	} else {
 		// create the in-cluster config
 		config, err = rest.InClusterConfig()

@@ -1,0 +1,22 @@
+basePath: /
+host: localhost:8080
+info:
+  contact: {}
+  description: This is the Kubestro API server. It serves as the backend for the Kubestro
+    dashboard to deploy Minecraft
+  license:
+    name: MIT
+    url: https://github.com/Bricklou/kubestro/blob/main/LICENSE
+  title: Kubestro API
+  version: "1.0"
+paths: {}
+schemes:
+- http
+- https
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" followed by a space and the access token
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
