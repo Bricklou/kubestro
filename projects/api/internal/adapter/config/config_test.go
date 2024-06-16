@@ -54,7 +54,7 @@ func Test_CreateNewConfig_WithInvalidProxies_ShouldReturnAnError(t *testing.T) {
 		t.Fatalf("New() = %v, want %v", err, nil)
 	}
 
-	var actualError *InvalidIpError
+	var actualError *InvalidCidrError
 	if !errors.As(err, &actualError) {
 		t.Fatalf("New() = %v, want %q", err, reflect.TypeOf(actualError))
 	}

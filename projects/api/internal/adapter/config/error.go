@@ -2,11 +2,11 @@ package config
 
 import "fmt"
 
-type InvalidIpError struct {
+type InvalidCidrError struct {
 	Value   string
 	Message error
 }
 
-func (e *InvalidIpError) Error() string {
-	return fmt.Sprintf("Invalid ip or subnet `%s` specified", e.Value)
+func (e *InvalidCidrError) Error() string {
+	return fmt.Sprintf("Invalid subnet `%s` specified", e.Value)
 }

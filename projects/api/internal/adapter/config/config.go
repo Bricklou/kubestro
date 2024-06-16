@@ -64,7 +64,7 @@ func New() (*Container, error) {
 	for _, value := range trustedProxies {
 		_, _, err := net.ParseCIDR(value)
 		if err != nil {
-			return nil, &InvalidIpError{
+			return nil, &InvalidCidrError{
 				Value:   value,
 				Message: err,
 			}
