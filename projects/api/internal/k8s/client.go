@@ -1,11 +1,12 @@
 package k8s
 
 import (
-	"github.com/bricklou/kubestro-api/pkg/args"
-	"github.com/bricklou/kubestro-api/pkg/environment"
+	"github.com/bricklou/kubestro-api/internal/args"
+	"github.com/bricklou/kubestro-api/internal/environment"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
+	"k8s.io/klog/v2"
 )
 
 var client *kubernetes.Clientset

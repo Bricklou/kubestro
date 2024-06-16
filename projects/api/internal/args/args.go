@@ -3,7 +3,7 @@ package args
 import (
 	"flag"
 	"fmt"
-	"github.com/bricklou/kubestro-api/pkg/helpers"
+	"github.com/bricklou/kubestro-api/internal/helpers"
 	"github.com/spf13/pflag"
 	"k8s.io/klog/v2"
 	"net"

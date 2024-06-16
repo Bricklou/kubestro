@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/bricklou/kubestro-api/pkg/args"
-	_ "github.com/bricklou/kubestro-api/pkg/controllers"
-	"github.com/bricklou/kubestro-api/pkg/environment"
-	"github.com/bricklou/kubestro-api/pkg/k8s"
-	"github.com/bricklou/kubestro-api/pkg/router"
+	"github.com/bricklou/kubestro-api/internal/args"
+	_ "github.com/bricklou/kubestro-api/internal/controllers"
+	"github.com/bricklou/kubestro-api/internal/environment"
+	"github.com/bricklou/kubestro-api/internal/k8s"
+	"github.com/bricklou/kubestro-api/internal/router"
 	"k8s.io/klog/v2"
 )
 

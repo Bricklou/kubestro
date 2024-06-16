@@ -1,8 +1,46 @@
 version: '3'
 
+dotenv:
+  - ".env"
+
 tasks:
-  run:
+  default:
+    desc: "Getting started"
     cmds:
-      - KUBECONFIG=~/.kube/config go run . {{.CLI_ARGS}}
+      - task: install
+
+  install:
+    desc: "Install dependencies"
+    cmds:
+      - go mod download
+      - go install github.com/air-verse/air@latest
+
+  dev:
+    desc: "Start development server"
+    cmd: KUBECONFIG=~/.kube/config air {{.CLI_ARGS}}
     env:
       CGO_ENABLED: "0"
+
+  lint:
+    desc: "Run linter"
+    cmd: golangci-lint run ./...
+
+  build:
+    desc: "Build binary"
+    cmd: go build -o ./bin/{{APP_NAME}} ./cmd/http/main.go
+    requires:
+      vars:
+        - APP_NAME
+
+  start:
+    desc: "Start binary"
+    cmd: KUBECONFIG=~/.kube/config ./bin/{{APP_NAME}}
+    requires:
+      vars:
+        - APP_NAME
+
+  test:
+    desc: "Run tests"
+    cmds:
+      - go test -v ./... -race -cover -timeout 30s -count 1 -coverprofile=coverage.out
+      - go tool cover -html=coverage.out -o coverage.html

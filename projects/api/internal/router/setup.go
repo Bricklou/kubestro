@@ -1,7 +1,7 @@
 package router
 
 import (
-	"github.com/bricklou/kubestro-api/pkg/environment"
+	"github.com/bricklou/kubestro-api/internal/environment"
 	"github.com/gin-gonic/gin"
 )
 
