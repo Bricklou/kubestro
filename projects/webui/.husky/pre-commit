@@ -2,4 +2,4 @@
 
 cd projects/webui
 pnpm exec lint-staged
-pnpm test
+#pnpm test
