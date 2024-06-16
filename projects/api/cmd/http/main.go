@@ -42,7 +42,6 @@ func main() {
 	logger.Set(appConfig.App)
 
 	slog.Info("Starting kubestro dashboard web",
-		"app", appConfig.App.Name,
 		"env", appConfig.App.Env,
 		"version", environment.Version,
 	)

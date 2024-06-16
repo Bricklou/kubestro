@@ -1,11 +1,10 @@
 package config
 
 import (
+	"net"
 	"os"
 	"strings"
-)
 
-import (
 	"github.com/bricklou/kubestro-api/internal/core/helpers"
 	"github.com/joho/godotenv"
 )
@@ -20,8 +19,7 @@ type (
 
 	// App contains all the environment variables for the application
 	App struct {
-		Name string
-		Env  string
+		Env string
 	}
 
 	// HTTP contains all the environment variables for the http server
@@ -52,8 +50,7 @@ func New() (*Container, error) {
 	}
 
 	app := &App{
-		Name: os.Getenv("APP_NAME"),
-		Env:  appEnv,
+		Env: appEnv,
 	}
 
 	trustedProxiesEnv := os.Getenv("HTTP_TRUSTED_PROXIES")
@@ -63,6 +60,17 @@ func New() (*Container, error) {
 	} else {
 		trustedProxies = strings.Split(trustedProxiesEnv, ",")
 	}
+
+	for _, value := range trustedProxies {
+		_, _, err := net.ParseCIDR(value)
+		if err != nil {
+			return nil, &InvalidIpError{
+				Value:   value,
+				Message: err,
+			}
+		}
+	}
+
 	http := &HTTP{
 		Env:            appEnv,
 		Url:            helpers.Getenv("HTTP_URL", "0.0.0.0"),
