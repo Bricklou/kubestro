@@ -39,8 +39,8 @@ type (
 	}
 )
 
-// New creates a new container instance
-func New() (*Container, error) {
+// NewConfig creates a new container instance
+func NewConfig() (*Container, error) {
 	var appEnv = helpers.Getenv("APP_ENV", "production")
 	if appEnv != "production" {
 		err := godotenv.Load()

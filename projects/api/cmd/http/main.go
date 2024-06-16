@@ -32,7 +32,7 @@ import (
 //	@description				Type "Bearer" followed by a space and the access token
 func main() {
 	// Load environment variables
-	appConfig, err := config.New()
+	appConfig, err := config.NewConfig()
 	if err != nil {
 		klog.Fatal(err)
 		os.Exit(1)

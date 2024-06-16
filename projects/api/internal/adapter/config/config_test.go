@@ -7,26 +7,26 @@ import (
 	"testing"
 )
 
-func Test_CreateNewConfig_ShouldNotThrowErrors(t *testing.T) {
-	_, err := New()
+func Test_NewConfig_ShouldBeValid(t *testing.T) {
+	_, err := NewConfig()
 
 	if err != nil {
-		t.Fatalf("New() => %v, want %v", err, nil)
+		t.Fatalf("NewConfig() => %v, want %v", err, nil)
 	}
 }
 
-func Test_CreateNewConfig_WithoutTrustedProxiesEnv_ShouldBeEmpty(t *testing.T) {
-	actual, _ := New()
+func Test_NewConfig_WithoutTrustedProxiesEnv_ShouldBeEmpty(t *testing.T) {
+	actual, _ := NewConfig()
 
 	if actual.HTTP.TrustedProxies != nil {
 		t.Fatalf("HTTP.TrustedProxies = %v, want nil value", actual.HTTP.TrustedProxies)
 	}
 }
 
-func Test_CreateNewConfig_WithoutUrl_ShouldBeDefaulted(t *testing.T) {
+func Test_NewConfig_WithoutUrl_ShouldBeDefaulted(t *testing.T) {
 	t.Setenv("HTTP_URL", "")
 
-	actual, _ := New()
+	actual, _ := NewConfig()
 
 	const wantedUrl = "0.0.0.0"
 	if actual.HTTP.Url != wantedUrl {
@@ -34,10 +34,10 @@ func Test_CreateNewConfig_WithoutUrl_ShouldBeDefaulted(t *testing.T) {
 	}
 }
 
-func Test_CreateNewConfig_WithoutPort_ShouldBeDefaulted(t *testing.T) {
+func Test_NewConfig_WithoutPort_ShouldBeDefaulted(t *testing.T) {
 	t.Setenv("HTTP_PORT", "")
 
-	actual, _ := New()
+	actual, _ := NewConfig()
 
 	const wantedPort = "8001"
 	if actual.HTTP.Port != wantedPort {
@@ -45,31 +45,41 @@ func Test_CreateNewConfig_WithoutPort_ShouldBeDefaulted(t *testing.T) {
 	}
 }
 
-func Test_CreateNewConfig_WithInvalidProxies_ShouldReturnAnError(t *testing.T) {
+func Test_NewConfig_WithInvalidProxies_ShouldReturnAnError(t *testing.T) {
 	var proxies = []string{"toto"}
 	t.Setenv("HTTP_TRUSTED_PROXIES", strings.Join(proxies, ","))
 
-	_, err := New()
+	_, err := NewConfig()
 	if err == nil {
-		t.Fatalf("New() = %v, want %v", err, nil)
+		t.Fatalf("NewConfig() = %v, want %v", err, nil)
 	}
 
 	var actualError *InvalidCidrError
 	if !errors.As(err, &actualError) {
-		t.Fatalf("New() = %v, want %q", err, reflect.TypeOf(actualError))
+		t.Fatalf("NewConfig() = %v, want %q", err, reflect.TypeOf(actualError))
 	}
 
 	var wantValue = "toto"
 	if actualError.Value != wantValue {
-		t.Fatalf("New() = %q, want %q", actualError.Value, wantValue)
+		t.Fatalf("NewConfig() = %q, want %q", actualError.Value, wantValue)
 	}
 }
 
-func Test_CreateNewConfig_WithTrustedProxies_ShouldBeAnArray(t *testing.T) {
+func Test_NewConfig_WithTrustedProxies_ShouldBeAnArray(t *testing.T) {
+	var proxies = []string{"127.0.0.1/24"}
+	t.Setenv("HTTP_TRUSTED_PROXIES", strings.Join(proxies, ","))
+
+	actual, _ := NewConfig()
+	if !reflect.DeepEqual(actual.HTTP.TrustedProxies, proxies) {
+		t.Fatalf("HTTP.TrustedProxies = %q, want %q", actual.HTTP.TrustedProxies, proxies)
+	}
+}
+
+func Test_NewConfig_WithTrustedProxies_ShouldBeAnArray2(t *testing.T) {
 	var proxies = []string{"127.0.0.1/24", "192.168.1.1/16", "10.0.0.1/32"}
 	t.Setenv("HTTP_TRUSTED_PROXIES", strings.Join(proxies, ","))
 
-	actual, _ := New()
+	actual, _ := NewConfig()
 	if !reflect.DeepEqual(actual.HTTP.TrustedProxies, proxies) {
 		t.Fatalf("HTTP.TrustedProxies = %q, want %q", actual.HTTP.TrustedProxies, proxies)
 	}
