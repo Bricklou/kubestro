@@ -57,6 +57,12 @@ func main() {
 		os.Exit(1)
 	}
 
+	err = http.ConfigureRouter(router)
+	if err != nil {
+		slog.Error("Error configuring router", "error", err)
+		os.Exit(0)
+	}
+
 	// Start server
 	listenAddr := fmt.Sprintf("%s:%s", appConfig.HTTP.Url, appConfig.HTTP.Port)
 	slog.Info("Starting server", "address", listenAddr)

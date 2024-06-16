@@ -7,11 +7,7 @@ import (
 	"github.com/bricklou/kubestro-api/internal/adapter/config"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
-	"github.com/go-playground/validator/v10"
 	sloggin "github.com/samber/slog-gin"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // Router is a wrapper for HTTP router
@@ -38,23 +34,7 @@ func NewRouter(
 	_ = router.SetTrustedProxies(httpConfig.TrustedProxies)
 	router.Use(sloggin.New(slog.Default()), gin.Recovery(), cors.New(ginConfig))
 
-	// Custom validators
-	_, ok := binding.Validator.Engine().(*validator.Validate)
-	if ok {
-		// Add custom validators here
-	}
-
-	// Swagger
-	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
-	_ = router.Group("/v1")
-	{
-		// Add routes here
-	}
-
-	return &Router{
-		router,
-	}, nil
+	return &Router{router}, nil
 }
 
 // Serve starts the HTTP server
