@@ -11,7 +11,7 @@ func Test_CreateNewConfig_ShouldNotThrowErrors(t *testing.T) {
 	_, err := New()
 
 	if err != nil {
-		t.Fatalf("Config creation throw the error %v", err)
+		t.Fatalf("New() => %v, want %v", err, nil)
 	}
 }
 
@@ -51,16 +51,17 @@ func Test_CreateNewConfig_WithInvalidProxies_ShouldReturnAnError(t *testing.T) {
 
 	_, err := New()
 	if err == nil {
-		t.Fatalf("expected error not be nil, but was nil")
+		t.Fatalf("New() = %v, want %v", err, nil)
 	}
 
 	var actualError *InvalidIpError
 	if !errors.As(err, &actualError) {
-		t.Fatalf("expected error to be InvalidIpError, but go %v", err)
+		t.Fatalf("New() = %v, want %q", err, reflect.TypeOf(actualError))
 	}
 
-	if actualError.Value != "toto" {
-		t.Fatalf("expected error value to be %v, but go %v", "toto", actualError.Value)
+	var wantValue = "toto"
+	if actualError.Value != wantValue {
+		t.Fatalf("New() = %q, want %q", actualError.Value, wantValue)
 	}
 }
 
