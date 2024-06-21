@@ -9,12 +9,6 @@ includes:
     taskfile: ./projects/api/Taskfile.yml
     dir: ./projects/api
 
-tasks:
   ui:
+    taskfile: ./projects/webui/Taskfile.yml
     dir: ./projects/webui
-    cmds:
-      - pnpm run dev
-  build-ui:
-    dir: ./projects/webui
-    cmds:
-      - pnpm run build
