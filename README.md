@@ -41,6 +41,6 @@ This project is under MIT license. It can be found [here](./LICENSE) or on https
 ## Acknowledgements
 
 - [Kubebuilder](https://book.kubebuilder.io/)
-- [bagashiz's Go POS project](https://github.com/bagashiz/go-pos/) for its pretty go implementation of hexagonal architecture in Golang
+- [bagashiz's Go POS project](https://github.com/bagashiz/go-pos/) for its pretty implementation of hexagonal architecture in Golang
 - [Kubecraft](https://github.com/serainville/Kubecraft) and [kubernetes-minecraft-operator](https://github.com/JamesLaverack/kubernetes-minecraft-operator)
   for the inspirations for my own operator implementation.
