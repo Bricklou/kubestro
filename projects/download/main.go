@@ -70,7 +70,7 @@ func main() {
 		log.Fatal(err)
 	}
 	if actualHash != expectedHash {
-		log.Fatal(errors.New(fmt.Sprintf("Invalid file expectedHash. Expected \"%s\", got \"%s\"", expectedHash, actualHash)))
+		log.Fatal(fmt.Errorf("invalid file expectedHash. Expected \"%s\", got \"%s\"", expectedHash, actualHash))
 	}
 
 	log.Printf("Successfully downloaded file \"%s\" (%d bytes) to \"%s\".\n", url, size, target)

@@ -1,0 +1,46 @@
+version: "3"
+
+vars:
+  IMG: kubestro-download:latest
+
+tasks:
+  default:
+    desc: "Getting started"
+    cmds:
+      - task: install
+
+  install:
+    desc: "Install dependencies"
+    cmds:
+      - go mod download
+      - go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
+  lint:
+    desc: "Run linter"
+    cmd: golangci-lint run ./...
+
+  build:
+    desc: "Build binary"
+    cmd: go build -o ./bin/downloader ./main.go
+
+  dev:
+    desc: "Start development server"
+    cmd: air {{.CLI_ARGS}}
+    env:
+      CGO_ENABLED: "0"
+
+  start:
+    desc: "Start binary"
+    cmd: ./bin/downloader {{.CLI_ARGS}}
+
+  fmt:
+    desc: Format files
+    cmd: go fmt ./...
+
+  docker-build:
+    desc: "Build container image"
+    cmd: docker build -t {{.IMG}} .
+
+  docker-push:
+    desc: "Push docker image"
+    cmd: docker push {{.IMG}}

@@ -1,2 +1,16 @@
-# Binaries for programs and plugins
-bin/download
+# exclude any dependency directories
+vendor/
+
+# exclude build artifacts
+build/
+dist/
+bin/
+tmp/
+log/
+
+# exclude any development-specific files
+*.env
+*.log
+*.test
+*.out
+coverage*
