@@ -1,0 +1,5 @@
+run:
+  timeout: "3m"
+  tests: true
+  allow-parallel-runners: false
+  go: "1.22"
