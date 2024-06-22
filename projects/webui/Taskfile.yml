@@ -1,0 +1,27 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+tasks:
+  dev:
+    cmds:
+      - pnpm run dev
+
+  build:
+    cmds:
+      - pnpm run build
+
+  test:
+    cmds:
+      - pnpm run test
+
+  lint:
+    cmds:
+      - pnpm run lint
+
+  install:
+    cmds:
+      - pnpm install
+
+  format:
+    cmds:
+      - pnpm run format
