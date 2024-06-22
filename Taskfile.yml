@@ -41,6 +41,6 @@ tasks:
         # override stuff
       - git config gitflow.prefix.versiontag "v"
       - git config gitflow.prefix.feature ""
-      - git config gitflow.branch.master=main
-      - git config gitflow.branch.develop=develop
-      - git config gitflow.prefix.versiontag=v
+      - git config gitflow.branch.master main
+      - git config gitflow.branch.develop develop
+      - git config gitflow.prefix.versiontag v
