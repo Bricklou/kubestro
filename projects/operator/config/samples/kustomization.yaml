@@ -1,5 +1,5 @@
 ## Append samples of your project ##
 resources:
-- manager_v1_minecraftserver.yaml
-- manager_v1_minecraftbackup.yaml
+  - manager_v1_minecraftserver.yaml
+  - manager_v1_minecraftbackup.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples

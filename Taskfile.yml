@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
-version: "3"
+version: '3'
 
 dotenv:
-  - "projects/api/.env"
+  - 'projects/api/.env'
 
 includes:
   api:
@@ -19,13 +19,13 @@ includes:
 
 tasks:
   install:
-    desc: "Install git hooks and dependencies"
+    desc: 'Install git hooks and dependencies'
     cmds:
       - task: init-gitflow
       - task: deps
 
   deps:
-    desc: "Install project dependencies"
+    desc: 'Install project dependencies'
     cmds:
       - go install golang.org/x/tools/cmd/goimports@latest
       - go install github.com/air-verse/air@latest
@@ -35,7 +35,7 @@ tasks:
       - task: download:install
 
   init-gitflow:
-    desc: "Initialize git flow configuration"
+    desc: 'Initialize git flow configuration'
     cmds:
       - git flow init -d
         # override stuff

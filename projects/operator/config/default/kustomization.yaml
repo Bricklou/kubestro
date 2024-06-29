@@ -59,7 +59,7 @@ replacements:
         fieldPaths:
           - .metadata.annotations.[cert-manager.io/inject-ca-from]
         options:
-          delimiter: "/"
+          delimiter: '/'
           index: 0
           create: true
       - select:
@@ -67,7 +67,7 @@ replacements:
         fieldPaths:
           - .metadata.annotations.[cert-manager.io/inject-ca-from]
         options:
-          delimiter: "/"
+          delimiter: '/'
           index: 0
           create: true
       - select:
@@ -75,7 +75,7 @@ replacements:
         fieldPaths:
           - .metadata.annotations.[cert-manager.io/inject-ca-from]
         options:
-          delimiter: "/"
+          delimiter: '/'
           index: 0
           create: true
   - source:
@@ -90,7 +90,7 @@ replacements:
         fieldPaths:
           - .metadata.annotations.[cert-manager.io/inject-ca-from]
         options:
-          delimiter: "/"
+          delimiter: '/'
           index: 1
           create: true
       - select:
@@ -98,7 +98,7 @@ replacements:
         fieldPaths:
           - .metadata.annotations.[cert-manager.io/inject-ca-from]
         options:
-          delimiter: "/"
+          delimiter: '/'
           index: 1
           create: true
       - select:
@@ -106,7 +106,7 @@ replacements:
         fieldPaths:
           - .metadata.annotations.[cert-manager.io/inject-ca-from]
         options:
-          delimiter: "/"
+          delimiter: '/'
           index: 1
           create: true
   - source: # Add cert-manager annotation to the webhook Service
@@ -123,7 +123,7 @@ replacements:
           - .spec.dnsNames.0
           - .spec.dnsNames.1
         options:
-          delimiter: "."
+          delimiter: '.'
           index: 0
           create: true
   - source:
@@ -140,6 +140,6 @@ replacements:
           - .spec.dnsNames.0
           - .spec.dnsNames.1
         options:
-          delimiter: "."
+          delimiter: '.'
           index: 1
           create: true

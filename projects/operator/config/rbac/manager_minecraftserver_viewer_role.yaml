@@ -11,17 +11,17 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: manager-minecraftserver-viewer-role
 rules:
-- apiGroups:
-  - manager.bricklou.ovh
-  resources:
-  - minecraftservers
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - manager.bricklou.ovh
-  resources:
-  - minecraftservers/status
-  verbs:
-  - get
+  - apiGroups:
+      - manager.bricklou.ovh
+    resources:
+      - minecraftservers
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - manager.bricklou.ovh
+    resources:
+      - minecraftservers/status
+    verbs:
+      - get

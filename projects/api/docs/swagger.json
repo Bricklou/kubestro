@@ -1,28 +1,25 @@
 {
-    "schemes": [
-        "http",
-        "https"
-    ],
-    "swagger": "2.0",
-    "info": {
-        "description": "This is the Kubestro API server. It serves as the backend for the Kubestro dashboard to deploy Minecraft",
-        "title": "Kubestro API",
-        "contact": {},
-        "license": {
-            "name": "MIT",
-            "url": "https://github.com/Bricklou/kubestro/blob/main/LICENSE"
-        },
-        "version": "1.0"
+  "schemes": ["http", "https"],
+  "swagger": "2.0",
+  "info": {
+    "description": "This is the Kubestro API server. It serves as the backend for the Kubestro dashboard to deploy Minecraft",
+    "title": "Kubestro API",
+    "contact": {},
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/Bricklou/kubestro/blob/main/LICENSE"
     },
-    "host": "localhost:8080",
-    "basePath": "/",
-    "paths": {},
-    "securityDefinitions": {
-        "BearerAuth": {
-            "description": "Type \"Bearer\" followed by a space and the access token",
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header"
-        }
+    "version": "1.0"
+  },
+  "host": "localhost:8080",
+  "basePath": "/",
+  "paths": {},
+  "securityDefinitions": {
+    "BearerAuth": {
+      "description": "Type \"Bearer\" followed by a space and the access token",
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
     }
+  }
 }
