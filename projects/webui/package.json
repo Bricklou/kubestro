@@ -12,7 +12,6 @@
     "preview": "vite preview",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "prepare": "cd ../.. && husky projects/webui/.husky",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test-storybook": "test-storybook"
@@ -52,7 +51,6 @@
     "eslint-plugin-storybook": "^0.8.0",
     "globals": "^15.4.0",
     "jsdom": "^24.1.0",
-    "lint-staged": "^15.2.7",
     "prettier": "^3.3.2",
     "storybook": "^8.1.7",
     "stylelint": "^16.6.1",
@@ -64,17 +62,6 @@
     "typescript-eslint": "^7.13.0",
     "vite": "^5.2.13",
     "vitest": "^1.6.0"
-  },
-  "lint-staged": {
-    "*.{ts,tsx,json,md}": "prettier --write",
-    "*.{ts,tsx}": [
-      "prettier --write",
-      "eslint --fix"
-    ],
-    "*.css": [
-      "prettier --write",
-      "stylelint --fix"
-    ]
   },
   "packageManager": "pnpm@9.4.0+sha512.f549b8a52c9d2b8536762f99c0722205efc5af913e77835dbccc3b0b0b2ca9e7dc8022b78062c17291c48e88749c70ce88eb5a74f1fa8c4bf5e18bb46c8bd83a",
   "eslintConfig": {
