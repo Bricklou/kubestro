@@ -2,14 +2,15 @@ package vanillatweaks
 
 import (
 	"context"
+	"io"
+	"net/http"
+	"net/url"
+
 	minecraftv1alpha1 "github.com/bricklou/kubestro/api/manager/v1"
 	"github.com/bricklou/kubestro/internal/version"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
-	"io"
 	"k8s.io/apimachinery/pkg/util/json"
-	"net/http"
-	"net/url"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 )
 

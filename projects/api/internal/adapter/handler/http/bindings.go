@@ -9,7 +9,8 @@ func setupBindings(router *Router) error {
 	// Custom validators
 	_, ok := binding.Validator.Engine().(*validator.Validate)
 	if ok {
-		// Add custom validators here
+		// TODO: Add custom validators here
+		return nil
 	}
 
 	return nil

@@ -2,11 +2,12 @@ package vanilla
 
 import (
 	"fmt"
-	"github.com/pkg/errors"
 	"io"
-	"k8s.io/apimachinery/pkg/util/json"
 	"net/http"
 	"time"
+
+	"github.com/pkg/errors"
+	"k8s.io/apimachinery/pkg/util/json"
 )
 
 type VersionsManifestLatest struct {
@@ -79,7 +80,8 @@ func GetVersionManifest(version string) (SingleVersionManifest, error) {
 		version = manifestJson.Latest.Snapshot
 	}
 
-	for _, ver := range versions {
+	for i := range versions {
+		ver := versions[i]
 		if ver.Id == version {
 			foundVersion = &ver
 			break
@@ -92,6 +94,9 @@ func GetVersionManifest(version string) (SingleVersionManifest, error) {
 
 	// Download and parse version manifest
 	body, err = downloadJson(foundVersion.Url)
+	if err != nil {
+		return SingleVersionManifest{}, err
+	}
 
 	var versionManifest SingleVersionManifest
 	err = json.Unmarshal(body, &versionManifest)
