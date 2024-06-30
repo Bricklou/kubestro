@@ -11,17 +11,17 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: manager-minecraftbackup-viewer-role
 rules:
-- apiGroups:
-  - manager.bricklou.ovh
-  resources:
-  - minecraftbackups
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - manager.bricklou.ovh
-  resources:
-  - minecraftbackups/status
-  verbs:
-  - get
+  - apiGroups:
+      - manager.bricklou.ovh
+    resources:
+      - minecraftbackups
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - manager.bricklou.ovh
+    resources:
+      - minecraftbackups/status
+    verbs:
+      - get

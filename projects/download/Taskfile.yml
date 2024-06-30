@@ -11,9 +11,7 @@ tasks:
 
   install:
     desc: "Install dependencies"
-    cmds:
-      - go mod download
-      - go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+    cmd: go mod download
 
   lint:
     desc: "Run linter"

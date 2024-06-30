@@ -1,0 +1,20 @@
+#!/usr/bin/env sh
+. "$(dirname "$0")/_/husky.sh"
+
+# format the code
+echo "Linting projects files..."
+pnpm exec lint-staged
+
+# format projects files
+echo "Linting projects files for [webui]..."
+pnpm exec lint-staged --cwd ./projects/webui
+
+echo "Linting projects files for [api]..."
+pnpm exec lint-staged --cwd ./projects/api --config ./projects/.lintstagedrc.go.json
+
+echo "Linting projects files for [operator]..."
+pnpm exec lint-staged --cwd ./projects/operator --config ./projects/.lintstagedrc.go.json
+
+echo "Linting projects files for [download]..."
+pnpm exec lint-staged --cwd ./projects/download --config ./projects/.lintstagedrc.go.json
+

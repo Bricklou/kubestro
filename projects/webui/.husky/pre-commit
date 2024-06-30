@@ -1,5 +1,0 @@
-#!/usr/bin/env sh
-
-cd projects/webui
-pnpm exec lint-staged
-#pnpm test

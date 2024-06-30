@@ -2,10 +2,11 @@ package paper
 
 import (
 	"fmt"
-	"github.com/pkg/errors"
 	"io"
-	"k8s.io/apimachinery/pkg/util/json"
 	"net/http"
+
+	"github.com/pkg/errors"
+	"k8s.io/apimachinery/pkg/util/json"
 )
 
 type VersionResponse struct {

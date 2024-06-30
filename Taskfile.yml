@@ -12,3 +12,35 @@ includes:
   ui:
     taskfile: ./projects/webui/Taskfile.yml
     dir: ./projects/webui
+
+  download:
+    taskfile: ./projects/download/Taskfile.yml
+    dir: ./projects/download/
+
+tasks:
+  install:
+    desc: "Install git hooks and dependencies"
+    cmds:
+      - task: init-gitflow
+      - task: deps
+
+  deps:
+    desc: "Install project dependencies"
+    cmds:
+      - go install golang.org/x/tools/cmd/goimports@latest
+      - go install github.com/air-verse/air@latest
+      - go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+      - task: api:install
+      - task: ui:install
+      - task: download:install
+
+  init-gitflow:
+    desc: "Initialize git flow configuration"
+    cmds:
+      - git flow init -d
+        # override stuff
+      - git config gitflow.prefix.versiontag "v"
+      - git config gitflow.prefix.feature ""
+      - git config gitflow.branch.master main
+      - git config gitflow.branch.develop develop
+      - git config gitflow.prefix.versiontag v

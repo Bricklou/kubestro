@@ -1,0 +1,52 @@
+name: Golang linter
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+  checks: write
+
+jobs:
+  golang:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        project: [api, download, operator]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.22
+
+      - name: golangci-lint "${{ matrix.project }}"
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.59
+          working-directory: projects/${{ matrix.project }}
+
+      - name: Run staticcheck
+        uses: dominikh/staticcheck-action@v1
+        with:
+          version: "2023.1.7"
+          working-directory: projects/${{ matrix.project }}
+
+      - name: Check Go code formatting
+        uses: Jerome1337/gofmt-action@v1.0.5
+        with:
+          gofmt-flags: "-l -d"
+          gofmt-path: "projects/${{ matrix.project }}"

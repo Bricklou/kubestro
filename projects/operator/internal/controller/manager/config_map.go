@@ -2,11 +2,12 @@ package manager
 
 import (
 	"context"
+	"strconv"
+	"strings"
+
 	"github.com/bricklou/kubestro/internal/propertiesfile"
 	"gopkg.in/yaml.v2"
 	"k8s.io/apimachinery/pkg/util/json"
-	"strconv"
-	"strings"
 
 	minecraftserverv1 "github.com/bricklou/kubestro/api/manager/v1"
 	"github.com/pkg/errors"
@@ -21,6 +22,11 @@ import (
 func ConfigMapNameForServer(server *minecraftserverv1.MinecraftServer) string {
 	return server.Name
 }
+
+const (
+	True  = "true"
+	False = "false"
+)
 
 func ConfigMap(ctx context.Context, k8s client.Client, server *minecraftserverv1.MinecraftServer) (bool, error) {
 	logger := log.FromContext(ctx)
@@ -66,7 +72,7 @@ func configMapData(server minecraftserverv1.MinecraftServer) (map[string]string,
 	config := make(map[string]string)
 
 	props := make(map[string]string)
-	props["enable-rcon"] = "true"
+	props["enable-rcon"] = True
 	// TODO Use a real password
 	props["rcon.password"] = "password"
 	if server.Spec.MOTD != "" {
@@ -82,8 +88,8 @@ func configMapData(server minecraftserverv1.MinecraftServer) (map[string]string,
 		props["max-players"] = strconv.Itoa(server.Spec.MaxPlayers)
 	}
 	if server.Spec.AccessMode == minecraftserverv1.AccessModeAllowListOnly {
-		props["enforce-whitelist"] = "true"
-		props["white-list"] = "true"
+		props["enforce-whitelist"] = True
+		props["white-list"] = True
 	}
 	if server.Spec.World != nil && server.Spec.World.Seed != "" {
 		props["level-seed"] = server.Spec.World.Seed

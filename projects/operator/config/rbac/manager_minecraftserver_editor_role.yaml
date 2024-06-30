@@ -11,21 +11,21 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: manager-minecraftserver-editor-role
 rules:
-- apiGroups:
-  - manager.bricklou.ovh
-  resources:
-  - minecraftservers
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - manager.bricklou.ovh
-  resources:
-  - minecraftservers/status
-  verbs:
-  - get
+  - apiGroups:
+      - manager.bricklou.ovh
+    resources:
+      - minecraftservers
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - manager.bricklou.ovh
+    resources:
+      - minecraftservers/status
+    verbs:
+      - get

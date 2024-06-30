@@ -3,6 +3,9 @@ package manager
 import (
 	"context"
 	"fmt"
+	"path/filepath"
+	"strings"
+
 	minecraftserverv1 "github.com/bricklou/kubestro/api/manager/v1"
 	"github.com/bricklou/kubestro/internal/vanillatweaks"
 	appsv1 "k8s.io/api/apps/v1"
@@ -10,9 +13,7 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	"k8s.io/utils/pointer"
-	"path/filepath"
-	"strings"
+	"k8s.io/utils/ptr"
 )
 
 const minecraftJarVolumeName = "minecraft-jar"
@@ -21,12 +22,12 @@ const dataPacksMountName = "data-packs"
 
 func securityContext() *corev1.SecurityContext {
 	return &corev1.SecurityContext{
-		Privileged:               pointer.Bool(false),
-		RunAsUser:                pointer.Int64(1000),
-		RunAsGroup:               pointer.Int64(1000),
-		RunAsNonRoot:             pointer.Bool(true),
-		ReadOnlyRootFilesystem:   pointer.Bool(true),
-		AllowPrivilegeEscalation: pointer.Bool(false),
+		Privileged:               ptr.To(false),
+		RunAsUser:                ptr.To(int64(1000)),
+		RunAsGroup:               ptr.To(int64(1000)),
+		RunAsNonRoot:             ptr.To(true),
+		ReadOnlyRootFilesystem:   ptr.To(true),
+		AllowPrivilegeEscalation: ptr.To(false),
 	}
 }
 

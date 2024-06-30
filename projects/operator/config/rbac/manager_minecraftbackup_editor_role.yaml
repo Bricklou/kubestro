@@ -11,21 +11,21 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: manager-minecraftbackup-editor-role
 rules:
-- apiGroups:
-  - manager.bricklou.ovh
-  resources:
-  - minecraftbackups
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - manager.bricklou.ovh
-  resources:
-  - minecraftbackups/status
-  verbs:
-  - get
+  - apiGroups:
+      - manager.bricklou.ovh
+    resources:
+      - minecraftbackups
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - manager.bricklou.ovh
+    resources:
+      - minecraftbackups/status
+    verbs:
+      - get
