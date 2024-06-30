@@ -9,6 +9,7 @@
     "lint:js": "eslint . --report-unused-disable-directives --max-warnings 0",
     "lint:css": "stylelint '**/*.css'",
     "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "lint": "pnpm run --stream --parallel  '/^lint:.*/'",
     "preview": "vite preview",
     "test": "vitest",
