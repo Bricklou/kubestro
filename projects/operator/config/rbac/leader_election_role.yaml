@@ -12,7 +12,7 @@ metadata:
   name: leader-election-role
 rules:
   - apiGroups:
-      - ''
+      - ""
     resources:
       - configmaps
     verbs:
@@ -36,7 +36,7 @@ rules:
       - patch
       - delete
   - apiGroups:
-      - ''
+      - ""
     resources:
       - events
     verbs:

@@ -40,17 +40,20 @@ spec:
               description: MinecraftServerSpec defines the desired state of MinecraftServer
               properties:
                 accessMode:
-                  description: The access mode determine if the whitelist is enabled
+                  description:
+                    The access mode determine if the whitelist is enabled
                     or not
                   enum:
                     - Public
                     - AllowListOnly
                   type: string
                 allowList:
-                  description: List of players allowed to connect when AccessMode is
+                  description:
+                    List of players allowed to connect when AccessMode is
                     true
                   items:
-                    description: Player is a Minecraft player defined by a username
+                    description:
+                      Player is a Minecraft player defined by a username
                       or a UUID
                     properties:
                       name:
@@ -60,7 +63,8 @@ spec:
                     type: object
                   type: array
                 eula:
-                  description: The EULA need to be accepted to allow the Minecraft server
+                  description:
+                    The EULA need to be accepted to allow the Minecraft server
                     to boot.
                   enum:
                     - Accepted
@@ -80,11 +84,13 @@ spec:
                   type: integer
                 minecraftVersion:
                   default: latest
-                  description: The minecraft version that the server will run with.
+                  description:
+                    The minecraft version that the server will run with.
                     By default, the value will be "latest".
                   type: string
                 monitoring:
-                  description: If specified, the server will be configured to be monitored
+                  description:
+                    If specified, the server will be configured to be monitored
                     by Prometheus
                   properties:
                     type:
@@ -101,7 +107,8 @@ spec:
                 opsList:
                   description: List of players with OP permissions
                   items:
-                    description: Player is a Minecraft player defined by a username
+                    description:
+                      Player is a Minecraft player defined by a username
                       or a UUID
                     properties:
                       name:
@@ -114,7 +121,8 @@ spec:
                   description: Service type used to expose the minecraft server
                   properties:
                     minecraftNodePort:
-                      description: Port to bind Minecraft to if using a NodePort or
+                      description:
+                        Port to bind Minecraft to if using a NodePort or
                         LoadBalancer service
                       format: int32
                       type: integer
@@ -153,11 +161,13 @@ spec:
                   type: object
                 viewDistance:
                   default: 10
-                  description: Number of chunks a player will be able to load at the
+                  description:
+                    Number of chunks a player will be able to load at the
                     same time
                   type: integer
                 world:
-                  description: Worlds configuration, this will allow to specify custom
+                  description:
+                    Worlds configuration, this will allow to specify custom
                     volumes or particular seed
                   properties:
                     nether:
