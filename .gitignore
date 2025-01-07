@@ -1,0 +1,15 @@
+# editor and IDE paraphernalia
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# tools dependencies
+.task
+node_modules/
+target/
+.direnv
+
+# sensitive or high-risk files
+.env

@@ -1,0 +1,7 @@
+overrides:
+  - files: "(CHANGELOG|README).md"
+    options:
+      proseWrap: always
+
+plugins:
+  - prettier-plugin-toml
