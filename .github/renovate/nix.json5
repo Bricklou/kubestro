@@ -1,0 +1,9 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  nix: {
+    enabled: true,
+    fileMatch: ["(^|/)default.nix$"],
+    commitMessageTopic: "feat(nixpkgs): ",
+    commitMessageExtra: "to {{newValue}}",
+  },
+}

@@ -1,0 +1,23 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: [
+    "config:recommended",
+    "docker:enableMajor",
+    "replacements:k8s-registry-move",
+    ":dependencyDashboard",
+    ":automergePatch",
+    ":semanticCommits",
+    ":timezone(Europe/Paris)",
+
+    "github>Bricklou/kubestro//.github/renovate/grouping.json5",
+    "github>Bricklou/kubestro//.github/renovate/labels.json5",
+    "github>Bricklou/kubestro//.github/renovate/nix.json5",
+    "github>Bricklou/kubestro//.github/renovate/semanticCommits.json5",
+  ],
+  dependencyDashboardTitle: "Dependency Dashboard 🤖",
+  suppressNotifications: ["prEditedNotification", "prIgnoreNotification"],
+  rebaseWhen: "conflicted",
+  schedule: ["after 6am on monday"],
+  labels: ["dependencies"],
+  assignees: ["Bricklou"],
+}
