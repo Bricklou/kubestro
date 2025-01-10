@@ -1,0 +1,54 @@
+@startuml
+title Use Cases
+
+left to right direction
+
+actor User as u
+actor Admin as a
+a --|> u
+
+package "App" {
+    package "Auth" {
+        usecase "Login to the app" as c_u1
+        u --> c_u1
+    }
+
+    package "Admin" {
+        ' Users
+        usecase "Manage users" as c_u6
+        a -> c_u6
+        usecase "List users" as c_u7
+        usecase "Create users" as c_u8
+        usecase "Delete users" as c_u9
+        c_u6 --|> c_u7
+        c_u6 --|> c_u8
+        c_u6 --|> c_u9
+
+    }
+    
+    package "Gateway" {
+        ' Servers
+        usecase "Manage servers" as c_u3
+        a -> c_u3
+        usecase "List servers" as c_u2
+        u -> c_u2
+        c_u3 --|> c_u2
+        usecase "Create servers" as c_u4
+        c_u3 --|> c_u4
+        usecase "Delete servers" as c_u5
+        c_u3 --|> c_u5
+        usecase "Edit servers" as c_u13
+        c_u3 --|> c_u13
+
+        ' Gateways
+        usecase "Manage gateways" as c_u10
+        a -> c_u10
+        usecase "Configure gateway" as c_u11
+        c_u10 --|> c_u11
+        usecase "List gateways" as c_u12
+        c_u10 --|> c_u12
+
+    }
+}
+
+@enduml

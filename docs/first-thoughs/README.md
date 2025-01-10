@@ -35,17 +35,33 @@ From the explaination above, this should give something like this:
 ```mermaid
 architecture-beta
   group core(cloud)[Core]
+  group frontend(cloud)[Frontend]
+  group gateways(cloud)[Game Server Gateways]
 
-  service frontend(internet)[Frontend]
-  service core(server)[Core]
-  service database(database)[Database]
-  service gateway1(server)[Game Server Gateway 1]
-  service gateway2(server)[Game Server Gateway 2]
+  service frontend_app(internet)[Frontend] in frontend
+  service core_api(server)[Core] in core
+  service database(database)[Database] in core
+  service gateway1(server)[Game Server Gateway 1] in gateways
+  service gateway2(server)[Game Server Gateway 2] in gateways
+  service gateway3(server)[Game Server Gateway 2] in gateways
 
-  frontend -- core
-  core -- database
-  core -- gateway1
-  core -- gateway2
+  junction gateways_junc in gateways
+
+  frontend_app:R --> L:core_api
+  core_api:B --> T:database
+  core_api:R -- L:gateways_junc
+  gateways_junc:T --> B:gateway1
+  gateways_junc:R --> L:gateway2
+  gateways_junc:B --> T:gateway3
+
+  service games_server_1(server)[Game server 1] in gateways
+  gateway1:R --> L:games_server_1
+
+  service games_server_2(server)[Game server 1] in gateways
+  gateway2:R --> L:games_server_2
+
+  service games_server_3(server)[Game server 1] in gateways
+  gateway3:R --> L:games_server_3
 ```
 
 ## How game servers will deployed?
@@ -66,4 +82,3 @@ servers like managings backups, worlds, mods, etc.
 Like explained in the previous section, the project will be extensible by
 creating new gateways interacting with Kubernetes. Each gateway will be
 responsible for managing a specific game server.
-
