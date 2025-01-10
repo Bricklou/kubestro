@@ -18,9 +18,8 @@ cluster to deploy any kind of Minecraft servers.
 
 ### How does it work?
 
-:::info
-This project is still in development and is not yet usable.
-:::
+> [!WARNING]
+> This project is still in development and is not yet usable.
 
 *TODO*
 
