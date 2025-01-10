@@ -64,7 +64,7 @@ architecture-beta
   gateway3:R --> L:games_server_3
 ```
 
-## How game servers will deployed?
+## How game servers will be deployed?
 
 To deploy game servers, gateways take take advantage of Kubernetes custom
 resources. This are, in fact, kubernetes operators that will extends the
@@ -76,6 +76,25 @@ Minecraft gateway. This gateway will be responsible for creating the game
 server, managing it and also providing the frontend files to extend the
 interface. This also include all the possible logic and actions related to a
 servers like managings backups, worlds, mods, etc.
+
+## How gateways will be deployed?
+
+To deplay gateways, i was thinking about 3 ways:
+
+1. Deploying them using custom resources to declare them. Which means it would
+   be possible to deploy a gateway by both creating a custom resource or from
+   the frontend.
+2. Deploying them as a sidecar container to the core. So they would be embeded
+   aside the core inside the Helm chart.
+3. Deploying them completely separated from the core. So, they would require
+   their own Helm chart.
+
+For now, I am considering the first option. But a study should be done to ensure
+this is the best way to go.
+
+Another possibility is that the core support custom resources, and the user can
+either deploy the gateway CR from the UI, deploy it manually, or deploy it
+through a Helm chart.
 
 ## How would the project be extensible?
 
