@@ -1,0 +1,77 @@
+---
+name: Rust fmt
+
+on:
+  push:
+    branches:
+      - "*"
+    paths:
+      - "projects/**/src/**/*.rs"
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches:
+      - main
+      - develop
+    paths:
+      - "projects/**/src/**/*.rs"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+  checks: write
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: 0
+
+jobs:
+  rustfmt:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        project: [services/kubestro-core/backend]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: rustfmt,cargo
+          cache: true
+          cache-workspaces: |-
+            ./projects/${{ matrix.project }}
+
+      - name: Check formatting
+        uses: actions-rust-lang/rustfmt@v1
+        with:
+          manifest-path: projects/${{ matrix.project }}/Cargo.toml
+
+  clippy:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        project: [services/kubestro-core/backend]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: clippy,cargo
+          cache: true
+          cache-workspaces: |-
+            ./projects/${{ matrix.project }}
+
+      - uses: clechasseur/rs-clippy-check@v3
+        with:
+          args: --all-features
+          toolchain: stable
+          working-directory: projects/${{ matrix.project }}

@@ -1,0 +1,32 @@
+---
+version: 3
+
+tasks:
+  default:
+    silent: true
+    cmd: go-task -l
+
+  dev:
+    desc: "Start development server"
+    cmd: pnpm run dev
+
+  install:
+    desc: Install dependencies
+    cmd: pnpm i
+
+  lint:
+    desc: Lint the project
+    cmd: pnpm run lint
+
+  build:
+    desc: Build the project
+    cmds:
+      - pnpm build
+    sources:
+      - src/**/*.{ts,css,tsx}
+    generates:
+      - dist
+
+  format:
+    desc: Format files
+    cmd: pnpm run format

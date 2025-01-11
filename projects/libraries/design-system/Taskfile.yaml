@@ -1,10 +1,6 @@
 ---
 version: 3
 
-includes:
-  core: ./projects/services/kubestro-core/Taskfile.yaml
-  design-system: ./projects/libraries/design-system/Taskfile.yaml
-
 tasks:
   default:
     silent: true
@@ -13,7 +9,16 @@ tasks:
   install:
     desc: Install dependencies
     cmds:
-      - ppnm i
+      - pnpm i
+
+  dev:
+    desc: "Start development server"
+    cmd: pnpm run dev
+
+  build:
+    desc: Build the project
+    cmds:
+      - pnpm build
 
   format:
     desc: Format files
