@@ -24,22 +24,25 @@
   };
 
   # Development shell
-  outputs = {
-    self,
-    nixpkgs,
-    flake-utils,
-    pre-commit-hooks,
-    rust-overlay,
-  }:
-    flake-utils.lib.eachDefaultSystem (system: let
-      overlays = [(import rust-overlay)];
+  outputs =
+    { self
+    , nixpkgs
+    , flake-utils
+    , pre-commit-hooks
+    , rust-overlay
+    ,
+    }:
+    flake-utils.lib.eachDefaultSystem (system:
+    let
+      overlays = [ (import rust-overlay) ];
       pkgs = import nixpkgs {
         inherit system overlays;
       };
-    in {
+    in
+    {
       checks = {
-        pre-commit-hooks = pre-commit-hooks.lib.${system}.run {
-          src = ".";
+        pre-commit-check = pre-commit-hooks.lib.${system}.run {
+          src = "./.";
           hooks = {
             # Source code spell checker
             typos = {
@@ -68,7 +71,7 @@
               };
               settings = {
                 allFeatures = true;
-                allTargets = true;
+                extraArgs = "--all-targets";
               };
             };
 
@@ -87,51 +90,53 @@
               enable = true;
               description = "Format backend code";
               entry = "cargo fmt -- --config-path=./configs/rustfmt.toml";
-              files = "projects/[^\/]+/backend/src/**/*.rs";
+              files = "projects/[^/]+/backend/src/.+\.rs";
             };
             format-frontend = {
               enable = true;
               description = "Format frontend code";
               entry = "prettier --write --config .prettierrc.yaml";
-              files = "projects/[^\/]+/frontend/src/**/*.{ts,tsx,css}";
+              files = "projects/[^/]+/frontend/src/.+\.(ts|tsx|css)";
             };
             format-other = {
               enable = true;
               description = "Format other files";
               entry = "prettier --write --config .prettierrc.yaml";
-              files = "**/*.{md,yaml,yml,json}";
+              files = ".*\.(md|ya?ml|json)";
             };
           };
         };
       };
 
       devShells.default = pkgs.mkShell {
-        buildInputs = with pkgs; [
-          # fix https://discourse.nixos.org/t/non-interactive-bash-errors-from-flake-nix-mkshell/33310
-          bashInteractive
-          # fix `cc` replaced by clang, which causes nvim-treesitter compilation error
-          gcc
+        buildInputs = with pkgs;
+          [
+            # fix https://discourse.nixos.org/t/non-interactive-bash-errors-from-flake-nix-mkshell/33310
+            bashInteractive
+            # fix `cc` replaced by clang, which causes nvim-treesitter compilation error
+            gcc
 
-          # task runner
-          go-task
+            # task runner
+            go-task
 
-          # spell checker
-          typos
+            # spell checker
+            typos
 
-          # nodejs deps
-          nodejs_22
-          pnpm
+            # nodejs deps
+            nodejs_22
+            pnpm
 
-          # rust
-          rustfmt
-          rust-bin.stable.latest.default
-          cargo-workspaces
-          cargo-watch
-        ];
+            # rust
+            rustfmt
+            rust-bin.stable.latest.default
+            cargo-workspaces
+            cargo-watch
+          ]
+          ++ self.checks.${system}.pre-commit-check.enabledPackages;
 
         shellHook = ''
+          ${self.checks.${system}.pre-commit-check.shellHook}
           export PATH="$(${pkgs.pnpm}/bin/pnpm bin):$PATH"
-          echo $PATH
 
           # Install Dependencies
           go-task install
