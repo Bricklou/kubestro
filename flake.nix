@@ -58,6 +58,49 @@
                 configPath = ".prettierrc.yaml"; # relative to the flake root
               };
             };
+
+            # Rust code formatter
+            clippy = {
+              enable = true;
+              packageOverrides = {
+                cargo = pkgs.cargo;
+                clippy = pkgs.clippy;
+              };
+              settings = {
+                allFeatures = true;
+                allTargets = true;
+              };
+            };
+
+            # Ensure no one commits to the main branch
+            no-commit-to-branch.enable = true;
+
+            # Nix code formatter
+            nixpkgs-fmt.enable = true;
+
+            # ========================
+            # Custom hooks
+            # ========================
+
+            # Format backend code
+            format-backend = {
+              enable = true;
+              description = "Format backend code";
+              entry = "cargo fmt -- --config-path=./configs/rustfmt.toml";
+              files = "projects/[^\/]+/backend/src/**/*.rs";
+            };
+            format-frontend = {
+              enable = true;
+              description = "Format frontend code";
+              entry = "prettier --write --config .prettierrc.yaml";
+              files = "projects/[^\/]+/frontend/src/**/*.{ts,tsx,css}";
+            };
+            format-other = {
+              enable = true;
+              description = "Format other files";
+              entry = "prettier --write --config .prettierrc.yaml";
+              files = "**/*.{md,yaml,yml,json}";
+            };
           };
         };
       };
@@ -87,7 +130,8 @@
         ];
 
         shellHook = ''
-          export PATH=$PATH:$(pnpm bin)
+          export PATH="$(${pkgs.pnpm}/bin/pnpm bin):$PATH"
+          echo $PATH
 
           # Install Dependencies
           go-task install

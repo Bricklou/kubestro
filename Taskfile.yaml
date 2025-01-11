@@ -13,9 +13,9 @@ tasks:
   install:
     desc: Install dependencies
     cmds:
-      - ppnm i
+      - pnpm i
 
   format:
     desc: Format files
     cmds:
-      - prettier --write .
+      - prettier --write . --config .prettierrc.yaml
