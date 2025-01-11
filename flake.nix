@@ -82,6 +82,7 @@
           # rust
           rustfmt
           rust-bin.stable.latest.default
+          cargo-workspaces
         ];
 
         shellHook = ''
