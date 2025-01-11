@@ -10,11 +10,13 @@ on:
     branches:
       - main
       - develop
+    paths:
+      - "projects/**/src/**/*.{tsx,ts,css}"
   push:
     branches:
-      - main
-      - develop
-
+      - "*"
+    paths:
+      - "projects/**/src/**/*.{tsx,ts,css}"
   workflow_dispatch:
 
 permissions:
@@ -28,14 +30,18 @@ jobs:
 
     strategy:
       matrix:
-        working-directory: [projects/services/kubestro-core/frontend, projects/libraries/desgin-system]
+        working-directory:
+          [
+            projects/services/kubestro-core/frontend,
+            projects/libraries/desgin-system,
+          ]
 
     env:
       working-directory: ${{ matrix.working-directory }}
     defaults:
       run:
         working-directory: ${{ env.working-directory }}
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
