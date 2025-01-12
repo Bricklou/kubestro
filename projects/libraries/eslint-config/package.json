@@ -20,5 +20,8 @@
     "eslint-plugin-react-hooks": "catalog:",
     "globals": "catalog:",
     "typescript-eslint": "catalog:"
+  },
+  "dependencies": {
+    "eslint-plugin-tailwindcss": "catalog:"
   }
 }

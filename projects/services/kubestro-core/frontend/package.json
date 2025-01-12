@@ -10,7 +10,7 @@
     "format": "prettier --write . --config ../../../../.prettierrc.yaml",
     "format:check": "prettier --check . --config ../../../../.prettierrc.yaml",
     "lint:js": "eslint --flag unstable_config_lookup_from_file .",
-    "lint:css": "stylelint 'src/**/*.css'"
+    "lint:css": "stylelint 'app/**/*.css'"
   },
   "dependencies": {
     "@react-router/node": "catalog:",

@@ -1,2 +1,20 @@
 /** @type {import('stylelint').Config} */
-export default { extends: ['stylelint-config-standard', 'stylelint-config-tailwindcss'] }
+export default {
+  extends: ['stylelint-config-standard'],
+  rules: {
+    'at-rule-no-unknown': [
+      true,
+      {
+        ignoreAtRules: [
+          'tailwind',
+          'apply',
+          'variants',
+          'responsive',
+          'screen',
+        ],
+      },
+    ],
+    'declaration-block-trailing-semicolon': null,
+    'no-descending-specificity': null,
+  },
+}

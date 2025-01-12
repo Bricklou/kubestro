@@ -51,6 +51,9 @@ catalogs:
     eslint-plugin-react-hooks:
       specifier: ^5.1.0
       version: 5.1.0
+    eslint-plugin-tailwindcss:
+      specifier: ^3.17.5
+      version: 3.17.5
     globals:
       specifier: ^15.14.0
       version: 15.14.0
@@ -81,9 +84,6 @@ catalogs:
     stylelint-config-standard:
       specifier: ^37.0.0
       version: 37.0.0
-    stylelint-config-tailwindcss:
-      specifier: ^0.0.7
-      version: 0.0.7
     tailwindcss:
       specifier: ^3.4.16
       version: 3.4.17
@@ -152,9 +152,6 @@ importers:
       stylelint-config-standard:
         specifier: "catalog:"
         version: 37.0.0(stylelint@16.13.0(typescript@5.6.3))
-      stylelint-config-tailwindcss:
-        specifier: "catalog:"
-        version: 0.0.7(stylelint@16.13.0(typescript@5.6.3))(tailwindcss@3.4.17)
       typescript:
         specifier: "catalog:"
         version: 5.6.3
@@ -163,6 +160,10 @@ importers:
         version: 6.0.7(@types/node@20.17.12)(jiti@1.21.7)(yaml@2.7.0)
 
   projects/libraries/eslint-config:
+    dependencies:
+      eslint-plugin-tailwindcss:
+        specifier: "catalog:"
+        version: 3.17.5(tailwindcss@3.4.17)
     devDependencies:
       "@eslint/js":
         specifier: "catalog:"
@@ -2249,6 +2250,15 @@ packages:
     engines: { node: ">=4" }
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9.7
+
+  eslint-plugin-tailwindcss@3.17.5:
+    resolution:
+      {
+        integrity: sha512-8Mi7p7dm+mO1dHgRHHFdPu4RDTBk69Cn4P0B40vRQR+MrguUpwmKwhZy1kqYe3Km8/4nb+cyrCF+5SodOEmaow==,
+      }
+    engines: { node: ">=18.12.0" }
+    peerDependencies:
+      tailwindcss: ^3.4.0
 
   eslint-scope@8.2.0:
     resolution:
@@ -4368,15 +4378,6 @@ packages:
     peerDependencies:
       stylelint: ^16.13.0
 
-  stylelint-config-tailwindcss@0.0.7:
-    resolution:
-      {
-        integrity: sha512-n2dCWH+0ppr0/by4EYCLWW7g5LU+l4UzUIsYS7xbVHqvm9UWa7UhltNdNiz5NmLF/FmbJR4Yd/v9DuUGvLw1Tg==,
-      }
-    peerDependencies:
-      stylelint: ">=13.13.1"
-      tailwindcss: ">=2.2.16"
-
   stylelint@16.13.0:
     resolution:
       {
@@ -6174,6 +6175,12 @@ snapshots:
       string.prototype.matchall: 4.0.12
       string.prototype.repeat: 1.0.0
 
+  eslint-plugin-tailwindcss@3.17.5(tailwindcss@3.4.17):
+    dependencies:
+      fast-glob: 3.3.3
+      postcss: 8.4.49
+      tailwindcss: 3.4.17
+
   eslint-scope@8.2.0:
     dependencies:
       esrecurse: 4.3.0
@@ -7461,11 +7468,6 @@ snapshots:
     dependencies:
       stylelint: 16.13.0(typescript@5.6.3)
       stylelint-config-recommended: 15.0.0(stylelint@16.13.0(typescript@5.6.3))
-
-  stylelint-config-tailwindcss@0.0.7(stylelint@16.13.0(typescript@5.6.3))(tailwindcss@3.4.17):
-    dependencies:
-      stylelint: 16.13.0(typescript@5.6.3)
-      tailwindcss: 3.4.17
 
   stylelint@16.13.0(typescript@5.6.3):
     dependencies:

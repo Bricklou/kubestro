@@ -5,6 +5,7 @@ import pluginReact from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 import stylistic from '@stylistic/eslint-plugin'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
+import tailwindcss from 'eslint-plugin-tailwindcss'
 
 /**
  * Configures ESLint to use an opinionated config tailored for
@@ -34,21 +35,28 @@ export function configApp(rootDir, ...configBlockToMerge) {
     { ignores: ['dist'] },
     // Ignore unwanted files
     { ignores: ['**/node_modules/**', '**/eslint.config.mjs', '**/stylelint.config.mjs'] },
+    { files: ['**/*.{ts,jsx,tsx,mjs}'] },
 
-    // Typescript & React config
+    pluginJs.configs.recommended,
+    tseslint.configs.strictTypeChecked,
+    pluginReact.configs.flat.recommended,
+    pluginReact.configs.flat['jsx-runtime'],
+    jsxA11y.flatConfigs.recommended,
+    stylistic.configs.customize({
+      jsx: true,
+      flat: true,
+    }),
+    ...tailwindcss.configs['flat/recommended'],
+
     {
-      extends: [
-        pluginJs.configs.recommended,
-        tseslint.configs.strictTypeChecked,
-        pluginReact.configs.flat.recommended,
-        pluginReact.configs.flat['jsx-runtime'],
-        jsxA11y.flatConfigs.recommended,
-        stylistic.configs.customize({
-          jsx: true,
-          flat: true,
-        }),
-      ],
-      files: ['**/*.{ts,jsx,tsx,mjs}'],
+      plugins: {
+        'eslint': pluginJs,
+        'react': pluginReact,
+        'react-hooks': reactHooks,
+      },
+    },
+
+    {
       languageOptions: {
         parserOptions: {
           ecmaVersion: 'latest',
@@ -63,14 +71,13 @@ export function configApp(rootDir, ...configBlockToMerge) {
           ...globals.es2024,
         },
       },
-      plugins: {
-        'eslint': pluginJs,
-        'react': pluginReact,
-        'react-hooks': reactHooks,
-      },
+    },
+    {
       rules: {
         ...reactHooks.configs.recommended.rules,
       },
+    },
+    {
       settings: {
         react: {
           version: 'detect',

@@ -24,7 +24,6 @@
     "eslint-config-kubestro": "workspace:../eslint-config/",
     "stylelint": "catalog:",
     "stylelint-config-standard": "catalog:",
-    "stylelint-config-tailwindcss": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:"
   }
