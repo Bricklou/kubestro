@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "format": "prettier --write . --config ../../../../.prettierrc.yaml",
+    "format:check": "prettier --check . --config ../../../../.prettierrc.yaml",
     "lint:js": "eslint .",
     "lint:css": "stylelint 'src/**/*.css'",
     "preview": "vite preview"

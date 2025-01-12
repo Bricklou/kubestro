@@ -12,11 +12,15 @@ on:
       - develop
     paths:
       - "projects/**/src/**/*.{tsx,ts,css}"
+      - "**/eslint.config.mjs"
+      - "**/stylelint.config.mjs"
   push:
     branches:
       - "*"
     paths:
       - "projects/**/src/**/*.{tsx,ts,css}"
+      - "**/eslint.config.mjs"
+      - "**/stylelint.config.mjs"
   workflow_dispatch:
 
 permissions:
@@ -59,12 +63,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # TODO: Uncomment the following lines when ESLint and Stylelint are configured
-      # - name: Run ESLint
-      #   run: pnpm run lint:js
-      #
-      # - name: Run Stylelint
-      #   run: pnpm run lint:css
+      - name: Run ESLint
+        run: pnpm run lint:js
+
+      - name: Run Stylelint
+        run: pnpm run lint:css
 
       - name: Run format check
         run: pnpm run format:check
