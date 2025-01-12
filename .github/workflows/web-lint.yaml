@@ -37,7 +37,7 @@ jobs:
         working-directory:
           [
             projects/services/kubestro-core/frontend,
-            projects/libraries/desgin-system,
+            projects/libraries/design-system,
           ]
 
     env:
