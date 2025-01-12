@@ -7,8 +7,6 @@
     "dev": "react-router dev",
     "start": "cross-env NODE_ENV=production react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc",
-    "format": "prettier --write . --config ../../../../.prettierrc.yaml",
-    "format:check": "prettier --check . --config ../../../../.prettierrc.yaml",
     "lint:js": "eslint --flag unstable_config_lookup_from_file .",
     "lint:css": "stylelint 'app/**/*.css'"
   },

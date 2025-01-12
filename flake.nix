@@ -99,7 +99,7 @@
             lint-css = {
               enable = true;
               description = "Format and lint css code";
-              entry = "stylelint --fix";
+              entry = "stylelint --fix --config ./configs/stylelint-config.mjs";
               files = ".+\.css";
             };
           };

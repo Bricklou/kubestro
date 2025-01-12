@@ -26,7 +26,3 @@ tasks:
       - src/**/*.{ts,css,tsx}
     generates:
       - dist
-
-  format:
-    desc: Format files
-    cmd: pnpm run format

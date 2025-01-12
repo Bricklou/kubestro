@@ -19,8 +19,3 @@ tasks:
     desc: Build the project
     cmds:
       - pnpm build
-
-  format:
-    desc: Format files
-    cmds:
-      - prettier --write .

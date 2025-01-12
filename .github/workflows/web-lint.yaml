@@ -29,7 +29,7 @@ permissions:
   checks: write
 
 jobs:
-  web:
+  web-lint:
     runs-on: ubuntu-latest
 
     strategy:
@@ -70,6 +70,3 @@ jobs:
 
       - name: Run Stylelint
         run: pnpm run lint:css
-
-      - name: Run format check
-        run: pnpm run format:check

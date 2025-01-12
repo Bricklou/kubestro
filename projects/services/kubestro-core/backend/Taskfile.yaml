@@ -25,5 +25,4 @@ tasks:
   format:
     desc: Format files
     cmds:
-      - prettier --write . --config ../../../../.prettierrc.yaml
       - cargo fmt -- --config-path ../../../../configs/rustfmt.toml

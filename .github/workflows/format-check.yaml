@@ -1,5 +1,5 @@
 ---
-name: Other Linter
+name: Format check
 
 on:
   pull_request:
