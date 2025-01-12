@@ -57,6 +57,7 @@
                 write = true;
                 configPath = ".prettierrc.yaml"; # relative to the flake root
               };
+              files = ".+\.(md|ya?ml|json|css)";
             };
 
             # Rust code formatter
@@ -87,25 +88,19 @@
               enable = true;
               description = "Format backend code";
               entry = "cargo fmt -- --config-path=./configs/rustfmt.toml";
-              files = "projects/[^/]+/backend/src/.+\.rs";
+              files = "projects/[^/]+/backend/.+\.rs";
             };
             format-javascript = {
               enable = true;
-              description = "Format frontend code";
+              description = "Format and lint frontend code";
               entry = "eslint --flag unstable_config_lookup_from_file";
               files = ".+\.(m?jsx?|tsx?)";
             };
-            format-css = {
+            lint-css = {
               enable = true;
-              description = "Format css code";
+              description = "Format and lint css code";
               entry = "stylelint --fix";
               files = ".+\.css";
-            };
-            format-other = {
-              enable = true;
-              description = "Format other files";
-              entry = "prettier --write --config .prettierrc.yaml";
-              files = ".*\.(md|ya?ml|json)";
             };
           };
         };
