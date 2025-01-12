@@ -1,0 +1,19 @@
+{
+  "name": "eslint-config-kubestro",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "description": "",
+  "scripts": {},
+  "keywords": [],
+  "author": "Louis Bailleau <louis13.bailleau@gmail.com>",
+  "license": "MIT",
+  "peerDependencies": {
+    "eslint": "^9.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.18.0",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "globals": "catalog:"
+  }
+}

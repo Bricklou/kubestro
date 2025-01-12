@@ -24,22 +24,19 @@
   };
 
   # Development shell
-  outputs =
-    { self
-    , nixpkgs
-    , flake-utils
-    , pre-commit-hooks
-    , rust-overlay
-    ,
-    }:
-    flake-utils.lib.eachDefaultSystem (system:
-    let
-      overlays = [ (import rust-overlay) ];
+  outputs = {
+    self,
+    nixpkgs,
+    flake-utils,
+    pre-commit-hooks,
+    rust-overlay,
+  }:
+    flake-utils.lib.eachDefaultSystem (system: let
+      overlays = [(import rust-overlay)];
       pkgs = import nixpkgs {
         inherit system overlays;
       };
-    in
-    {
+    in {
       checks = {
         pre-commit-check = pre-commit-hooks.lib.${system}.run {
           src = "./.";
@@ -79,7 +76,7 @@
             no-commit-to-branch.enable = true;
 
             # Nix code formatter
-            nixpkgs-fmt.enable = true;
+            alejandra.enable = true; # formatter
 
             # ========================
             # Custom hooks
@@ -92,11 +89,17 @@
               entry = "cargo fmt -- --config-path=./configs/rustfmt.toml";
               files = "projects/[^/]+/backend/src/.+\.rs";
             };
-            format-frontend = {
+            format-javascript = {
               enable = true;
               description = "Format frontend code";
-              entry = "prettier --write --config .prettierrc.yaml";
-              files = "projects/[^/]+/frontend/src/.+\.(ts|tsx|css)";
+              entry = "eslint --flag unstable_config_lookup_from_file";
+              files = ".+\.(m?jsx?|tsx?)";
+            };
+            format-css = {
+              enable = true;
+              description = "Format css code";
+              entry = "stylelint --fix";
+              files = ".+\.css";
             };
             format-other = {
               enable = true;

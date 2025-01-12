@@ -8,28 +8,38 @@
     "start": "cross-env NODE_ENV=production react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc",
     "format": "prettier --write . --config ../../../../.prettierrc.yaml",
-    "format:check": "prettier --check . --config ../../../../.prettierrc.yaml"
+    "format:check": "prettier --check . --config ../../../../.prettierrc.yaml",
+    "lint:js": "eslint .",
+    "lint:css": "stylelint 'src/**/*.css'"
   },
   "dependencies": {
-    "@react-router/node": "^7.1.1",
-    "@react-router/serve": "^7.1.1",
-    "cross-env": "^7.0.3",
-    "isbot": "^5.1.17",
+    "@react-router/node": "catalog:",
+    "@react-router/serve": "catalog:",
+    "cross-env": "catalog:",
+    "isbot": "catalog:",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router": "^7.1.1"
+    "react-router": "catalog:"
   },
   "devDependencies": {
-    "@react-router/dev": "^7.1.1",
-    "@types/node": "^20",
+    "@eslint/js": "^9.18.0",
+    "@react-router/dev": "catalog:",
+    "@stylistic/eslint-plugin": "catalog:",
+    "@types/node": "catalog:",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.1",
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.49",
-    "prettier": "^3.4.2",
-    "tailwindcss": "^3.4.16",
-    "typescript": "^5.7.2",
+    "autoprefixer": "catalog:",
+    "eslint": "catalog:",
+    "eslint-plugin-jsx-a11y": "catalog:",
+    "eslint-plugin-react": "catalog:",
+    "globals": "catalog:",
+    "postcss": "catalog:",
+    "prettier": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:",
+    "typescript-eslint": "^8.19.1",
     "vite": "^5.4.11",
-    "vite-tsconfig-paths": "^5.1.4"
+    "vite-tsconfig-paths": "catalog:",
+    "eslint-config-kubestro": "workspace:../../../libraries/eslint-config"
   }
 }

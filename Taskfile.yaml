@@ -19,3 +19,8 @@ tasks:
     desc: Format files
     cmds:
       - prettier --write . --config .prettierrc.yaml
+
+  sync-deps:
+    desc: Sync dependencies
+    cmds:
+      - pnpm dlx codemod pnpm/catalog
