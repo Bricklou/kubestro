@@ -12,8 +12,13 @@
     "eslint": "^9.0.0"
   },
   "devDependencies": {
+    "@eslint/js": "catalog:",
+    "@stylistic/eslint-plugin": "catalog:",
     "eslint": "catalog:",
+    "eslint-plugin-jsx-a11y": "catalog:",
+    "eslint-plugin-react": "catalog:",
     "eslint-plugin-react-hooks": "catalog:",
-    "globals": "catalog:"
+    "globals": "catalog:",
+    "typescript-eslint": "catalog:"
   }
 }

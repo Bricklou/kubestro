@@ -17,19 +17,15 @@
     "react-dom": "catalog:"
   },
   "devDependencies": {
-    "@eslint/js": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react-swc": "catalog:",
     "eslint": "catalog:",
-    "eslint-plugin-react-hooks": "catalog:",
-    "eslint-plugin-react-refresh": "catalog:",
-    "globals": "catalog:",
+    "eslint-config-kubestro": "workspace:../eslint-config/",
     "stylelint": "catalog:",
     "stylelint-config-standard": "catalog:",
     "stylelint-config-tailwindcss": "catalog:",
     "typescript": "catalog:",
-    "typescript-eslint": "catalog:",
     "vite": "catalog:"
   }
 }
