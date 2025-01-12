@@ -13,15 +13,13 @@ Kubernetes cluster.
 This mainly answer a personal desire to take the advantage of my own Kubernetes
 cluster to deploy any kind of Minecraft servers.
 
-
 ## Getting Started
 
 ### How does it work?
 
-> [!WARNING]
-> This project is still in development and is not yet usable.
+> [!WARNING] This project is still in development and is not yet usable.
 
-*TODO*
+_TODO_
 
 ## Contributing
 

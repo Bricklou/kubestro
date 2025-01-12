@@ -76,10 +76,10 @@ cd projects/<SUB_PROJECT>
 4. Install dependencies on your local machine. Please do not update any dependencies along with a feature request. If you find stale dependencies, please open a
    separate pull request to update them.
 
-I am a bit excentric and I used Nix Flake to manage my dependencies. Ideally, you should use the Nix Flake too. You can install Nix by following the instructions on the [Nix website](https://nixos.org/download.html).
+I am a bit eccentric and I used Nix Flake to manage my dependencies. Ideally, you should use the Nix Flake too. You can install Nix by following the instructions on the [Nix website](https://nixos.org/download.html).
 On the other hand, if you don't want to use Nix, you can try installing the required dependencies manually. You can find the dependencies in the `flake.nix` file.
 
-For all the sub-projects, I also use [Task](https://taskfile.dev/#/) to run tasks. Please ensure it is installed on your machine. 
+For all the sub-projects, I also use [Task](https://taskfile.dev/#/) to run tasks. Please ensure it is installed on your machine.
 
 For all the projects, you can install the dependencies by running the following command:
 

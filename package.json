@@ -2,7 +2,8 @@
   "type": "module",
   "scripts": {
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "lint:js": "eslint ."
   },
   "engines": {
     "node": "^22.0.0",

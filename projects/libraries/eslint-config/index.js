@@ -1,11 +1,10 @@
-import globals from "globals";
-import pluginJs from "@eslint/js";
-import tseslint from "typescript-eslint";
-import pluginReact from "eslint-plugin-react";
-import reactHooks from "eslint-plugin-react-hooks";
-import reactRefresh from "eslint-plugin-react-refresh";
-import stylistic from "@stylistic/eslint-plugin";
-import jsxA11y from "eslint-plugin-jsx-a11y";
+import globals from 'globals'
+import pluginJs from '@eslint/js'
+import tseslint from 'typescript-eslint'
+import pluginReact from 'eslint-plugin-react'
+import reactHooks from 'eslint-plugin-react-hooks'
+import stylistic from '@stylistic/eslint-plugin'
+import jsxA11y from 'eslint-plugin-jsx-a11y'
 
 /**
  * Configures ESLint to use an opinionated config tailored for
@@ -16,9 +15,9 @@ import jsxA11y from "eslint-plugin-jsx-a11y";
  *
  * @example
  * ```js
- * configApp()
+ * configApp(import.meta.dirname)
  *
- * configApp({
+ * configApp(import.meta.dirname, {
  *   files: ['src/**\/*.ts'],
  *   ignore: ['dist'],
  *   rules: {
@@ -26,12 +25,15 @@ import jsxA11y from "eslint-plugin-jsx-a11y";
  * })
  * ````
  *
- * @param  {import('typescript-eslint').ConfigWithExtends[]} configBlockToMerge
+ * @param  {string} rootDir Path to the root directory of the project
+ * @param  {import('typescript-eslint').ConfigWithExtends[]} configBlockToMerge Additional config blocks to merge
  */
-export function configApp(...configBlockToMerge) {
+export function configApp(rootDir, ...configBlockToMerge) {
   return tseslint.config(
     // Ignore the build output directory
-    { ignores: ["dist"] },
+    { ignores: ['dist'] },
+    // Ignore unwanted files
+    { ignores: ['**/node_modules/**', '**/eslint.config.mjs', '**/stylelint.config.mjs'] },
 
     // Typescript & React config
     {
@@ -39,21 +41,22 @@ export function configApp(...configBlockToMerge) {
         pluginJs.configs.recommended,
         tseslint.configs.strictTypeChecked,
         pluginReact.configs.flat.recommended,
+        pluginReact.configs.flat['jsx-runtime'],
         jsxA11y.flatConfigs.recommended,
         stylistic.configs.customize({
           jsx: true,
           flat: true,
         }),
       ],
-      files: ["**/*.{ts,jsx,tsx}"],
+      files: ['**/*.{ts,jsx,tsx,mjs}'],
       languageOptions: {
         parserOptions: {
-          ecmaVersion: "latest",
+          ecmaVersion: 'latest',
           ecmaFeatures: {
             jsx: true,
           },
           projectService: true,
-          tsconfigRootDir: import.meta.dirname,
+          tsconfigRootDir: rootDir,
         },
         globals: {
           ...globals.browser,
@@ -61,18 +64,19 @@ export function configApp(...configBlockToMerge) {
         },
       },
       plugins: {
-        react: pluginReact,
-        "react-hooks": reactHooks,
-        "react-refresh": reactRefresh,
+        'eslint': pluginJs,
+        'react': pluginReact,
+        'react-hooks': reactHooks,
       },
       rules: {
         ...reactHooks.configs.recommended.rules,
-        "react-refresh/only-export-components": [
-          "warn",
-          { allowConstantExport: true },
-        ],
+      },
+      settings: {
+        react: {
+          version: 'detect',
+        },
       },
     },
     ...configBlockToMerge,
-  );
+  )
 }
