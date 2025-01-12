@@ -1,0 +1,28 @@
+---
+version: 3
+
+tasks:
+  default:
+    silent: true
+    cmd: go-task -l
+
+  dev:
+    desc: "Start development server"
+    cmd: cargo watch -x 'run {{.CLI_ARGS}}'
+
+  lint:
+    desc: Lint the project
+    cmd: cargo clippy --all-targets
+
+  build:
+    desc: Build the project
+    cmd: cargo build
+    sources:
+      - src/**/*.rs
+    generates:
+      - target/debug/kubestro-core
+
+  format:
+    desc: Format files
+    cmds:
+      - cargo fmt -- --config-path ../../../../configs/rustfmt.toml

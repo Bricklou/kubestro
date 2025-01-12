@@ -108,7 +108,7 @@
       commitMessageTopic: "{{depName}}",
       commitMessageExtra: "( {{currentVersion}} → {{newVersion}} )",
     },
-    
+
     // GitHub
     {
       matchDatasources: ["github-releases", "github-tags"],

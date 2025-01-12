@@ -2,14 +2,20 @@
   "type": "module",
   "scripts": {
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "lint:js": "eslint ."
   },
   "engines": {
     "node": "^22.0.0",
     "pnpm": ">=9.15.0"
   },
   "devDependencies": {
-    "prettier": "^3.4.2",
-    "prettier-plugin-toml": "2.0.1"
+    "@eslint/js": "catalog:",
+    "@stylistic/eslint-plugin": "catalog:",
+    "eslint": "catalog:",
+    "globals": "catalog:",
+    "prettier": "catalog:",
+    "prettier-plugin-toml": "catalog:",
+    "stylelint": "^16.13.0"
   }
 }

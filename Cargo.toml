@@ -1,5 +1,3 @@
 [workspace]
-members = [
-    "projects/services/kubestro-core/backend",
-]
+members = ["projects/services/kubestro-core/backend"]
 resolver = "2"

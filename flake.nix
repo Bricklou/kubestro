@@ -38,8 +38,8 @@
       };
     in {
       checks = {
-        pre-commit-hooks = pre-commit-hooks.lib.${system}.run {
-          src = ".";
+        pre-commit-check = pre-commit-hooks.lib.${system}.run {
+          src = "./.";
           hooks = {
             # Source code spell checker
             typos = {
@@ -57,36 +57,84 @@
                 write = true;
                 configPath = ".prettierrc.yaml"; # relative to the flake root
               };
+              files = ".+\.(md|ya?ml|json|css)";
+            };
+
+            # Rust code formatter
+            clippy = {
+              enable = true;
+              packageOverrides = {
+                cargo = pkgs.cargo;
+                clippy = pkgs.clippy;
+              };
+              settings = {
+                allFeatures = true;
+                extraArgs = "--all-targets";
+              };
+            };
+
+            # Ensure no one commits to the main branch
+            no-commit-to-branch.enable = true;
+
+            # Nix code formatter
+            alejandra.enable = true; # formatter
+
+            # ========================
+            # Custom hooks
+            # ========================
+
+            # Format backend code
+            format-backend = {
+              enable = true;
+              description = "Format backend code";
+              entry = "cargo fmt -- --config-path=./configs/rustfmt.toml";
+              files = "projects/[^/]+/backend/.+\.rs";
+            };
+            format-javascript = {
+              enable = true;
+              description = "Format and lint frontend code";
+              entry = "eslint --flag unstable_config_lookup_from_file";
+              files = ".+\.(m?jsx?|tsx?)";
+            };
+            lint-css = {
+              enable = true;
+              description = "Format and lint css code";
+              entry = "stylelint --fix --config ./configs/stylelint-config.mjs";
+              files = ".+\.css";
             };
           };
         };
       };
 
       devShells.default = pkgs.mkShell {
-        buildInputs = with pkgs; [
-          # fix https://discourse.nixos.org/t/non-interactive-bash-errors-from-flake-nix-mkshell/33310
-          bashInteractive
-          # fix `cc` replaced by clang, which causes nvim-treesitter compilation error
-          gcc
+        buildInputs = with pkgs;
+          [
+            # fix https://discourse.nixos.org/t/non-interactive-bash-errors-from-flake-nix-mkshell/33310
+            bashInteractive
+            # fix `cc` replaced by clang, which causes nvim-treesitter compilation error
+            gcc
 
-          # task runner
-          go-task
+            # task runner
+            go-task
 
-          # spell checker
-          typos
+            # spell checker
+            typos
 
-          # nodejs deps
-          nodejs_22
-          pnpm
+            # nodejs deps
+            nodejs_22
+            pnpm
 
-          # rust
-          rustfmt
-          rust-bin.stable.latest.default
-          cargo-workspaces
-        ];
+            # rust
+            rustfmt
+            rust-bin.stable.latest.default
+            cargo-workspaces
+            cargo-watch
+          ]
+          ++ self.checks.${system}.pre-commit-check.enabledPackages;
 
         shellHook = ''
-          export PATH=$PATH:$(pnpm bin)
+          ${self.checks.${system}.pre-commit-check.shellHook}
+          export PATH="$(${pkgs.pnpm}/bin/pnpm bin):$PATH"
 
           # Install Dependencies
           go-task install

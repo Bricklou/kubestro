@@ -1,9 +1,9 @@
+---
 version: 3
 
-dotenv:
-  - .env
-
-includes: {}
+includes:
+  core: ./projects/services/kubestro-core/Taskfile.yaml
+  design-system: ./projects/libraries/design-system/Taskfile.yaml
 
 tasks:
   default:
@@ -13,16 +13,14 @@ tasks:
   install:
     desc: Install dependencies
     cmds:
-      - task: deps
-      - cp -n .env.example .env
-
-  deps:
-    desc: Install project dependencies
-    cmds:
       - pnpm i
 
   format:
     desc: Format files
     cmds:
-      - prettier --write .
+      - prettier --write . --config .prettierrc.yaml
 
+  sync-deps:
+    desc: Sync dependencies
+    cmds:
+      - pnpm dlx codemod pnpm/catalog
