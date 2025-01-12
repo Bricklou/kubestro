@@ -14,7 +14,13 @@ export default {
         ],
       },
     ],
-    'declaration-block-trailing-semicolon': null,
-    'no-descending-specificity': null,
+    'at-rule-no-deprecated': [
+      true,
+      {
+        ignoreAtRules: [
+          'apply',
+        ],
+      },
+    ],
   },
 }
