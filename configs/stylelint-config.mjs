@@ -14,6 +14,7 @@ export default {
         ],
       },
     ],
+    'import-notation': 'string',
     'at-rule-no-deprecated': [
       true,
       {

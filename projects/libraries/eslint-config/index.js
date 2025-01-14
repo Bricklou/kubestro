@@ -5,7 +5,9 @@ import pluginReact from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 import stylistic from '@stylistic/eslint-plugin'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
-import tailwindcss from 'eslint-plugin-tailwindcss'
+import simpleImportSort from 'eslint-plugin-simple-import-sort'
+// TODO: enable when compatible with Tailwindcss 4
+// import tailwindcss from 'eslint-plugin-tailwindcss'
 
 /**
  * Configures ESLint to use an opinionated config tailored for
@@ -46,13 +48,14 @@ export function configApp(rootDir, ...configBlockToMerge) {
       jsx: true,
       flat: true,
     }),
-    ...tailwindcss.configs['flat/recommended'],
+    // ...tailwindcss.configs['flat/recommended'],
 
     {
       plugins: {
         'eslint': pluginJs,
         'react': pluginReact,
         'react-hooks': reactHooks,
+        'simple-import-sort': simpleImportSort,
       },
     },
 
