@@ -11,6 +11,7 @@ export default {
           'variants',
           'responsive',
           'screen',
+          'theme',
         ],
       },
     ],
