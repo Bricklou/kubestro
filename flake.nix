@@ -57,7 +57,7 @@
                 write = true;
                 configPath = ".prettierrc.yaml"; # relative to the flake root
               };
-              files = ".+\.(md|ya?ml|json|css)";
+              files = ".+\.(mdx?|ya?ml|json|css)";
             };
 
             # Rust code formatter
