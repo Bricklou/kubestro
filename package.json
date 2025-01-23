@@ -16,6 +16,7 @@
     "globals": "catalog:",
     "prettier": "catalog:",
     "prettier-plugin-toml": "catalog:",
-    "stylelint": "^16.13.0"
+    "stylelint": "catalog:",
+    "eslint-config-kubestro": "workspace:./projects/libraries/eslint-config/"
   }
 }

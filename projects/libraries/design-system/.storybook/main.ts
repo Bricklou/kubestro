@@ -8,15 +8,15 @@ const config: StorybookConfig = {
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
     '@storybook/addon-a11y',
-    '@storybook/addon-themes',
+    '@storybook/addon-themes'
   ],
   framework: {
     name: '@storybook/react-vite',
-    options: {},
+    options: {}
   },
   typescript: {
     reactDocgen: 'react-docgen-typescript',
-    check: false,
-  },
+    check: false
+  }
 }
 export default config
