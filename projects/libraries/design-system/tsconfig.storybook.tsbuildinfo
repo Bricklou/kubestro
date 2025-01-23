@@ -1,0 +1,1 @@
+{"root":["./src/components/base/button/button.stories.tsx","./src/components/form/checkbox/checkbox.stories.tsx","./src/components/form/input/input.stories.tsx","./src/components/form/label/label.stories.tsx","./.storybook/main.ts","./.storybook/preview.ts"],"errors":true,"version":"5.7.2"}

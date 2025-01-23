@@ -15,8 +15,13 @@ const config: StorybookConfig = {
     options: {}
   },
   typescript: {
+
+    /*
+     * WARN: description generation is broken when using PNPM, see
+     * https://github.com/storybookjs/storybook/discussions/23209
+     */
     reactDocgen: 'react-docgen-typescript',
-    check: false
+    check: true
   }
 }
 export default config
