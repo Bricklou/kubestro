@@ -70,7 +70,7 @@ jobs:
           cache-workspaces: |-
             ./projects/${{ matrix.project }}
 
-      - uses: clechasseur/rs-clippy-check@v3
+      - uses: clechasseur/rs-clippy-check@v4
         with:
           args: --all-features
           toolchain: stable
