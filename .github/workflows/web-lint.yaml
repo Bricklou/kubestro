@@ -65,6 +65,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Generate types before doing any checking
+        run: pnpm run typecheck
+        # This is only valid for the frontend project
+        if: matrix.working-directory == 'projects/services/kubestro-core/frontend'
+
       - name: Run ESLint
         run: pnpm run lint:js
 
