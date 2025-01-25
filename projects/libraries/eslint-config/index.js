@@ -285,7 +285,6 @@ export function configApp(rootDir, ...configBlockToMerge) {
         'yoda': 'error',
         'default-case': 'error',
         'default-case-last': 'error',
-        'func-style': ['error', 'declaration'],
         'grouped-accessor-pairs': 'warn',
         'guard-for-in': 'error',
         'no-alert': 'error',
