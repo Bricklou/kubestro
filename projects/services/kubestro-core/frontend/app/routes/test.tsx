@@ -1,5 +1,5 @@
-import { linkVariants } from "@kubestro/design-system";
-import { Link } from "react-router";
+import { linkVariants } from '@kubestro/design-system'
+import { Link } from 'react-router'
 
 export default function Test() {
   return (
