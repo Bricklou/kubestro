@@ -22,7 +22,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint:js": "eslint --flag unstable_config_lookup_from_file .",
-    "lint:css": "stylelint 'src/**/*.css'",
+    "lint:css": "stylelint '{src,public}/**/*.css'",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
