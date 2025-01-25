@@ -3,6 +3,7 @@ import { withActions } from '@storybook/addon-actions/decorator'
 
 import { LucideSmile } from 'lucide-react'
 import { Button } from './button'
+import { buttonVariants } from './style'
 
 const meta: Meta<typeof Button> = {
   title: 'Base/Button',
@@ -23,6 +24,10 @@ const meta: Meta<typeof Button> = {
     type: {
       control: 'select',
       options: ['button', 'submit', 'reset']
+    },
+    variant: {
+      control: 'radio',
+      options: Object.keys(buttonVariants.variants.variant)
     },
     icon: {
       control: 'radio',
@@ -53,10 +58,29 @@ const Template: Story = {
   }
 }
 
-export const Primary: Story = {
+export const All: Story = {
   args: {
     ...Template.args
-  }
+  },
+  render: () => (
+    <>
+      <div className="flex gap-4 p-8 bg-background">
+        <Button variant="primary">Primary</Button>
+        <Button variant="secondary">Secondary</Button>
+        <Button variant="danger">Danger</Button>
+        <Button variant="ghost">Ghost</Button>
+        <Button variant="link">Link</Button>
+      </div>
+
+      <div className="flex gap-4 p-8 bg-background" data-theme="dark">
+        <Button variant="primary">Primary</Button>
+        <Button variant="secondary">Secondary</Button>
+        <Button variant="danger">Danger</Button>
+        <Button variant="ghost">Ghost</Button>
+        <Button variant="link">Link</Button>
+      </div>
+    </>
+  )
 }
 
 export const Loading: Story = {
