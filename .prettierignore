@@ -4,3 +4,4 @@
 **/*.js
 **/*.mjs
 **/*.jsx
+flake.lock
