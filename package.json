@@ -13,9 +13,16 @@
     "@eslint/js": "catalog:",
     "@stylistic/eslint-plugin": "catalog:",
     "eslint": "catalog:",
+    "eslint-config-kubestro": "workspace:./projects/libraries/eslint-config/",
     "globals": "catalog:",
     "prettier": "catalog:",
     "prettier-plugin-toml": "catalog:",
-    "stylelint": "^16.13.0"
+    "stylelint": "catalog:"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@storybook/react": "patches/@storybook__react.patch",
+      "tailwind-variants": "patches/tailwind-variants.patch"
+    }
   }
 }

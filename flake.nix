@@ -41,6 +41,9 @@
         pre-commit-check = pre-commit-hooks.lib.${system}.run {
           src = "./.";
           hooks = {
+            # Ensure no one commits to the main branch
+            no-commit-to-branch.enable = true;
+
             # Source code spell checker
             typos = {
               enable = true;
@@ -72,9 +75,6 @@
                 extraArgs = "--all-targets";
               };
             };
-
-            # Ensure no one commits to the main branch
-            no-commit-to-branch.enable = true;
 
             # Nix code formatter
             alejandra.enable = true; # formatter

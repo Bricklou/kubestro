@@ -8,15 +8,20 @@ const config: StorybookConfig = {
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
     '@storybook/addon-a11y',
-    '@storybook/addon-themes',
+    '@storybook/addon-themes'
   ],
   framework: {
     name: '@storybook/react-vite',
-    options: {},
+    options: {}
   },
   typescript: {
+
+    /*
+     * WARN: description generation is broken when using PNPM, see
+     * https://github.com/storybookjs/storybook/discussions/23209
+     */
     reactDocgen: 'react-docgen-typescript',
-    check: false,
-  },
+    check: true
+  }
 }
 export default config
