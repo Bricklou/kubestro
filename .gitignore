@@ -12,5 +12,8 @@ target/
 .direnv
 /.pre-commit-config.yaml
 
+# NodeJS files
+**/*.tsbuildinfo
+
 # sensitive or high-risk files
 .env

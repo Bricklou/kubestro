@@ -3,6 +3,21 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/design-system.es.js",
+  "module": "./dist/design-system.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/design-system.es.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./*": {
+      "types": "./dist/*.d.ts"
+    },
+    "./preset.css": "./dist/tw-preset.css"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -17,12 +32,7 @@
     "@fontsource-variable/inter": "catalog:",
     "@radix-ui/react-checkbox": "catalog:",
     "@radix-ui/react-label": "catalog:",
-    "@radix-ui/react-slot": "catalog:",
-    "lucide-react": "catalog:",
-    "react": "catalog:",
-    "react-dom": "catalog:",
-    "tailwind-merge": "catalog:",
-    "tailwind-variants": "catalog:"
+    "@radix-ui/react-slot": "catalog:"
   },
   "devDependencies": {
     "@storybook/addon-a11y": "catalog:",
@@ -43,16 +53,29 @@
     "eslint": "catalog:",
     "eslint-config-kubestro": "workspace:../eslint-config/",
     "eslint-plugin-storybook": "catalog:",
+    "lucide-react": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "storybook": "catalog:",
     "stylelint": "catalog:",
     "stylelint-config-standard": "catalog:",
+    "tailwind-merge": "catalog:",
+    "tailwind-variants": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
-    "vite": "catalog:"
+    "vite": "catalog:",
+    "vite-plugin-dts": "^4.5.0"
   },
   "eslintConfig": {
     "extends": [
       "plugin:storybook/recommended"
     ]
+  },
+  "peerDependencies": {
+    "lucide-react": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "tailwind-merge": "catalog:",
+    "tailwind-variants": "catalog:"
   }
 }

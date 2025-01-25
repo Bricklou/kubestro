@@ -474,7 +474,10 @@ export function configApp(rootDir, ...configBlockToMerge) {
     {
       files: ['**/*.ts'],
       ignores: ['**/src/**'],
-      rules: { 'import/no-nodejs-modules': 'off' }
+      rules: {
+        'import/no-nodejs-modules': 'off',
+        'import/no-extraneous-dependencies': 'off'
+      }
     },
 
     ...configBlockToMerge

@@ -1,5 +1,5 @@
 import type { Preview, ReactRenderer } from '@storybook/react'
-import '../src/index.css'
+import '../public/tw-preset.css'
 import '@fontsource-variable/inter'
 import { withThemeByDataAttribute } from '@storybook/addon-themes'
 
