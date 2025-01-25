@@ -1,5 +1,5 @@
 {
-  "name": "design-system",
+  "name": "@kubestro/design-system",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -29,7 +29,6 @@
     "typecheck": "tsc --noEmit --project tsconfig.json"
   },
   "dependencies": {
-    "@fontsource-variable/inter": "catalog:",
     "@radix-ui/react-checkbox": "catalog:",
     "@radix-ui/react-label": "catalog:",
     "@radix-ui/react-slot": "catalog:"
@@ -51,7 +50,7 @@
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react-swc": "catalog:",
     "eslint": "catalog:",
-    "eslint-config-kubestro": "workspace:../eslint-config/",
+    "@kubestro/eslint-config": "workspace:../eslint-config/",
     "eslint-plugin-storybook": "catalog:",
     "lucide-react": "catalog:",
     "react": "catalog:",
@@ -64,7 +63,8 @@
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
-    "vite-plugin-dts": "^4.5.0"
+    "vite-plugin-dts": "catalog:",
+    "@fontsource-variable/inter": "catalog:"
   },
   "eslintConfig": {
     "extends": [
@@ -76,6 +76,7 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "tailwind-merge": "catalog:",
-    "tailwind-variants": "catalog:"
+    "tailwind-variants": "catalog:",
+    "@fontsource-variable/inter": "catalog:"
   }
 }

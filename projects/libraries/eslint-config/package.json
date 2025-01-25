@@ -1,5 +1,5 @@
 {
-  "name": "eslint-config-kubestro",
+  "name": "@kubestro/eslint-config",
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",

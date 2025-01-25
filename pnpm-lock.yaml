@@ -81,9 +81,6 @@ catalogs:
     "@vitejs/plugin-react-swc":
       specifier: ^3.5.0
       version: 3.7.2
-    autoprefixer:
-      specifier: ^10.4.20
-      version: 10.4.20
     cross-env:
       specifier: ^7.0.3
       version: 7.0.3
@@ -165,6 +162,9 @@ catalogs:
     vite:
       specifier: ^6.0.7
       version: 6.0.11
+    vite-plugin-dts:
+      specifier: ^4.5.0
+      version: 4.5.0
     vite-tsconfig-paths:
       specifier: ^5.1.4
       version: 5.1.4
@@ -207,9 +207,6 @@ importers:
 
   projects/libraries/design-system:
     dependencies:
-      "@fontsource-variable/inter":
-        specifier: "catalog:"
-        version: 5.1.1
       "@radix-ui/react-checkbox":
         specifier: "catalog:"
         version: 1.1.3(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -220,6 +217,12 @@ importers:
         specifier: "catalog:"
         version: 1.1.1(@types/react@19.0.8)(react@19.0.0)
     devDependencies:
+      "@fontsource-variable/inter":
+        specifier: "catalog:"
+        version: 5.1.1
+      "@kubestro/eslint-config":
+        specifier: workspace:../eslint-config/
+        version: link:../eslint-config
       "@storybook/addon-a11y":
         specifier: "catalog:"
         version: 8.5.1(storybook@8.5.1(prettier@3.4.2))(vitest@3.0.3(@types/node@20.17.16)(jiti@2.4.2)(lightningcss@1.29.1))
@@ -268,9 +271,6 @@ importers:
       eslint:
         specifier: "catalog:"
         version: 9.18.0(jiti@2.4.2)
-      eslint-config-kubestro:
-        specifier: workspace:../eslint-config/
-        version: link:../eslint-config
       eslint-plugin-storybook:
         specifier: "catalog:"
         version: 0.11.2(eslint@9.18.0(jiti@2.4.2))(typescript@5.7.3)
@@ -308,7 +308,7 @@ importers:
         specifier: "catalog:"
         version: 6.0.11(@types/node@20.17.16)(jiti@2.4.2)(lightningcss@1.29.1)
       vite-plugin-dts:
-        specifier: ^4.5.0
+        specifier: "catalog:"
         version: 4.5.0(@types/node@20.17.16)(rollup@4.31.0)(typescript@5.7.3)(vite@6.0.11(@types/node@20.17.16)(jiti@2.4.2)(lightningcss@1.29.1))
 
   projects/libraries/eslint-config:
@@ -350,6 +350,15 @@ importers:
 
   projects/services/kubestro-core/frontend:
     dependencies:
+      "@fontsource-variable/inter":
+        specifier: "catalog:"
+        version: 5.1.1
+      "@kubestro/design-system":
+        specifier: workspace:../../../libraries/design-system
+        version: link:../../../libraries/design-system
+      "@module-federation/runtime":
+        specifier: ^0.8.9
+        version: 0.8.9
       "@react-router/node":
         specifier: "catalog:"
         version: 7.1.3(react-router@7.1.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(typescript@5.7.3)
@@ -362,6 +371,9 @@ importers:
       isbot:
         specifier: "catalog:"
         version: 5.1.21
+      lucide-react:
+        specifier: "catalog:"
+        version: 0.474.0(react@19.0.0)
       react:
         specifier: "catalog:"
         version: 19.0.0
@@ -372,9 +384,15 @@ importers:
         specifier: "catalog:"
         version: 7.1.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
     devDependencies:
+      "@kubestro/eslint-config":
+        specifier: workspace:../../../libraries/eslint-config
+        version: link:../../../libraries/eslint-config
       "@react-router/dev":
         specifier: "catalog:"
         version: 7.1.3(@react-router/serve@7.1.3(react-router@7.1.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(typescript@5.7.3))(@types/node@20.17.16)(jiti@2.4.2)(lightningcss@1.29.1)(react-router@7.1.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(typescript@5.7.3)(vite@6.0.11(@types/node@20.17.16)(jiti@2.4.2)(lightningcss@1.29.1))
+      "@tailwindcss/vite":
+        specifier: "catalog:"
+        version: 4.0.0(vite@6.0.11(@types/node@20.17.16)(jiti@2.4.2)(lightningcss@1.29.1))
       "@types/node":
         specifier: "catalog:"
         version: 20.17.16
@@ -384,15 +402,9 @@ importers:
       "@types/react-dom":
         specifier: "catalog:"
         version: 19.0.3(@types/react@19.0.8)
-      autoprefixer:
-        specifier: "catalog:"
-        version: 10.4.20(postcss@8.5.1)
       eslint:
         specifier: "catalog:"
         version: 9.18.0(jiti@2.4.2)
-      eslint-config-kubestro:
-        specifier: workspace:../../../libraries/eslint-config
-        version: link:../../../libraries/eslint-config
       postcss:
         specifier: "catalog:"
         version: 8.5.1
@@ -1115,6 +1127,30 @@ packages:
     resolution:
       {
         integrity: sha512-EMlH1e30yzmTpGLQjlFmaDAjyOeZhng1/XCd7DExR8PNAnG/G1tyruZxEoUe11ClnwGhGrtsdnyyUx1frSzjng==,
+      }
+
+  "@module-federation/error-codes@0.8.9":
+    resolution:
+      {
+        integrity: sha512-yUA3GZjOy8Ll6l193faXir2veexDaUiLdmptbzC9tIee/iSQiSwIlibdTafCfqaJ62cLZaytOUdmAFAKLv8QQw==,
+      }
+
+  "@module-federation/runtime-core@0.6.17":
+    resolution:
+      {
+        integrity: sha512-PXFN/TT9f64Un6NQYqH1Z0QLhpytW15jkZvTEOV8W7Ed319BECFI0Rv4xAsAGa8zJGFoaM/c7QOQfdFXtKj5Og==,
+      }
+
+  "@module-federation/runtime@0.8.9":
+    resolution:
+      {
+        integrity: sha512-i+a+/hoT/c+EE52mT+gJrbA6DhL86PY9cd/dIv/oKpLz9i+yYBlG+RA+puc7YsUEO4irbFLvnIMq6AGDUKVzYA==,
+      }
+
+  "@module-federation/sdk@0.8.9":
+    resolution:
+      {
+        integrity: sha512-QJ60itWC/SPjqduT7wDiF8UGwVU/yJ/Sz+QbnoxB9b7gNLzvI//swAXTo9eOtKsCy/V2BMwjt0F3eOcfnaqllA==,
       }
 
   "@nodelib/fs.scandir@2.1.5":
@@ -2731,16 +2767,6 @@ packages:
       }
     engines: { node: ">= 0.4" }
 
-  autoprefixer@10.4.20:
-    resolution:
-      {
-        integrity: sha512-XY25y5xSv/wEoqzDyXXME4AFfkZI0P23z6Fs3YgymDnKJkCGOnkL0iTxCa85UTqaSgfcqyf3UA6+c7wUvx/16g==,
-      }
-    engines: { node: ^10 || ^12 || >=14 }
-    hasBin: true
-    peerDependencies:
-      postcss: ^8.1.0
-
   available-typed-arrays@1.0.7:
     resolution:
       {
@@ -3813,12 +3839,6 @@ packages:
       }
     engines: { node: ">= 0.6" }
 
-  fraction.js@4.3.7:
-    resolution:
-      {
-        integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==,
-      }
-
   fresh@0.5.2:
     resolution:
       {
@@ -4421,6 +4441,13 @@ packages:
         integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==,
       }
 
+  isomorphic-rslog@0.0.7:
+    resolution:
+      {
+        integrity: sha512-n6/XnKnZ5eLEj6VllG4XmamXG7/F69nls8dcynHyhcTpsPUYgcgx4ifEaCo4lQJ2uzwfmIT+F0KBGwBcMKmt5g==,
+      }
+    engines: { node: ">=14.17.6" }
+
   iterator.prototype@1.1.5:
     resolution:
       {
@@ -5021,13 +5048,6 @@ packages:
     resolution:
       {
         integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==,
-      }
-    engines: { node: ">=0.10.0" }
-
-  normalize-range@0.1.2:
-    resolution:
-      {
-        integrity: sha512-bdok/XvKII3nUpklnV6P2hxtMNrCboOjAcyBuQnWEhO665FwrSNRxU+AqpsyvO6LgGYPspN+lu5CLtw4jPRKNA==,
       }
     engines: { node: ">=0.10.0" }
 
@@ -7190,6 +7210,23 @@ snapshots:
 
   "@mjackson/node-fetch-server@0.2.0": {}
 
+  "@module-federation/error-codes@0.8.9": {}
+
+  "@module-federation/runtime-core@0.6.17":
+    dependencies:
+      "@module-federation/error-codes": 0.8.9
+      "@module-federation/sdk": 0.8.9
+
+  "@module-federation/runtime@0.8.9":
+    dependencies:
+      "@module-federation/error-codes": 0.8.9
+      "@module-federation/runtime-core": 0.6.17
+      "@module-federation/sdk": 0.8.9
+
+  "@module-federation/sdk@0.8.9":
+    dependencies:
+      isomorphic-rslog: 0.0.7
+
   "@nodelib/fs.scandir@2.1.5":
     dependencies:
       "@nodelib/fs.stat": 2.0.5
@@ -8356,16 +8393,6 @@ snapshots:
 
   async-function@1.0.0: {}
 
-  autoprefixer@10.4.20(postcss@8.5.1):
-    dependencies:
-      browserslist: 4.24.4
-      caniuse-lite: 1.0.30001695
-      fraction.js: 4.3.7
-      normalize-range: 0.1.2
-      picocolors: 1.1.1
-      postcss: 8.5.1
-      postcss-value-parser: 4.2.0
-
   available-typed-arrays@1.0.7:
     dependencies:
       possible-typed-array-names: 1.0.0
@@ -9153,8 +9180,6 @@ snapshots:
 
   forwarded@0.2.0: {}
 
-  fraction.js@4.3.7: {}
-
   fresh@0.5.2: {}
 
   fs-extra@10.1.0:
@@ -9486,6 +9511,8 @@ snapshots:
 
   isexe@2.0.0: {}
 
+  isomorphic-rslog@0.0.7: {}
+
   iterator.prototype@1.1.5:
     dependencies:
       define-data-property: 1.1.4
@@ -9767,8 +9794,6 @@ snapshots:
       validate-npm-package-license: 3.0.4
 
   normalize-path@3.0.0: {}
-
-  normalize-range@0.1.2: {}
 
   npm-install-checks@6.3.0:
     dependencies:

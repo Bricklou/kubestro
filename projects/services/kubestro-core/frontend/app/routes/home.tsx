@@ -1,4 +1,7 @@
-import { Welcome } from '../welcome/welcome'
+import { Button, linkVariants } from '@kubestro/design-system'
+import { Bolt } from 'lucide-react'
+import { useCallback } from 'react'
+import { Link } from 'react-router'
 
 export function meta() {
   return [
@@ -11,5 +14,24 @@ export function meta() {
 }
 
 export default function Home() {
-  return <Welcome />
+  const onClick = useCallback(() => {
+    console.log('Hello!')
+  }, [])
+
+  return (
+    <div className="p-8">
+      <Button
+        icon={<Bolt />}
+        onClick={onClick}
+        size="lg"
+        variant="primary"
+      >
+        Hello
+      </Button>
+
+      <p>
+        <Link className={linkVariants()} to="/test">Go to /test</Link>
+      </p>
+    </div>
+  )
 }
