@@ -17,3 +17,12 @@ target/
 
 # sensitive or high-risk files
 .env
+
+
+
+.nx/cache
+.nx/workspace-data
+
+storybook-static
+vite.config.*.timestamp*
+vitest.config.*.timestamp*

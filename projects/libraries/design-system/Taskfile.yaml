@@ -13,13 +13,13 @@ tasks:
 
   dev:
     desc: "Start development server"
-    cmd: pnpm run dev
+    cmd: nx dev
 
   build:
     desc: Build the project
     cmds:
-      - pnpm build
+      - nx build
 
   story:
     desc: Start storybook
-    cmd: pnpm storybook
+    cmd: nx storybook

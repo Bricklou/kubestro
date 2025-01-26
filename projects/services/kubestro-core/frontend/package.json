@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "@kubestro/core-frontend",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,22 +11,26 @@
     "lint:css": "stylelint 'app/**/*.css'"
   },
   "dependencies": {
+    "@kubestro/design-system": "workspace:../../../libraries/design-system",
+    "@module-federation/runtime": "^0.8.9",
     "@react-router/node": "catalog:",
     "@react-router/serve": "catalog:",
     "cross-env": "catalog:",
     "isbot": "catalog:",
+    "lucide-react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-router": "catalog:"
+    "react-router": "catalog:",
+    "@fontsource-variable/inter": "catalog:"
   },
   "devDependencies": {
+    "@kubestro/eslint-config": "workspace:../../../libraries/eslint-config",
     "@react-router/dev": "catalog:",
+    "@tailwindcss/vite": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "autoprefixer": "catalog:",
     "eslint": "catalog:",
-    "eslint-config-kubestro": "workspace:../../../libraries/eslint-config",
     "postcss": "catalog:",
     "prettier": "catalog:",
     "stylelint": "catalog:",

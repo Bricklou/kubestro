@@ -1,14 +1,19 @@
 import { reactRouter } from '@react-router/dev/vite'
-import autoprefixer from 'autoprefixer'
-import tailwindcss from 'tailwindcss'
 import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
+import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  css: {
-    postcss: {
-      plugins: [tailwindcss, autoprefixer]
-    }
+  root: import.meta.dirname,
+  plugins: [
+    reactRouter(),
+    tsconfigPaths(),
+    tailwindcss()
+  ],
+  build: {
+    target: 'es2023'
   },
-  plugins: [reactRouter(), tsconfigPaths()]
+  optimizeDeps: {
+    include: ['lucide-react', 'tailwind-variants', 'tailwind-merge']
+  }
 })

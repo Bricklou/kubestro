@@ -471,7 +471,7 @@ export function configApp(rootDir, ...configBlockToMerge) {
 
     // Allow NodeJS imports outside src directory
     {
-      files: ['**/*.ts'],
+      files: ['**/*.{ts,js,mjs}'],
       ignores: ['**/src/**'],
       rules: {
         'import/no-nodejs-modules': 'off',

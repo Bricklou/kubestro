@@ -1,5 +1,5 @@
-import { configApp } from 'eslint-config-kubestro'
+import { configApp } from '@kubestro/eslint-config'
 
 export default configApp(import.meta.dirname, [
-  { ignores: ['**/.react-router/**'] }
+  { ignores: ['**/.react-router/**', '**/.__mf__temp/**', '**/build/**'] }
 ])

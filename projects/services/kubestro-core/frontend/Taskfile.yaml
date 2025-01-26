@@ -8,7 +8,7 @@ tasks:
 
   dev:
     desc: "Start development server"
-    cmd: pnpm run dev
+    cmd: nx dev
 
   install:
     desc: Install dependencies
@@ -16,12 +16,12 @@ tasks:
 
   lint:
     desc: Lint the project
-    cmd: pnpm run lint
+    cmd: nx run-many -t lint:js,lint:css --parallel -p @kubestro/core-frontend
 
   build:
     desc: Build the project
     cmds:
-      - pnpm build
+      - nx build
     sources:
       - src/**/*.{ts,css,tsx}
     generates:

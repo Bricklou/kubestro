@@ -1,4 +1,4 @@
-import { configApp } from 'eslint-config-kubestro'
+import { configApp } from '@kubestro/eslint-config'
 import pluginStorybook from 'eslint-plugin-storybook'
 
 export default configApp(
