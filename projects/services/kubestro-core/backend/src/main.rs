@@ -13,7 +13,6 @@ use tower_http::{
     timeout::TimeoutLayer,
     trace::{self, TraceLayer},
 };
-use tracing::info_span;
 use tracing::Level;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 

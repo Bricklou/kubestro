@@ -74,6 +74,7 @@
                 allFeatures = true;
                 # extraArgs = "--all-targets";
               };
+              files = ".+\.rs";
             };
 
             # Nix code formatter
