@@ -60,20 +60,21 @@
                 write = true;
                 configPath = ".prettierrc.yaml"; # relative to the flake root
               };
-              files = ".+\.(mdx?|ya?ml|json|css)";
+              files = ".+\.(mdx?|ya?ml|json|toml|css)";
             };
 
             # Rust code formatter
             clippy = {
               enable = true;
               packageOverrides = {
-                cargo = pkgs.cargo;
-                clippy = pkgs.clippy;
+                cargo = pkgs.rust-bin.stable.latest.default;
+                clippy = pkgs.rust-bin.stable.latest.default;
               };
               settings = {
                 allFeatures = true;
-                extraArgs = "--all-targets";
+                # extraArgs = "--all-targets";
               };
+              files = ".+\.rs";
             };
 
             # Nix code formatter
@@ -138,6 +139,12 @@
 
           # Install Dependencies
           go-task install
+
+          # Debug print
+          echo "rustc version: $(rustc --version)"
+          echo "rustc path: ${pkgs.rustc}"
+          echo "cargo version: $(cargo --version)"
+          echo "cargo path: ${pkgs.cargo}"
         '';
       };
     });
