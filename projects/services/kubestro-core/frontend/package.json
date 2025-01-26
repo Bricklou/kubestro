@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "@kubestro/core-frontend",
   "private": true,
   "type": "module",
   "scripts": {
