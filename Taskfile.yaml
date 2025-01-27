@@ -5,6 +5,9 @@ includes:
   core: ./projects/services/kubestro-core/Taskfile.yaml
   design-system: ./projects/libraries/design-system/Taskfile.yaml
 
+env:
+  KUBECONFIG: ./configs/k3d/kubeconfig
+
 tasks:
   default:
     silent: true
@@ -24,3 +27,63 @@ tasks:
     desc: Sync dependencies
     cmds:
       - pnpm dlx codemod pnpm/catalog
+
+  # kubernetes tasks
+  k3d:up:
+    desc: Start k3d cluster
+    env:
+      HELM_EXPERIMENTAL_OCI: 1
+    cmds:
+      - k3d cluster create --config ./configs/k3d/k3d.yaml --wait
+      - k3d kubeconfig get kubestro > ./configs/k3d/kubeconfig
+      - chmod 600 ./configs/k3d/kubeconfig
+      - echo "Waiting for traefik install job to complete (CTRL+C is safe if you're impatient)"
+      - kubectl wait jobs/helm-install-traefik -n kube-system --for condition=complete --timeout 90s && echo "Completed" || echo "Timed out (but it should still come up eventually)"
+      - task: k3d:cnpg
+
+  k3d:cnpg:
+    desc: Deploy Cloud Native PostgreSQL
+    env:
+      HELM_EXPERIMENTAL_OCI: 1
+    cmds:
+      - echo "Deploying CNPG operator"
+      - helm install cnpg-operator --create-namespace -n cnpg-operator oci://ghcr.io/cloudnative-pg/charts/cloudnative-pg --version 0.23.0 --wait
+      - kubectl wait pods -n cnpg-operator --for condition=ready --selector=app.kubernetes.io/name=cloudnative-pg --timeout 90s
+      - task: k3d:database
+
+  k3d:database:
+    desc: Create database
+    cmds:
+      - kubectl apply -f ./configs/k3d/database.yaml --wait
+      - echo "Waiting for cnpg cluster install job to complete (CTRL+C is safe if you're impatient)"
+      - kubectl wait clusters -n kubestro --for condition=ready kubestro --timeout 90s
+
+  k3d:start:
+    desc: Start k3d cluster
+    cmds:
+      - k3d cluster start kubestro
+
+  k3d:stop:
+    desc: Stop k3d cluster
+    cmds:
+      - k3d cluster stop kubestro
+
+  k3d:status:
+    desc: Show k3d cluster status
+    cmds:
+      - k3d cluster list
+
+  k3d:down:
+    desc: Stop k3d cluster
+    cmds:
+      - k3d cluster delete kubestro
+      - rm configs/k3d/kubeconfig
+
+  k3d:deploy:
+    desc: Deploy app to k3d cluster
+    env:
+      DOCKER_BUILDKIT: 1
+    cmds:
+      - docker build -t k3d-registry.localhost:55000/kubestro-core:local ./projects/services/kubestro-core/
+      - docker push k3d-registry.localhost:55000/kubestro-core:local
+      - 'echo "TODO: Configure the helm chart deployment" && exit 1'

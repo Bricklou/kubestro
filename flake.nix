@@ -125,6 +125,9 @@
             nodejs_22
             pnpm
 
+            # kubernetes
+            k3d
+
             # rust
             rustfmt
             rust-bin.stable.latest.default
