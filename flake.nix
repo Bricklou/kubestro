@@ -133,6 +133,7 @@
             rust-bin.stable.latest.default
             cargo-workspaces
             cargo-watch
+            sea-orm-cli
           ]
           ++ self.checks.${system}.pre-commit-check.enabledPackages;
 

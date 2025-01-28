@@ -8,7 +8,9 @@ tasks:
 
   dev:
     desc: "Start development server"
-    cmd: cargo watch -x 'run {{.CLI_ARGS}}'
+    dotenv:
+      - .env
+    cmd: cargo watch -x 'run --bin kubestro-core {{.CLI_ARGS}}'
 
   lint:
     desc: Lint the project
@@ -26,3 +28,24 @@ tasks:
     desc: Format files
     cmds:
       - cargo fmt -- --config-path ../../../../configs/rustfmt.toml
+
+  # sea-orm migrations
+  migrate:up:
+    desc: Create a new migration
+    cmd: sea-orm-cli migrate up -d ./migration/
+
+  migrate:down:
+    desc: Rollback the last migration
+    cmd: sea-orm-cli migrate down -d ./migration/
+
+  migrate:reset:
+    desc: Reset the database
+    cmd: sea-orm-cli migrate reset -d ./migration/
+
+  migrate:refresh:
+    desc: Refresh the database
+    cmd: sea-orm-cli migrate refresh -d ./migration/
+
+  generate-entity:
+    desc: Generate a new entity
+    cmd: sea-orm-cli generate entity -d ./migration/ -o ./entity/src/ --with-serde --serde-skip-hidden-column --serde-skip-deserializing-primary-key --date-time-crate chrono
