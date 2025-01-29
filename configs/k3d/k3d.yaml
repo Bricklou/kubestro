@@ -1,0 +1,55 @@
+---
+apiVersion: k3d.io/v1alpha5
+kind: Simple
+metadata:
+  name: kubestro
+servers: 1
+agents: 0
+image: docker.io/rancher/k3s:v1.32.0-k3s1
+kubeAPI:
+  hostIP: "0.0.0.0"
+  hostPort: "6443"
+volumes:
+  - volume: /tmp:/tmp/k3d-kubestro
+    nodeFilters:
+      - all
+ports:
+  - port: 8080:80
+    nodeFilters:
+      - loadbalancer
+  - port: 0.0.0.0:8443:443
+    nodeFilters:
+      - loadbalancer
+  - port: 5432:5432
+    nodeFilters:
+      - loadbalancer
+options:
+  k3d:
+    wait: true
+    timeout: 6m0s
+    disableLoadbalancer: false
+    disableImageVolume: false
+    disableRollback: false
+  k3s:
+    extraArgs:
+      - arg: --tls-san=127.0.0.1
+        nodeFilters:
+          - server:*
+    nodeLabels: []
+  kubeconfig:
+    updateDefaultKubeconfig: false
+    switchCurrentContext: false
+  runtime:
+    gpuRequest: ""
+    serversMemory: "2048MiB"
+    agentsMemory: "2048MiB"
+registries:
+  create:
+    name: k3d-registry
+    #    host: 0.0.0.0
+    hostPort: "55000"
+  config: |
+    mirrors:
+      "k3d-registry.localhost:55000":
+        endpoint:
+          - http://k3d-registry:5000

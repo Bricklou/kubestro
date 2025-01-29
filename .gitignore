@@ -17,8 +17,7 @@ target/
 
 # sensitive or high-risk files
 .env
-
-
+configs/k3d/kubeconfig
 
 .nx/cache
 .nx/workspace-data

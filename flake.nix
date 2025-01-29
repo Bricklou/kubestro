@@ -125,11 +125,15 @@
             nodejs_22
             pnpm
 
+            # kubernetes
+            k3d
+
             # rust
             rustfmt
             rust-bin.stable.latest.default
             cargo-workspaces
             cargo-watch
+            sea-orm-cli
           ]
           ++ self.checks.${system}.pre-commit-check.enabledPackages;
 

@@ -34,7 +34,10 @@ jobs:
 
     strategy:
       matrix:
-        project: [services/kubestro-core/backend]
+        project:
+          - services/kubestro-core/backend/app
+          - services/kubestro-core/backend/entity
+          - services/kubestro-core/backend/migration
 
     steps:
       - name: Checkout repository

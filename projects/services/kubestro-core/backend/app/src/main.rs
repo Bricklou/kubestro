@@ -7,6 +7,7 @@ use axum::{
     routing::get,
     Json, Router,
 };
+use migration::{Migrator, MigratorTrait};
 use serde::Serialize;
 use tokio::{net::TcpListener, signal};
 use tower_http::{
@@ -15,6 +16,8 @@ use tower_http::{
 };
 use tracing::Level;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+
+mod app;
 
 #[tokio::main]
 async fn main() {
@@ -32,11 +35,22 @@ async fn main() {
         .with(tracing_subscriber::fmt::layer().with_target(false).json())
         .init();
 
+    // Configure the database connection
+    let database_url = dotenvy::var("DATABASE_URL").expect("DATABASE_URL is not set");
+
+    let db_provider = app::repositories::db::DbProvider::new(&database_url)
+        .await
+        .expect("Failed to connect to the database");
+
+    let db = db_provider.get_db();
+    Migrator::up(db, None)
+        .await
+        .expect("Failed to run migrations");
+
     // build our application with a route
     let app = Router::new()
         .route("/", get(handler))
         .layer((
-            // TraceLayer::new_for_http()
             // Create our own span for the request and include the matched path. The matched
             // path is useful for figuring out which handler the request was routed to.
             TraceLayer::new_for_http()
