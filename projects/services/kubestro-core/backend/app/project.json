@@ -1,0 +1,48 @@
+{
+  "name": "kubestro-core",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "projects/services/kubestro-core/backend/app/src",
+  "targets": {
+    "build": {
+      "executor": "@monodon/rust:build",
+      "outputs": ["{options.target-dir}"],
+      "options": {
+        "target-dir": "target/debug/core/"
+      },
+      "configurations": {
+        "production": {
+          "release": true
+        }
+      }
+    },
+    "lint": {
+      "executor": "@monodon/rust:lint",
+      "outputs": ["{options.target-dir}"],
+      "options": {
+        "target-dir": "target/debug/core/"
+      }
+    },
+    "run": {
+      "executor": "@monodon/rust:run",
+      "outputs": ["{options.target-dir}"],
+      "options": {
+        "target-dir": "target/debug/core/"
+      },
+      "configurations": {
+        "production": {
+          "release": true
+        }
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "projects/services/kubestro-core/backend/entity",
+        "commands": [
+          "cargo fmt -- --config-path ../../../../../configs/rustfmt.toml"
+        ]
+      }
+    }
+  }
+}

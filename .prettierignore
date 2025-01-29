@@ -5,3 +5,7 @@
 **/*.mjs
 **/*.jsx
 *.lock
+pnpm-lock.yaml
+
+/.nx/cache
+/.nx/workspace-data

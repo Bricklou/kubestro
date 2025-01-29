@@ -22,6 +22,7 @@ tasks:
     desc: Format files
     cmds:
       - prettier --write . --config .prettierrc.yaml
+      - nx format
 
   sync-deps:
     desc: Sync dependencies
