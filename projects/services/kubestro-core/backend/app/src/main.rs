@@ -1,11 +1,10 @@
-use std::time::Duration;
+use std::{io, time::Duration};
 
 use axum::{
     extract::{MatchedPath, Request},
     http::StatusCode,
     response::IntoResponse,
-    routing::get,
-    Json, Router,
+    Json,
 };
 use migration::{Migrator, MigratorTrait};
 use serde::Serialize;
@@ -16,11 +15,18 @@ use tower_http::{
 };
 use tracing::Level;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+use utoipa::OpenApi;
+use utoipa_axum::{router::OpenApiRouter, routes};
+use utoipa_scalar::{Scalar, Servable};
 
 mod app;
 
+#[derive(OpenApi)]
+#[openapi()]
+struct ApiDoc;
+
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), io::Error> {
     // This returns an error if the `.env` file doesn't exist, but that's not what we want
     // since we're not going to use a `.env` file if we deploy this application.
     dotenvy::dotenv().ok();
@@ -47,9 +53,10 @@ async fn main() {
         .await
         .expect("Failed to run migrations");
 
+    // Configure OpenAPI
     // build our application with a route
-    let app = Router::new()
-        .route("/", get(handler))
+    let (router, api) = OpenApiRouter::with_openapi(ApiDoc::openapi())
+        .routes(routes!(handler))
         .layer((
             // Create our own span for the request and include the matched path. The matched
             // path is useful for figuring out which handler the request was routed to.
@@ -73,15 +80,17 @@ async fn main() {
             TimeoutLayer::new(Duration::from_secs(10)),
         ))
         // add a fallback service for handling routes to unknown paths
-        .fallback(handler_404);
+        .fallback(handler_404)
+        .split_for_parts();
+
+    let router = router.merge(Scalar::with_url("/docs", api));
 
     // run it
     let listener = TcpListener::bind("127.0.0.1:3000").await.unwrap();
     tracing::debug!("Listening on {}", listener.local_addr().unwrap());
-    axum::serve(listener, app)
+    axum::serve(listener, router)
         .with_graceful_shutdown(shutdown_signal())
         .await
-        .unwrap();
 }
 
 async fn shutdown_signal() {
@@ -113,12 +122,21 @@ pub struct MyData {
     name: String,
 }
 
+#[utoipa::path(
+    method(get,head),
+    summary = "Demo",
+    path = "/",
+    responses(
+        (status = OK, description = "Success", body= str, content_type="application/json")
+    )
+)]
 async fn handler() -> Json<MyData> {
     Json(MyData {
         name: "Hello, World!".to_string(),
     })
 }
 
+/// Fallback service for handling routes to unknown paths
 async fn handler_404() -> impl IntoResponse {
     (StatusCode::NOT_FOUND, "Not Found")
 }
