@@ -4,6 +4,14 @@
   "projectType": "application",
   "sourceRoot": "projects/services/kubestro-core/backend/app/src",
   "targets": {
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "projects/services/kubestro-core/backend/app",
+        "command": "cargo watch -x run",
+        "color": true
+      }
+    },
     "build": {
       "executor": "@monodon/rust:build",
       "outputs": ["{options.target-dir}"],
@@ -39,9 +47,7 @@
       "executor": "nx:run-commands",
       "options": {
         "cwd": "projects/services/kubestro-core/backend/entity",
-        "commands": [
-          "cargo fmt -- --config-path ../../../../../configs/rustfmt.toml"
-        ]
+        "command": "cargo fmt -- --config-path ../../../../../configs/rustfmt.toml"
       }
     }
   }
