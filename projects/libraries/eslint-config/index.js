@@ -415,7 +415,12 @@ export function configApp(rootDir, ...configBlockToMerge) {
         '@stylistic/operator-linebreak': ['warn', 'after'],
         '@stylistic/padded-blocks': ['warn', 'never'],
         '@stylistic/quote-props': ['warn', 'consistent-as-needed'],
-        '@stylistic/quotes': ['warn', 'single'],
+        '@stylistic/quotes': ['warn',
+          'single',
+          {
+            avoidEscape: true,
+            allowTemplateLiterals: 'avoidEscape'
+          }],
         '@stylistic/rest-spread-spacing': 'warn',
         '@stylistic/semi': ['warn', 'never'],
         '@stylistic/space-before-blocks': 'warn',
