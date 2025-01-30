@@ -15,6 +15,9 @@
     "typecheck": {
       "outputs": ["{projectRoot}/dist"],
       "cache": true
+    },
+    "format": {
+      "cache": false
     }
   },
   "defaultBase": "main",

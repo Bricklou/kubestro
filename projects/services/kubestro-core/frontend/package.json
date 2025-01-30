@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@kubestro/design-system": "workspace:../../../libraries/design-system",
-    "@module-federation/runtime": "^0.8.9",
+    "@module-federation/runtime": "catalog:",
     "@react-router/node": "catalog:",
     "@react-router/serve": "catalog:",
     "cross-env": "catalog:",
