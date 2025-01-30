@@ -54,6 +54,39 @@ catalogs:
     '@react-router/serve':
       specifier: ^7.1.3
       version: 7.1.4
+    '@storybook/addon-a11y':
+      specifier: ^8.5.1
+      version: 8.5.2
+    '@storybook/addon-actions':
+      specifier: ^8.5.1
+      version: 8.5.2
+    '@storybook/addon-essentials':
+      specifier: ^8.5.1
+      version: 8.5.2
+    '@storybook/addon-interactions':
+      specifier: ^8.5.1
+      version: 8.5.2
+    '@storybook/addon-links':
+      specifier: ^8.5.1
+      version: 8.5.2
+    '@storybook/addon-onboarding':
+      specifier: ^8.5.1
+      version: 8.5.2
+    '@storybook/addon-themes':
+      specifier: ^8.5.1
+      version: 8.5.2
+    '@storybook/blocks':
+      specifier: ^8.5.1
+      version: 8.5.2
+    '@storybook/react':
+      specifier: ^8.5.1
+      version: 8.5.2
+    '@storybook/react-vite':
+      specifier: ^8.5.1
+      version: 8.5.2
+    '@storybook/test':
+      specifier: ^8.5.1
+      version: 8.5.2
     '@stylistic/eslint-plugin':
       specifier: ^2.12.1
       version: 2.13.0
@@ -177,10 +210,10 @@ catalogs:
 
 patchedDependencies:
   '@storybook/react':
-    hash: pdueymwxrxv2c7glz4sxyz64t4
+    hash: 7e5ef2380d568e3c661b688e87913b21a1a02ebc112990fa0fe9b9f47e929f0c
     path: patches/@storybook__react.patch
   tailwind-variants:
-    hash: gvzhhjcznda77sftie6fq3scoi
+    hash: fbe6eb7f3bddaa60d29251b6575c09e87a63b0daf08b559c2cdb1c80deb99297
     path: patches/tailwind-variants.patch
 
 importers:
@@ -298,7 +331,7 @@ importers:
         version: 8.5.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(storybook@8.5.2(prettier@3.4.2))
       '@storybook/react':
         specifier: 'catalog:'
-        version: 8.5.2(patch_hash=pdueymwxrxv2c7glz4sxyz64t4)(@storybook/test@8.5.2(storybook@8.5.2(prettier@3.4.2)))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(storybook@8.5.2(prettier@3.4.2))(typescript@5.7.3)
+        version: 8.5.2(patch_hash=7e5ef2380d568e3c661b688e87913b21a1a02ebc112990fa0fe9b9f47e929f0c)(@storybook/test@8.5.2(storybook@8.5.2(prettier@3.4.2)))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(storybook@8.5.2(prettier@3.4.2))(typescript@5.7.3)
       '@storybook/react-vite':
         specifier: 'catalog:'
         version: 8.5.2(@storybook/test@8.5.2(storybook@8.5.2(prettier@3.4.2)))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(rollup@4.31.0)(storybook@8.5.2(prettier@3.4.2))(typescript@5.7.3)(vite@6.0.11(@types/node@22.12.0)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(yaml@2.7.0))
@@ -346,7 +379,7 @@ importers:
         version: 3.0.1
       tailwind-variants:
         specifier: 'catalog:'
-        version: 0.3.1(patch_hash=gvzhhjcznda77sftie6fq3scoi)(tailwindcss@4.0.1)
+        version: 0.3.1(patch_hash=fbe6eb7f3bddaa60d29251b6575c09e87a63b0daf08b559c2cdb1c80deb99297)(tailwindcss@4.0.1)
       tailwindcss:
         specifier: 'catalog:'
         version: 4.0.1
@@ -9076,7 +9109,7 @@ snapshots:
       '@joshwooding/vite-plugin-react-docgen-typescript': 0.4.2(typescript@5.7.3)(vite@6.0.11(@types/node@22.12.0)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(yaml@2.7.0))
       '@rollup/pluginutils': 5.1.4(rollup@4.31.0)
       '@storybook/builder-vite': 8.5.2(storybook@8.5.2(prettier@3.4.2))(vite@6.0.11(@types/node@22.12.0)(jiti@2.4.2)(lightningcss@1.29.1)(terser@5.37.0)(yaml@2.7.0))
-      '@storybook/react': 8.5.2(patch_hash=pdueymwxrxv2c7glz4sxyz64t4)(@storybook/test@8.5.2(storybook@8.5.2(prettier@3.4.2)))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(storybook@8.5.2(prettier@3.4.2))(typescript@5.7.3)
+      '@storybook/react': 8.5.2(patch_hash=7e5ef2380d568e3c661b688e87913b21a1a02ebc112990fa0fe9b9f47e929f0c)(@storybook/test@8.5.2(storybook@8.5.2(prettier@3.4.2)))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(storybook@8.5.2(prettier@3.4.2))(typescript@5.7.3)
       find-up: 5.0.0
       magic-string: 0.30.17
       react: 19.0.0
@@ -9093,7 +9126,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@storybook/react@8.5.2(patch_hash=pdueymwxrxv2c7glz4sxyz64t4)(@storybook/test@8.5.2(storybook@8.5.2(prettier@3.4.2)))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(storybook@8.5.2(prettier@3.4.2))(typescript@5.7.3)':
+  '@storybook/react@8.5.2(patch_hash=7e5ef2380d568e3c661b688e87913b21a1a02ebc112990fa0fe9b9f47e929f0c)(@storybook/test@8.5.2(storybook@8.5.2(prettier@3.4.2)))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(storybook@8.5.2(prettier@3.4.2))(typescript@5.7.3)':
     dependencies:
       '@storybook/components': 8.5.2(storybook@8.5.2(prettier@3.4.2))
       '@storybook/global': 5.0.0
@@ -12779,7 +12812,7 @@ snapshots:
 
   tailwind-merge@3.0.1: {}
 
-  tailwind-variants@0.3.1(patch_hash=gvzhhjcznda77sftie6fq3scoi)(tailwindcss@4.0.1):
+  tailwind-variants@0.3.1(patch_hash=fbe6eb7f3bddaa60d29251b6575c09e87a63b0daf08b559c2cdb1c80deb99297)(tailwindcss@4.0.1):
     dependencies:
       tailwind-merge: 2.5.4
       tailwindcss: 4.0.1
