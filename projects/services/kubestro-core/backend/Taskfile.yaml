@@ -48,4 +48,4 @@ tasks:
 
   generate-entity:
     desc: Generate a new entity
-    cmd: sea-orm-cli generate entity -d ./migration/ -o ./entity/src/ --with-serde --serde-skip-hidden-column --serde-skip-deserializing-primary-key --date-time-crate chrono
+    cmd: sea-orm-cli generate entity -o ./entity/src/ --with-serde both --serde-skip-hidden-column --serde-skip-deserializing-primary-key --date-time-crate chrono

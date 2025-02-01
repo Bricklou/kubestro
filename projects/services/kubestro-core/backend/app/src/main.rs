@@ -26,6 +26,6 @@ async fn main() {
 
     match app::start().await {
         Ok(_) => {}
-        Err(e) => error!("An error occurred: {}", e),
+        Err(e) => error!("{}", e),
     }
 }
