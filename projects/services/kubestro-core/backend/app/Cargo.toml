@@ -5,16 +5,22 @@ edition = "2021"
 publish = false
 
 [dependencies]
-axum = "0.8.1"
+axum = { version = "0.8.1", features = ["tower-log", "macros"] }
 dotenvy = { workspace = true }
 serde = { workspace = true }
+serde_json = { workspace = true }
 sea-orm = { workspace = true }
-thiserror = { workspace = true }
+thiserror.workspace = true
 tokio = { workspace = true }
+tower = "0.5.2"
 tower-http = { version = "0.6.2", features = ["trace", "timeout"] }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
-validator = "0.20.0"
+validator = { version = "0.20.0", features = ["derive"] }
+argon2 = "0.5.3"
+deserr = { git = "https://github.com/Bricklou/deserr.git", features = [
+  "axum",
+], rev = "665a70a9" }
 
 # sea-orm
 entity = { path = "../entity" }
@@ -26,3 +32,4 @@ utoipa = { version = "5.3.1", features = [
 ] }
 utoipa-scalar = { version = "0.3.0", features = ["axum"] }
 utoipa-axum = "0.2.0"
+anyhow = "1.0.95"
