@@ -2,16 +2,20 @@ use std::{borrow::Cow, collections::HashMap};
 
 use axum::{http::StatusCode, response::IntoResponse, Json};
 use serde::Serialize;
+use utoipa::ToSchema;
 
 use super::mapping::map_status_code;
 
+/// API Error object
+///
 /// This object respect the [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457.html) standard.
-#[derive(Debug, PartialEq, Serialize)]
+#[derive(Debug, PartialEq, Serialize, ToSchema)]
 pub struct ApiError {
     #[serde(rename = "type")] // type is a reserved keyword in Rust, so we need to rename it to
     #[serde(skip_serializing_if = "Option::is_none")]
     pub _type: Option<Cow<'static, str>>,
     #[serde(serialize_with = "map_status_code")]
+    #[schema(value_type = u16)]
     pub status: StatusCode,
     pub title: Cow<'static, str>,
     #[serde(skip_serializing_if = "Option::is_none")]

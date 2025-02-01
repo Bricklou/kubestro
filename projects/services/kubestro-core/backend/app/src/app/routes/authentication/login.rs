@@ -1,7 +1,10 @@
-use crate::app::{utils::validation::ValidatedJson, ApiContext};
+use crate::app::{
+    utils::{errors::ApiError, validation::ValidatedJson},
+    ApiContext,
+};
 
 use super::AUTHENTICATION_TAG;
-use axum::{response::IntoResponse, Extension, Json};
+use axum::{Extension, Json};
 use deserr::Deserr;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
@@ -18,7 +21,7 @@ pub(super) struct LoginPayload {
 
 /// Login response
 #[derive(Serialize, ToSchema)]
-struct LoginResponse {
+pub(super) struct LoginResponse {
     message: String,
 }
 
@@ -31,17 +34,30 @@ struct LoginResponse {
 
     request_body(content = LoginPayload, content_type = "application/json"),
     responses(
-        (status = OK, description = "Login successful", body = LoginResponse),
-        (status = BAD_REQUEST, description = "Invalid input data", body = str),
-        (status = UNAUTHORIZED, description = "Invalid login/password", body = str),
+        (status = OK, description = "Login successful", body = LoginResponse, example = json!({
+            "message": "Login successful"
+        })),
+        (status = BAD_REQUEST, description = "Invalid input data", body = ApiError, example = json!({
+            "status": 400,
+            "title": "Validation error",
+            "detail": "The request body is invalid",
+            "code": "VALIDATION_ERROR",
+            "error": "Failed to parse the request body as JSON: trailing comma at line 4 column 1"
+        })),
+        (status = UNAUTHORIZED, description = "Invalid login/password", body = ApiError, example = json!({
+            "status": 401,
+            "title": "Unauthorized",
+            "detail": "Invalid login/password",
+            "code": "UNAUTHORIZED"
+        })),
     )
 )]
 pub async fn handler_login(
-    // Extension(_context): Extension<ApiContext>,
+    Extension(_context): Extension<ApiContext>,
     ValidatedJson(input): ValidatedJson<LoginPayload>,
-) -> impl IntoResponse {
+) -> Result<Json<LoginResponse>, ApiError> {
     debug!("Login request: {:?}", input);
-    Json(LoginResponse {
+    Ok(Json(LoginResponse {
         message: "Login successful".to_string(),
-    })
+    }))
 }
