@@ -1,14 +1,13 @@
 {
-  "name": "kubestro-core-migration",
+  "name": "kubestro-core-domain",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
-  "sourceRoot": "projects/services/kubestro-core/backend/migration/src",
+  "sourceRoot": "projects/services/kubestro-core/backend/domain/src",
   "targets": {
     "build": {
       "executor": "@monodon/rust:build",
       "outputs": [
-        "{workspaceRoot}/target/kubestro-core-migration{,.d}",
-        "{workspaceRoot}/target/libmigration.{rlib,d}"
+        "{workspaceRoot}/target/debug/libkubestro_core_domain.{d,rlib}"
       ],
       "configurations": {
         "production": {
@@ -19,15 +18,13 @@
     "lint": {
       "executor": "@monodon/rust:lint",
       "outputs": [
-        "{workspaceRoot}/target/kubestro-core-migration{,.d}",
-        "{workspaceRoot}/target/libmigration.{rlib,d}"
+        "{workspaceRoot}/target/debug/libkubestro_core_domain.{d,rlib}"
       ]
     },
     "run": {
       "executor": "@monodon/rust:run",
       "outputs": [
-        "{workspaceRoot}/target/kubestro-core-migration{,.d}",
-        "{workspaceRoot}/target/libmigration.{rlib,d}"
+        "{workspaceRoot}/target/debug/libkubestro_core_domain.{d,rlib}"
       ],
       "configurations": {
         "production": {
@@ -38,11 +35,15 @@
     "format": {
       "executor": "nx:run-commands",
       "options": {
-        "cwd": "projects/services/kubestro-core/backend/migration",
-        "commands": [
-          "cargo fmt -- --config-path ../../../../../configs/rustfmt.toml"
-        ]
+        "cwd": "projects/services/kubestro-core/backend/domain",
+        "command": "cargo fmt -- --config-path ../../../../../configs/rustfmt.toml"
       }
+    },
+    "test": {
+      "executor": "@monodon/rust:test",
+      "outputs": [
+        "{workspaceRoot}/target/debug/libkubestro_core_domain.{d,rlib}"
+      ]
     }
   }
 }

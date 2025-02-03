@@ -1,19 +1,27 @@
-use std::net::Ipv4Addr;
+use std::{net::Ipv4Addr, sync::Arc};
 
-use anyhow::Context;
-use migration::{Migrator, MigratorTrait};
-use repositories::db::create_db_connection;
-use sea_orm::DatabaseConnection;
+use kubestro_core_domain::{
+    ports::{hasher::Hasher, repositories::user_repository::UserRepository},
+    services::auth::local_auth::LocalAuthService,
+};
+use kubestro_core_infra::{
+    repositories::{db::create_db_connection, user_repo::UserPgRepo},
+    services::{argon_hasher::Argon2Hasher, password_validator::InfraPasswordValidator},
+};
 use tokio::{net::TcpListener, signal};
 
 mod middlewares;
-mod repositories;
 mod routes;
 mod utils;
 
 #[derive(Clone)]
 struct ApiContext {
-    db: DatabaseConnection,
+    // Repositories
+    user_repo: Arc<dyn UserRepository>,
+
+    // Services
+    hasher: Arc<dyn Hasher>,
+    local_auth: Arc<LocalAuthService>,
 }
 
 /// Start the Kubestro Core application
@@ -22,15 +30,30 @@ pub async fn start() -> anyhow::Result<()> {
 
     // Initialize database connection
     let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL is not set");
-    let db = create_db_connection(&db_url).await?;
+    let db = Arc::new(create_db_connection(&db_url).await?);
 
-    // Run database migrations
-    Migrator::up(&db, None)
-        .await
-        .context("Failed to run migrations")?;
+    // === INFRASTRUCTURE ===
+    // Services
+    let hasher = Arc::new(Argon2Hasher::default());
+    let password_validator = Arc::new(InfraPasswordValidator::default());
+
+    // Repositories
+
+    // === DOMAIN ===
+    // Repositories
+    let user_repo = Arc::new(UserPgRepo::new(db.clone()));
+    let local_auth = Arc::new(LocalAuthService::new(
+        user_repo.clone(),
+        hasher.clone(),
+        password_validator.clone(),
+    ));
 
     // Create context
-    let context = ApiContext { db };
+    let context = ApiContext {
+        user_repo,
+        hasher,
+        local_auth,
+    };
 
     // Create router
     let router = routes::get_routes(context);

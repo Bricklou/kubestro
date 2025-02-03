@@ -1,5 +1,9 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "workspaceLayout": {
+    "libsDir": "./projects/libraries/",
+    "appsDir": "./projects/services/"
+  },
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build", "^typecheck"],
@@ -18,6 +22,9 @@
     },
     "format": {
       "cache": false
+    },
+    "test": {
+      "cache": true
     }
   },
   "defaultBase": "main",

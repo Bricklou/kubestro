@@ -2,10 +2,25 @@
 members = ["projects/services/kubestro-core/backend/*"]
 resolver = "3"
 
+[workspace.package]
+edition = "2021"
+
 [workspace.dependencies]
+# data transformation & manipulation
 serde = { version = "1.0.217", features = ["derive"] }
 serde_json = "1.0.138"
 dotenvy = { version = "0.15.7" }
+chrono = "0.4.39"
+uuid = { version = "1.12.1", features = ["v4", "serde"] }
+
+# http
+utoipa = { version = "5.3.1", features = [
+  "axum_extras",
+  "serde_yaml",
+  "chrono",
+] }
+
+# database
 sea-orm = { version = "1.1.4", features = [
   "sqlx-postgres",
   "runtime-tokio-rustls",
@@ -13,12 +28,22 @@ sea-orm = { version = "1.1.4", features = [
   "with-uuid",
   "with-chrono",
 ] }
-thiserror = "2.0.11"
-tokio = { version = "1.43.0", features = ["full"] }
-tracing = "0.1.41"
-tracing-subscriber = { version = "0.3.19", features = ["env-filter", "json"] }
 validator = { version = "0.20.0", features = ["derive"] }
 
-# testing dependencies
+# helpers
+async-trait = "0.1.86"
+
+# logging
+tracing = "0.1.41"
+tracing-subscriber = { version = "0.3.19", features = ["env-filter", "json"] }
+
+# async environment
+tokio = { version = "1.43.0", features = ["full"] }
+
+# error handling
+anyhow = "1.0.95"
+thiserror = "2.0.11"
+
+# testing libraries
 mockall = "0.13.1"
 fake = { version = "3.1.0", features = ["derive"] }

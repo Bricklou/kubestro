@@ -36,29 +36,33 @@ pub fn get_routes(context: ApiContext) -> axum::Router {
         .fallback(handler_404)
         // plug necessary context layer
         .layer(
-            ServiceBuilder::new().layer(Extension(context)).layer(
-                TraceLayer::new_for_http()
-                    // Create our own span for the request and include the matched path. The matched
-                    // path is useful for figuring out which handler the request was routed to.
-                    .make_span_with(|req: &Request| {
-                        let method = req.method();
-                        let uri = req.uri();
+            ServiceBuilder::new()
+                .layer(Extension(context.user_repo))
+                .layer(Extension(context.hasher))
+                .layer(Extension(context.local_auth))
+                .layer(
+                    TraceLayer::new_for_http()
+                        // Create our own span for the request and include the matched path. The matched
+                        // path is useful for figuring out which handler the request was routed to.
+                        .make_span_with(|req: &Request| {
+                            let method = req.method();
+                            let uri = req.uri();
 
-                        // Axum automatically adds this extension
-                        let matched_path = req
-                            .extensions()
-                            .get::<MatchedPath>()
-                            .map(|matched_path| matched_path.as_str());
+                            // Axum automatically adds this extension
+                            let matched_path = req
+                                .extensions()
+                                .get::<MatchedPath>()
+                                .map(|matched_path| matched_path.as_str());
 
-                        tracing::debug_span!("request", %method, %uri, matched_path)
-                    })
-                    // By default, `TraceLayer` will log 4xx and 5xx responses, but we're doing our
-                    // specific logging of errors so disable that
-                    .on_request(DefaultOnRequest::new().level(Level::DEBUG))
-                    // By default, `TraceLayer` will log 5xx responses, but we're doing our specific
-                    // logging of errors so disable that
-                    .on_response(DefaultOnResponse::new().level(Level::INFO)),
-            ),
+                            tracing::debug_span!("request", %method, %uri, matched_path)
+                        })
+                        // By default, `TraceLayer` will log 4xx and 5xx responses, but we're doing our
+                        // specific logging of errors so disable that
+                        .on_request(DefaultOnRequest::new().level(Level::DEBUG))
+                        // By default, `TraceLayer` will log 5xx responses, but we're doing our specific
+                        // logging of errors so disable that
+                        .on_response(DefaultOnResponse::new().level(Level::INFO)),
+                ),
         )
         .split_for_parts();
 

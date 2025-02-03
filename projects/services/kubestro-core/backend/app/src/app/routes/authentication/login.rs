@@ -1,11 +1,14 @@
-use crate::app::{
-    utils::{errors::ApiError, validation::ValidatedJson},
-    ApiContext,
-};
+use std::sync::Arc;
+
+use crate::app::utils::{errors::ApiError, validation::ValidatedJson};
 
 use super::AUTHENTICATION_TAG;
 use axum::{Extension, Json};
 use deserr::Deserr;
+use kubestro_core_domain::{
+    models::{fields::email::Email, user::User},
+    services::auth::local_auth::LocalAuthService,
+};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 use validator::Validate;
@@ -13,16 +16,16 @@ use validator::Validate;
 /// Login payload
 #[derive(Deserialize, Deserr, ToSchema, Validate, Debug)]
 pub(super) struct LoginPayload {
-    #[validate(length(min = 3, message = "login must be at least 3 characters long"))]
-    pub login: String,
-    #[validate(length(min = 8, message = "password must be at least 8 characters long"))]
+    #[validate(email(message = "Invalid email address"))]
+    pub email: String,
+    #[validate(length(min = 8, message = "Password must be at least 8 characters long"))]
     password: String,
 }
 
 /// Login response
 #[derive(Serialize, ToSchema)]
 pub(super) struct LoginResponse {
-    message: String,
+    user: User,
 }
 
 #[utoipa::path(
@@ -53,11 +56,12 @@ pub(super) struct LoginResponse {
     )
 )]
 pub async fn handler_login(
-    Extension(_context): Extension<ApiContext>,
+    Extension(local_auth): Extension<Arc<LocalAuthService>>,
     ValidatedJson(input): ValidatedJson<LoginPayload>,
 ) -> Result<Json<LoginResponse>, ApiError> {
-    debug!("Login request: {:?}", input);
-    Ok(Json(LoginResponse {
-        message: "Login successful".to_string(),
-    }))
+    let email = Email::try_from(input.email.clone())?;
+
+    let user = local_auth.login(&email, &input.password).await?;
+
+    Ok(Json(LoginResponse { user }))
 }
