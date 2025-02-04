@@ -23,6 +23,10 @@ ports:
   - port: 5432:5432
     nodeFilters:
       - loadbalancer
+
+  - port: 6379:6379
+    nodeFilters:
+      - loadbalancer
 options:
   k3d:
     wait: true

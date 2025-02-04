@@ -41,6 +41,7 @@ tasks:
       - echo "Waiting for traefik install job to complete (CTRL+C is safe if you're impatient)"
       - kubectl wait jobs/helm-install-traefik -n kube-system --for condition=complete --timeout 90s && echo "Completed" || echo "Timed out (but it should still come up eventually)"
       - task: k3d:cnpg
+      - task: k3d:redis
 
   k3d:cnpg:
     desc: Deploy Cloud Native PostgreSQL
@@ -48,7 +49,7 @@ tasks:
       HELM_EXPERIMENTAL_OCI: 1
     cmds:
       - echo "Deploying CNPG operator"
-      - helm install cnpg-operator --create-namespace -n cnpg-operator oci://ghcr.io/cloudnative-pg/charts/cloudnative-pg --version 0.23.0 --wait
+      - helm upgrade --install cnpg-operator --create-namespace -n cnpg-operator oci://ghcr.io/cloudnative-pg/charts/cloudnative-pg --version 0.23.0 --wait
       - kubectl wait pods -n cnpg-operator --for condition=ready --selector=app.kubernetes.io/name=cloudnative-pg --timeout 90s
       - task: k3d:database
 
@@ -58,6 +59,14 @@ tasks:
       - kubectl apply -f ./configs/k3d/database.yaml --wait
       - echo "Waiting for cnpg cluster install job to complete (CTRL+C is safe if you're impatient)"
       - kubectl wait clusters -n kubestro --for condition=ready kubestro --timeout 90s
+
+  k3d:redis:
+    desc: Deploy Redis
+    cmds:
+      - helm upgrade --install redis --create-namespace -n kubestro oci://registry-1.docker.io/bitnamicharts/redis --version 20.6.3 --wait --values ./configs/k3d/redis-helm-values.yaml
+      - echo "Waiting for redis install job to complete (CTRL+C is safe if you're impatient)"
+      - kubectl wait pods -n kubestro --for condition=ready --selector=app.kubernetes.io/name=redis --timeout 90s
+      - kubectl apply -f ./configs/k3d/redis-svc.yaml --wait
 
   k3d:start:
     desc: Start k3d cluster
