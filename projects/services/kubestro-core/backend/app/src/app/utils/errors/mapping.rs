@@ -100,7 +100,7 @@ impl From<PasswordError> for ApiError {
                 code: "INVALID_PASSWORD".into(),
                 ..Default::default()
             },
-            PasswordError::Hashing(e) => ApiError::unexpected_error(&e.to_string()),
+            PasswordError::Hashing(e) => ApiError::unexpected_error(e.to_string()),
             PasswordError::Validation(e) => {
                 let mut extensions = HashMap::<Cow<'static, str>, serde_json::Value>::new();
                 extensions.insert("errors".into(), e.to_string().into());

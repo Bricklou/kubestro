@@ -39,6 +39,13 @@
         "command": "cargo fmt -- --config-path ../../../../../configs/rustfmt.toml"
       }
     },
+    "format:check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "projects/services/kubestro-core/backend/domain",
+        "command": "cargo fmt -- --config-path ../../../../../configs/rustfmt.toml --check"
+      }
+    },
     "test": {
       "executor": "@monodon/rust:test",
       "outputs": [

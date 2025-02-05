@@ -33,6 +33,13 @@
         "cwd": "projects/services/kubestro-core/backend/infra",
         "command": "cargo fmt -- --config-path ../../../../../configs/rustfmt.toml"
       }
+    },
+    "format:check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "projects/services/kubestro-core/backend/infra",
+        "command": "cargo fmt -- --config-path ../../../../../configs/rustfmt.toml --check"
+      }
     }
   }
 }
