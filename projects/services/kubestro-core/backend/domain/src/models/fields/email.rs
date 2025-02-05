@@ -1,12 +1,11 @@
 use std::ops::Deref;
 
 use serde::{Deserialize, Serialize};
-use utoipa::ToSchema;
 use validator::ValidateEmail;
 
 /// The [`Email`] field represent an email address object.
 /// When created, it will validate the email address.
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Email(String);
 
 impl Email {

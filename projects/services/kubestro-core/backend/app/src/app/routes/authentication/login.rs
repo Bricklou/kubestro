@@ -1,13 +1,17 @@
 use std::sync::Arc;
 
-use crate::app::utils::{errors::ApiError, validation::ValidatedJson};
+use crate::app::{
+    dto::user_dto::UserDto,
+    utils::{errors::ApiError, validation::ValidatedJson},
+};
 
 use super::AUTHENTICATION_TAG;
 use axum::{Extension, Json};
+use axum_session::Session;
+use axum_session_redispool::SessionRedisPool;
 use deserr::Deserr;
 use kubestro_core_domain::{
-    models::{fields::email::Email, user::User},
-    services::auth::local_auth::LocalAuthService,
+    models::fields::email::Email, services::auth::local_auth::LocalAuthService,
 };
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
@@ -25,7 +29,7 @@ pub(super) struct LoginPayload {
 /// Login response
 #[derive(Serialize, ToSchema)]
 pub(super) struct LoginResponse {
-    user: User,
+    user: UserDto,
 }
 
 #[utoipa::path(
@@ -38,7 +42,13 @@ pub(super) struct LoginResponse {
     request_body(content = LoginPayload, content_type = "application/json"),
     responses(
         (status = OK, description = "Login successful", body = LoginResponse, example = json!({
-            "message": "Login successful"
+            "user": {
+                "id": "1",
+                "email": "admin@example.com",
+                "username" : "admin",
+                "created_at": "2021-08-31T12:00:00Z",
+                "updated_at": "2021-08-31T12:00:00Z",
+            }
         })),
         (status = BAD_REQUEST, description = "Invalid input data", body = ApiError, example = json!({
             "status": 400,
@@ -57,11 +67,15 @@ pub(super) struct LoginResponse {
 )]
 pub async fn handler_login(
     Extension(local_auth): Extension<Arc<LocalAuthService>>,
+    session: Session<SessionRedisPool>,
     ValidatedJson(input): ValidatedJson<LoginPayload>,
 ) -> Result<Json<LoginResponse>, ApiError> {
     let email = Email::try_from(input.email.clone())?;
 
-    let user = local_auth.login(&email, &input.password).await?;
+    let user: UserDto = local_auth.login(&email, &input.password).await?.into();
+
+    session.renew();
+    session.set("user", &user);
 
     Ok(Json(LoginResponse { user }))
 }

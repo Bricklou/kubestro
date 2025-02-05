@@ -11,9 +11,6 @@ uuid = { workspace = true }
 chrono = { workspace = true }
 validator.workspace = true
 
-# openapi schemas
-utoipa.workspace = true
-
 # helpers
 async-trait.workspace = true
 

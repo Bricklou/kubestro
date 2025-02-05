@@ -1,6 +1,5 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-use utoipa::{PartialSchema, ToSchema};
 use uuid::Uuid;
 
 use super::{
@@ -9,7 +8,7 @@ use super::{
 };
 
 /// User Id
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
 pub struct UserId(Uuid);
 
 impl EntityId for UserId {
@@ -22,30 +21,20 @@ impl EntityId for UserId {
     }
 }
 
+impl Default for UserId {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl From<Uuid> for UserId {
     fn from(id: Uuid) -> Self {
         Self(id)
     }
 }
 
-impl PartialSchema for UserId {
-    fn schema() -> utoipa::openapi::RefOr<utoipa::openapi::schema::Schema> {
-        utoipa::schema!(
-            #[inline]
-            String
-        )
-        .into()
-    }
-}
-
-impl ToSchema for UserId {
-    fn name() -> std::borrow::Cow<'static, str> {
-        "UserId".into()
-    }
-}
-
 /// This model represents a user entity inside the system
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, ToSchema)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct User {
     /// The id of the user
     id: UserId,
@@ -54,7 +43,6 @@ pub struct User {
     /// The email of the user.
     pub email: Email,
     /// The password of the user.
-    #[serde(skip_serializing)]
     pub password: Password,
     /// The date and time the user was created.
     pub created_at: DateTime<Utc>,

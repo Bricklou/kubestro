@@ -37,6 +37,16 @@ impl ApiError {
             ..Default::default()
         }
     }
+
+    pub fn unauthorized() -> Self {
+        Self {
+            status: StatusCode::UNAUTHORIZED,
+            title: "Unauthorized".into(),
+            detail: Some("Unauthorized".into()),
+            code: "unauthorized".into(),
+            ..Default::default()
+        }
+    }
 }
 
 impl From<EmailError> for ApiError {

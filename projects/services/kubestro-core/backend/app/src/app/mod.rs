@@ -1,5 +1,6 @@
 use std::{net::Ipv4Addr, sync::Arc};
 
+use anyhow::Context;
 use kubestro_core_domain::{
     ports::{hasher::Hasher, repositories::user_repository::UserRepository},
     services::auth::local_auth::LocalAuthService,
@@ -8,8 +9,10 @@ use kubestro_core_infra::{
     repositories::{db::create_db_connection, user_repo::UserPgRepo},
     services::{argon_hasher::Argon2Hasher, password_validator::InfraPasswordValidator},
 };
+use redis_pool::{RedisPool, SingleRedisPool};
 use tokio::{net::TcpListener, signal};
 
+mod dto;
 mod middlewares;
 mod routes;
 mod utils;
@@ -22,6 +25,9 @@ struct ApiContext {
     // Services
     hasher: Arc<dyn Hasher>,
     local_auth: Arc<LocalAuthService>,
+
+    // Redis pool
+    pool: SingleRedisPool,
 }
 
 /// Start the Kubestro Core application
@@ -29,7 +35,7 @@ pub async fn start() -> anyhow::Result<()> {
     info!("Welcome to Kubestro Core!");
 
     // Initialize database connection
-    let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL is not set");
+    let db_url = std::env::var("DATABASE_URL").context("DATABASE_URL is not set")?;
     let db = Arc::new(create_db_connection(&db_url).await?);
 
     // === INFRASTRUCTURE ===
@@ -48,15 +54,22 @@ pub async fn start() -> anyhow::Result<()> {
         password_validator.clone(),
     ));
 
+    // === API ===
+    // Redis pool
+    let redis_url = std::env::var("REDIS_URL").context("REDIS_URL is not set")?;
+    let client = redis::Client::open(redis_url)?;
+    let pool = RedisPool::from(client);
+
     // Create context
     let context = ApiContext {
         user_repo,
         hasher,
         local_auth,
+        pool,
     };
 
     // Create router
-    let router = routes::get_routes(context);
+    let router = routes::get_routes(context).await?;
 
     // Run Axum HTTP server
     let listener = TcpListener::bind((Ipv4Addr::UNSPECIFIED, 8001)).await?;

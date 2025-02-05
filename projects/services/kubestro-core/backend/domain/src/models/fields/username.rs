@@ -1,12 +1,11 @@
 use std::ops::Deref;
 
 use serde::{Deserialize, Serialize};
-use utoipa::ToSchema;
 use validator::ValidateLength;
 
 /// The [`Username`] field represent a username object
 /// When created, it will validate the username
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Username(String);
 
 impl Username {

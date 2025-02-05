@@ -1,16 +1,18 @@
 use std::sync::Arc;
 
 use axum::{Extension, Json};
+use axum_session::Session;
+use axum_session_redispool::SessionRedisPool;
 use deserr::Deserr;
-use kubestro_core_domain::{
-    models::user::User,
-    services::auth::local_auth::{LocalAuthService, RegisterUserPayload},
-};
+use kubestro_core_domain::services::auth::local_auth::{LocalAuthService, RegisterUserPayload};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 use validator::Validate;
 
-use crate::app::utils::{errors::ApiError, validation::ValidatedJson};
+use crate::app::{
+    dto::user_dto::UserDto,
+    utils::{errors::ApiError, validation::ValidatedJson},
+};
 
 use super::AUTHENTICATION_TAG;
 
@@ -28,7 +30,7 @@ pub(super) struct RegisterPayload {
 /// Register response
 #[derive(Serialize, ToSchema)]
 pub(super) struct RegisterResponse {
-    user: User,
+    user: UserDto,
 }
 
 #[utoipa::path(
@@ -66,6 +68,7 @@ pub(super) struct RegisterResponse {
 )]
 pub async fn handler_register(
     Extension(local_auth): Extension<Arc<LocalAuthService>>,
+    session: Session<SessionRedisPool>,
     ValidatedJson(input): ValidatedJson<RegisterPayload>,
 ) -> Result<Json<RegisterResponse>, ApiError> {
     let user_data = RegisterUserPayload {
@@ -74,6 +77,10 @@ pub async fn handler_register(
         password: input.password.into_boxed_str(),
     };
 
-    let user = local_auth.register(user_data).await?;
+    let user: UserDto = local_auth.register(user_data).await?.into();
+
+    session.renew();
+    session.set("user", &user);
+
     Ok(Json(RegisterResponse { user }))
 }

@@ -95,10 +95,8 @@ impl UserRepository for UserPgRepo {
             ..Default::default()
         };
 
-        let user = user
-            .insert(self.db.pool())
+        user.insert(self.db.pool())
             .await
-            .map(User::try_from)
             .map_err(|err| match err {
                 DbErr::Query(RuntimeErr::SqlxError(sqlx::Error::Database(db_err))) => {
                     trace!("Database error: {}", db_err.to_string());
@@ -109,10 +107,11 @@ impl UserRepository for UserPgRepo {
                     }
                 }
                 e => UserCreateRepoError::UnexpectedError(e.to_string()),
-            })?
-            .map_err(|e| UserCreateRepoError::UnexpectedError(e.to_string()))?;
-
-        Ok(user)
+            })
+            .and_then(|user| {
+                User::try_from(user)
+                    .map_err(|e| UserCreateRepoError::UnexpectedError(e.to_string()))
+            })
     }
 
     #[tracing::instrument(skip(self))]

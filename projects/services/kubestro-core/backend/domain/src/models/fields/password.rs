@@ -1,7 +1,6 @@
 use std::{ops::Deref, sync::Arc};
 
 use serde::{Deserialize, Serialize};
-use utoipa::ToSchema;
 
 use crate::ports::{
     hasher::{Hasher, HasherError},
@@ -10,7 +9,7 @@ use crate::ports::{
 
 /// [`Password`] field represent a password object.
 /// When created, it will validate the password.
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Password(Box<str>);
 
 impl Password {
