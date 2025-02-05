@@ -39,7 +39,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: kubestro
+  name: kubestro-pg
   namespace: kubestro
 spec:
   type: LoadBalancer

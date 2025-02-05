@@ -1,15 +1,15 @@
 {
-  "name": "migration",
+  "name": "kubestro-core-migration",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "projects/services/kubestro-core/backend/migration/src",
   "targets": {
     "build": {
       "executor": "@monodon/rust:build",
-      "outputs": ["{options.target-dir}"],
-      "options": {
-        "target-dir": "target/debug/migration/"
-      },
+      "outputs": [
+        "{workspaceRoot}/target/kubestro-core-migration{,.d}",
+        "{workspaceRoot}/target/libmigration.{rlib,d}"
+      ],
       "configurations": {
         "production": {
           "release": true
@@ -18,17 +18,17 @@
     },
     "lint": {
       "executor": "@monodon/rust:lint",
-      "outputs": ["{options.target-dir}"],
-      "options": {
-        "target-dir": "target/debug/migration/"
-      }
+      "outputs": [
+        "{workspaceRoot}/target/kubestro-core-migration{,.d}",
+        "{workspaceRoot}/target/libmigration.{rlib,d}"
+      ]
     },
     "run": {
       "executor": "@monodon/rust:run",
-      "outputs": ["{options.target-dir}"],
-      "options": {
-        "target-dir": "target/debug/migration/"
-      },
+      "outputs": [
+        "{workspaceRoot}/target/kubestro-core-migration{,.d}",
+        "{workspaceRoot}/target/libmigration.{rlib,d}"
+      ],
       "configurations": {
         "production": {
           "release": true
@@ -38,9 +38,18 @@
     "format": {
       "executor": "nx:run-commands",
       "options": {
-        "cwd": "projects/services/kubestro-core/backend/entity",
+        "cwd": "projects/services/kubestro-core/backend/migration",
         "commands": [
           "cargo fmt -- --config-path ../../../../../configs/rustfmt.toml"
+        ]
+      }
+    },
+    "format:check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "projects/services/kubestro-core/backend/migration",
+        "commands": [
+          "cargo fmt -- --config-path ../../../../../configs/rustfmt.toml --check"
         ]
       }
     }

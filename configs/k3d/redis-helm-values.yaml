@@ -1,0 +1,11 @@
+---
+image:
+  version: "7.4.2"
+
+auth:
+  enabled: false
+
+master:
+  persistence:
+    enabled: true
+    size: 200Mi

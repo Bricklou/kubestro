@@ -14,10 +14,7 @@
     },
     "build": {
       "executor": "@monodon/rust:build",
-      "outputs": ["{options.target-dir}"],
-      "options": {
-        "target-dir": "target/debug/core/"
-      },
+      "outputs": ["{workspaceRoot}/target/debug/kubestro-core{,.d}"],
       "configurations": {
         "production": {
           "release": true
@@ -26,17 +23,11 @@
     },
     "lint": {
       "executor": "@monodon/rust:lint",
-      "outputs": ["{options.target-dir}"],
-      "options": {
-        "target-dir": "target/debug/core/"
-      }
+      "outputs": ["{workspaceRoot}/target/debug/kubestro-core{,.d}"]
     },
     "run": {
       "executor": "@monodon/rust:run",
-      "outputs": ["{options.target-dir}"],
-      "options": {
-        "target-dir": "target/debug/core/"
-      },
+      "outputs": ["{workspaceRoot}/target/debug/kubestro-core{,.d}"],
       "configurations": {
         "production": {
           "release": true
@@ -46,8 +37,15 @@
     "format": {
       "executor": "nx:run-commands",
       "options": {
-        "cwd": "projects/services/kubestro-core/backend/entity",
+        "cwd": "projects/services/kubestro-core/backend/app",
         "command": "cargo fmt -- --config-path ../../../../../configs/rustfmt.toml"
+      }
+    },
+    "format:check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "projects/services/kubestro-core/backend/app",
+        "command": "cargo fmt -- --config-path ../../../../../configs/rustfmt.toml --check"
       }
     }
   }

@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubestro-redis
+  namespace: kubestro
+spec:
+  type: LoadBalancer
+  selector:
+    app.kubernetes.io/instance: redis
+    app.kubernetes.io/component: master
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379

@@ -1,0 +1,30 @@
+[package]
+name = "kubestro-core-domain"
+version = "0.1.0"
+edition = { workspace = true }
+
+[dependencies]
+# data transformation & manipulation
+serde = { workspace = true }
+serde_json = { workspace = true }
+uuid = { workspace = true }
+chrono = { workspace = true }
+validator.workspace = true
+
+# helpers
+async-trait.workspace = true
+
+# error handling
+thiserror = { workspace = true }
+
+# async environment
+tokio = { workspace = true }
+
+# logging
+tracing = { workspace = true }
+
+# testing dependencies
+mockall = { workspace = true }
+
+[lib]
+name = "kubestro_core_domain"

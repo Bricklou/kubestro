@@ -5,24 +5,44 @@ edition = "2021"
 publish = false
 
 [dependencies]
-axum = "0.8.1"
-dotenvy = { workspace = true }
-serde = { workspace = true }
-sea-orm = { workspace = true }
-thiserror = { workspace = true }
-tokio = { workspace = true }
+# http
+axum = { version = "0.8.1", features = ["tower-log", "macros"] }
+tower = "0.5.2"
 tower-http = { version = "0.6.2", features = ["trace", "timeout"] }
-tracing = { workspace = true }
-tracing-subscriber = { workspace = true }
-validator = "0.20.0"
-
-# sea-orm
-entity = { path = "../entity" }
-migration = { path = "../migration" }
-utoipa = { version = "5.3.1", features = [
-  "axum_extras",
-  "serde_yaml",
-  "chrono",
-] }
+utoipa.workspace = true
 utoipa-scalar = { version = "0.3.0", features = ["axum"] }
 utoipa-axum = "0.2.0"
+axum_session = { version = "0.16.0", features = ["advanced"] }
+axum_session_redispool = "0.5.0"
+axum_session_auth = "0.16.0"
+redis = "0.28.1"
+redis_pool = "0.7.0"
+
+# data transformation & manipulation
+dotenvy.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+validator = { version = "0.20.0", features = ["derive"] }
+deserr = { git = "https://github.com/Bricklou/deserr.git", features = [
+  "axum",
+], rev = "665a70a9" }
+chrono.workspace = true
+
+# logging
+tracing.workspace = true
+tracing-subscriber.workspace = true
+
+# async environment
+tokio.workspace = true
+
+# error handling
+anyhow.workspace = true
+thiserror.workspace = true
+
+# testing libraries
+mockall.workspace = true
+fake.workspace = true
+
+# sub-projects
+kubestro-core-domain = { path = "../domain" }
+kubestro-core-infra = { path = "../infra" }

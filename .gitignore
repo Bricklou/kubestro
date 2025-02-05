@@ -19,6 +19,7 @@ target/
 .env
 configs/k3d/kubeconfig
 
+dist/
 .nx/cache
 .nx/workspace-data
 

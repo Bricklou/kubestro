@@ -1,0 +1,56 @@
+{
+  "name": "kubestro-core-domain",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "projects/services/kubestro-core/backend/domain/src",
+  "targets": {
+    "build": {
+      "executor": "@monodon/rust:build",
+      "outputs": [
+        "{workspaceRoot}/target/debug/libkubestro_core_domain.{d,rlib}"
+      ],
+      "configurations": {
+        "production": {
+          "release": true
+        }
+      }
+    },
+    "lint": {
+      "executor": "@monodon/rust:lint",
+      "outputs": [
+        "{workspaceRoot}/target/debug/libkubestro_core_domain.{d,rlib}"
+      ]
+    },
+    "run": {
+      "executor": "@monodon/rust:run",
+      "outputs": [
+        "{workspaceRoot}/target/debug/libkubestro_core_domain.{d,rlib}"
+      ],
+      "configurations": {
+        "production": {
+          "release": true
+        }
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "projects/services/kubestro-core/backend/domain",
+        "command": "cargo fmt -- --config-path ../../../../../configs/rustfmt.toml"
+      }
+    },
+    "format:check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "projects/services/kubestro-core/backend/domain",
+        "command": "cargo fmt -- --config-path ../../../../../configs/rustfmt.toml --check"
+      }
+    },
+    "test": {
+      "executor": "@monodon/rust:test",
+      "outputs": [
+        "{workspaceRoot}/target/debug/libkubestro_core_domain.{d,rlib}"
+      ]
+    }
+  }
+}

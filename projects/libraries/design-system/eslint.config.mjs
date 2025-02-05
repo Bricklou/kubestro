@@ -17,6 +17,6 @@ export default configApp(
   },
   {
     files: ['src/**/*.stories.{ts,tsx}'],
-    extends: [storybook.configs['flat/recommended']],
+    extends: [pluginStorybook.configs['flat/recommended']]
   }
 )

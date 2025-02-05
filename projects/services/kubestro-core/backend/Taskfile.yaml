@@ -32,20 +32,25 @@ tasks:
   # sea-orm migrations
   migrate:up:
     desc: Create a new migration
+    dir: .
     cmd: sea-orm-cli migrate up -d ./migration/
 
   migrate:down:
     desc: Rollback the last migration
+    dir: .
     cmd: sea-orm-cli migrate down -d ./migration/
 
   migrate:reset:
     desc: Reset the database
+    dir: .
     cmd: sea-orm-cli migrate reset -d ./migration/
 
   migrate:refresh:
     desc: Refresh the database
+    dir: .
     cmd: sea-orm-cli migrate refresh -d ./migration/
 
   generate-entity:
     desc: Generate a new entity
-    cmd: sea-orm-cli generate entity -d ./migration/ -o ./entity/src/ --with-serde --serde-skip-hidden-column --serde-skip-deserializing-primary-key --date-time-crate chrono
+    dir: .
+    cmd: sea-orm-cli generate entity -o ./infra/src/entities/ --with-serde both --serde-skip-hidden-column --serde-skip-deserializing-primary-key --date-time-crate chrono
