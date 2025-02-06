@@ -7,6 +7,7 @@ import stylistic from '@stylistic/eslint-plugin'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
 import importPlugin from 'eslint-plugin-import'
 import unusedImports from 'eslint-plugin-unused-imports'
+import customRules from './custom-plugin.js'
 
 /*
  * TODO: enable when compatible with Tailwindcss 4
@@ -53,8 +54,8 @@ export function configApp(rootDir, ...configBlockToMerge) {
       plugins: {
         'eslint': pluginJs,
         '@stylistic': stylistic,
-        'unused-imports': unusedImports
-        // 'custom-rules': customRules
+        'unused-imports': unusedImports,
+        'custom-rules': customRules
       }
     },
 
@@ -406,10 +407,8 @@ export function configApp(rootDir, ...configBlockToMerge) {
             }
           }],
 
-        /*
-         * Since `@stylistic/object-curly-newline` seems broken, enable our own rule
-         * 'custom-rules/custom-object-curly-newline': 'warn',
-         */
+        // Since `@stylistic/object-curly-newline` seems broken, enable our own rule
+        'custom-rules/custom-object-curly-newline': 'warn',
         '@stylistic/object-curly-spacing': ['warn', 'always'],
         '@stylistic/object-property-newline': ['warn',
           { allowAllPropertiesOnSameLine: false }],
