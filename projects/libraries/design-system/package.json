@@ -31,9 +31,12 @@
   "dependencies": {
     "@radix-ui/react-checkbox": "catalog:",
     "@radix-ui/react-label": "catalog:",
-    "@radix-ui/react-slot": "catalog:"
+    "@radix-ui/react-slot": "catalog:",
+    "@radix-ui/react-switch": "^1.1.3"
   },
   "devDependencies": {
+    "@fontsource-variable/inter": "catalog:",
+    "@kubestro/eslint-config": "workspace:../eslint-config/",
     "@storybook/addon-a11y": "catalog:",
     "@storybook/addon-actions": "catalog:",
     "@storybook/addon-essentials": "catalog:",
@@ -50,7 +53,6 @@
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react-swc": "catalog:",
     "eslint": "catalog:",
-    "@kubestro/eslint-config": "workspace:../eslint-config/",
     "eslint-plugin-storybook": "catalog:",
     "lucide-react": "catalog:",
     "react": "catalog:",
@@ -64,7 +66,7 @@
     "typescript": "catalog:",
     "vite": "catalog:",
     "vite-plugin-dts": "catalog:",
-    "@fontsource-variable/inter": "catalog:"
+    "vitest": "catalog:"
   },
   "eslintConfig": {
     "extends": [
@@ -72,11 +74,11 @@
     ]
   },
   "peerDependencies": {
+    "@fontsource-variable/inter": "catalog:",
     "lucide-react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "tailwind-merge": "catalog:",
-    "tailwind-variants": "catalog:",
-    "@fontsource-variable/inter": "catalog:"
+    "tailwind-variants": "catalog:"
   }
 }

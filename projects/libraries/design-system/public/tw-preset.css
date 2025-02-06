@@ -79,7 +79,7 @@
    * Application typography
    */
   --font-sans: "Inter Variable", "sans-serif";
-  --radius: 0.3rem;
+  --radius: 0.15rem;
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius-lg) - 2px);
   --radius-sm: calc(var(--radius-lg) - 4px);

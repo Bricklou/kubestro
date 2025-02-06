@@ -1,3 +1,5 @@
+const maxLenRule = 100
+
 /**
  * @type {import('eslint').Rule.RuleModule}
  */
@@ -18,8 +20,22 @@ export const customObjectCurlyNewline = {
         const { properties } = node
         const { sourceCode } = context
 
-        // If there are more than 5 items in the object
-        if (node.properties.length > 5) {
+        /*
+         * Get line length of the full line (compute all the line length that are
+         * occupied by the object destructuring)
+         */
+        let lineLength = 0
+
+        for (let i = node.loc.start.line; i <= node.loc.end.line; i++) {
+          lineLength += sourceCode.lines[i - 1].length
+          // Console.log('line', sourceCode.lines[i - 1])
+        }
+
+        /*
+         * Console.log('lineLength checked', lineLength, maxLenRule, line)
+         * If there are more than 5 items in the object
+         */
+        if (node.properties.length > 5 || lineLength > maxLenRule) {
           let firstReportedProperty = null
           let lastReportedProperty = null
           properties.forEach((property, index) => {
