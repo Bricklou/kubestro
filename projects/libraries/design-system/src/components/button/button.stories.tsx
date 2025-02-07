@@ -34,8 +34,16 @@ const meta: Meta<typeof Button> = {
       options: ['None', 'LucideSmile'],
       mapping: {
         None: undefined,
-        LucideSmile: <LucideSmile className="size-4" />
+        LucideSmile
       }
+    },
+    effect: {
+      control: 'select',
+      options: [undefined, ...Object.keys(buttonVariants.variants.effect)]
+    },
+    iconPlacement: {
+      control: 'select',
+      options: [undefined, 'left', 'right']
     },
     asChild: { control: { disable: true } }
   },
@@ -100,6 +108,7 @@ export const Disabled: Story = {
 export const Icon: Story = {
   args: {
     ...Template.args,
-    icon: <LucideSmile className="size-4" />
+    icon: LucideSmile,
+    iconPlacement: 'left'
   }
 }

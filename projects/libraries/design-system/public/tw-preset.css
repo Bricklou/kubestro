@@ -83,6 +83,25 @@
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius-lg) - 2px);
   --radius-sm: calc(var(--radius-lg) - 4px);
+
+  /**
+   * Custom animations
+   */
+  --animate-shine: shine 3s ease-out infinite;
+
+  @keyframes shine {
+    0% {
+      background-position: 200% 0;
+    }
+
+    25% {
+      background-position: -200% 0;
+    }
+
+    100% {
+      background-position: -200% 0;
+    }
+  }
 }
 
 @layer theme {

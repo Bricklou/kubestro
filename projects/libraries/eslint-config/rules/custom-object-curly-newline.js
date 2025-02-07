@@ -106,7 +106,11 @@ export const customObjectCurlyNewline = {
         const firstProperty = properties[0]
         const lastProperty = properties[properties.length - 1]
 
-        if (firstProperty.loc.start.line !== lastProperty.loc.end.line) {
+        if (
+          firstProperty.loc &&
+          lastProperty.loc &&
+          firstProperty.loc.start.line !== lastProperty.loc.end.line
+        ) {
           context.report({
             node,
             loc: {

@@ -168,6 +168,7 @@ export function configApp(rootDir, ...configBlockToMerge) {
         'react/no-object-type-as-default-prop': 'error',
         'react/prefer-stateless-function': 'error',
         'react/void-dom-elements-no-children': 'error',
+        'react/prop-types': 'off',
 
         // Stylistic JSX
         '@stylistic/jsx-closing-bracket-location': 'warn',
