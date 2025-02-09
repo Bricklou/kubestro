@@ -79,6 +79,7 @@ export function configApp(rootDir, ...configBlockToMerge) {
       languageOptions: { parserOptions: { tsconfigRootDir: rootDir } },
       rules: {
         // Typescript ESLint rules
+        'no-void': ['error', { allowAsStatement: true }],
         '@typescript-eslint/array-type': 'warn',
         '@typescript-eslint/consistent-generic-constructors': 'warn',
         '@typescript-eslint/consistent-indexed-object-style': 'warn',
@@ -344,7 +345,12 @@ export function configApp(rootDir, ...configBlockToMerge) {
         'import/no-unresolved': 'off',
 
         // Stylistic
-        '@stylistic/indent': ['warn', 2],
+        '@stylistic/indent': ['warn',
+          2,
+          {
+            flatTernaryExpressions: false,
+            offsetTernaryExpressions: true
+          }],
         '@stylistic/array-bracket-newline': ['warn', 'consistent'],
         '@stylistic/array-bracket-spacing': 'warn',
         '@stylistic/array-element-newline': ['warn',

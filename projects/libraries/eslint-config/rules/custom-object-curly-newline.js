@@ -26,8 +26,10 @@ export const customObjectCurlyNewline = {
          */
         let lineLength = 0
 
-        for (let i = node.loc.start.line; i <= node.loc.end.line; i++) {
-          lineLength += sourceCode.lines[i - 1].length
+        if (node.loc) {
+          for (let i = node.loc.start.line; i <= node.loc.end.line; i++) {
+            lineLength += sourceCode.lines[i - 1].length
+          }
         }
 
         // If there are more than 5 items in the object
@@ -37,7 +39,11 @@ export const customObjectCurlyNewline = {
           properties.forEach((property, index) => {
             if (index > 0) {
               const previousProperty = node.properties[index - 1]
-              if (property.loc.start.line === previousProperty.loc.end.line) {
+              if (
+                previousProperty.loc &&
+                property.loc &&
+                property.loc.start.line === previousProperty.loc.end.line
+              ) {
                 if (!firstReportedProperty) {
                   firstReportedProperty = previousProperty
                 }
@@ -47,7 +53,10 @@ export const customObjectCurlyNewline = {
           })
 
           // If the first property is on the same line as the opening curly brace
-          if (properties[0].loc.start.line === node.loc.start.line) {
+          if (
+            properties[0].loc &&
+            node.loc &&
+            properties[0].loc.start.line === node.loc.start.line) {
             context.report({
               node,
               loc: {
@@ -62,7 +71,11 @@ export const customObjectCurlyNewline = {
           }
 
           // If the last property is on the same line as the closing curly brace
-          if (properties[properties.length - 1].loc.end.line === node.loc.end.line) {
+          if (
+            properties[properties.length - 1].loc &&
+            node.loc &&
+            properties[properties.length - 1].loc.end.line === node.loc.end.line
+          ) {
             context.report({
               node,
               loc: {
@@ -107,8 +120,8 @@ export const customObjectCurlyNewline = {
         const lastProperty = properties[properties.length - 1]
 
         if (
-          firstProperty.loc &&
-          lastProperty.loc &&
+          firstProperty?.loc &&
+          lastProperty?.loc &&
           firstProperty.loc.start.line !== lastProperty.loc.end.line
         ) {
           context.report({
