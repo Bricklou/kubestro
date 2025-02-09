@@ -11,19 +11,31 @@ use super::mapping::map_status_code;
 /// This object respect the [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457.html) standard.
 #[derive(Debug, PartialEq, Serialize, ToSchema)]
 pub struct ApiError {
+    /// The type of the error
     #[serde(rename = "type")] // type is a reserved keyword in Rust, so we need to rename it to
     #[serde(skip_serializing_if = "Option::is_none")]
     pub _type: Option<Cow<'static, str>>,
+
+    /// The HTTP status code of the error
     #[serde(serialize_with = "map_status_code")]
     #[schema(value_type = u16)]
     pub status: StatusCode,
+
+    /// The title of the error
     pub title: Cow<'static, str>,
+
+    /// The detail of the error
     #[serde(skip_serializing_if = "Option::is_none")]
     pub detail: Option<Cow<'static, str>>,
+
+    /// The instance of the error
     #[serde(skip_serializing_if = "Option::is_none")]
     pub instance: Option<Cow<'static, str>>,
+
+    /// The error code
     pub code: Cow<'static, str>,
 
+    /// The extensions of the error
     #[serde(skip_serializing_if = "HashMap::is_empty", flatten)]
     pub extensions: HashMap<Cow<'static, str>, serde_json::Value>,
 }
