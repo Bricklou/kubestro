@@ -32,7 +32,8 @@
     "@radix-ui/react-checkbox": "catalog:",
     "@radix-ui/react-label": "catalog:",
     "@radix-ui/react-slot": "catalog:",
-    "@radix-ui/react-switch": "^1.1.3"
+    "@radix-ui/react-switch": "^1.1.3",
+    "framer-motion": "^12.4.1"
   },
   "devDependencies": {
     "@fontsource-variable/inter": "catalog:",

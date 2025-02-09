@@ -56,7 +56,7 @@ export function CardDescription({
 }: HTMLAttributes<HTMLDivElement> & RefAttributes<HTMLDivElement>) {
   return (
     <div
-      className={twMerge('text-sm text-muted-foreground', className)}
+      className={twMerge('text-sm text-text-muted', className)}
       ref={ref}
       {...props}
     />

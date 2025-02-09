@@ -108,7 +108,7 @@
   [data-theme="dark"] {
     --color-background: oklch(17.05% 0.0024 145.47deg);
     --color-text: oklch(98.48% 0 0deg);
-    --color-border: oklch(24.01% 0.0059 156.75deg);
+    --color-border: oklch(26.01% 0.0059 156.75deg);
     --color-secondary: oklch(30% 0.0013 286.38deg);
     --color-secondary-hover: oklch(38% 0.0013 286.38deg);
     --color-secondary-text: var(--color-text);

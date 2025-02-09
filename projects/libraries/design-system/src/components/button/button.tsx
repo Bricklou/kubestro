@@ -75,7 +75,7 @@ export function Button({
       return null
     }
 
-    return <Icon />
+    return <Icon aria-hidden />
   }, [Icon, loading])
 
   /**
@@ -109,8 +109,13 @@ export function Button({
     }
 
     return <IconToRender />
-  }, [Icon, iconPlacement, effect, loading,
-IconToRender])
+  }, [
+    Icon,
+    iconPlacement,
+    effect,
+    loading,
+    IconToRender
+  ])
 
   return (
     <Comp
