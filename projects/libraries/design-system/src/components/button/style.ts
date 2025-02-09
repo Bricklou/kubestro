@@ -2,14 +2,16 @@ import { tv } from 'tailwind-variants'
 import { linkVariants } from '../link/style'
 
 export const buttonVariants = tv({
-  base: 'text-text inline-flex transform items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-95 disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-5 [&_svg]:shrink-0 select-none',
+  base: 'text-text inline-flex transform items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-95 disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-5 [&_svg]:shrink-0 select-none rounded-md',
   variants: {
     variant: {
-      primary: 'border border-primary bg-primary text-primary-text hover:bg-primary/90 active:bg-primary/80',
-      secondary: 'border border-secondary-text/5 bg-secondary text-secondary-text hover:bg-secondary-hover active:bg-secondary-hover/80',
-      danger: 'border border-danger bg-danger hover:bg-danger/80 active:bg-danger/70 text-danger-text',
-      ghost: 'border border-transparent hover:border-secondary-text/5 hover:bg-primary/40 hover:text-secondary-text active:bg-primary/5',
-      link: linkVariants({ className: 'active:scale-100' })
+      'primary': 'border border-primary bg-primary text-primary-text hover:bg-primary-hover active:bg-primary/80',
+      'primary-soft': 'bg-primary-soft text-primary-soft-text hover:bg-primary-soft-hover active:bg-primary-soft-hover/80',
+      'secondary': 'bg-secondary text-secondary-text hover:bg-secondary-hover active:bg-secondary-hover/80',
+      'warning': 'bg-warning text-warning-text hover:bg-warning-hover active:bg-warning-hover/80',
+      'danger': 'bg-danger text-danger-text hover:bg-danger-hover active:bg-danger-hover/80',
+      'ghost': 'hover:bg-secondary-hover hover:text-secondary-text',
+      'link': linkVariants({ className: 'active:scale-100' })
     },
     effect: {
       expandIcon: 'group gap-0 relative',

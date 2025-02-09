@@ -74,7 +74,9 @@ export const All: Story = {
     <>
       <div className="flex gap-4 p-8 bg-background">
         <Button variant="primary">Primary</Button>
+        <Button variant="primary-soft">Primary Soft</Button>
         <Button variant="secondary">Secondary</Button>
+        <Button variant="warning">Warning</Button>
         <Button variant="danger">Danger</Button>
         <Button variant="ghost">Ghost</Button>
         <Button variant="link">Link</Button>
@@ -82,7 +84,9 @@ export const All: Story = {
 
       <div className="flex gap-4 p-8 bg-background" data-theme="dark">
         <Button variant="primary">Primary</Button>
+        <Button variant="primary-soft">Primary Soft</Button>
         <Button variant="secondary">Secondary</Button>
+        <Button variant="warning">Warning</Button>
         <Button variant="danger">Danger</Button>
         <Button variant="ghost">Ghost</Button>
         <Button variant="link">Link</Button>

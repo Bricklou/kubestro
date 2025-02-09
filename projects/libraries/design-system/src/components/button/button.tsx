@@ -67,13 +67,9 @@ export function Button({
    * Decide whether to render the icon or the loader
    */
   const IconToRender = useCallback(() => {
-    if (loading) {
-      return <Loader2 aria-hidden className="animate-spin" />
-    }
+    if (loading) return <Loader2 aria-hidden className="animate-spin" />
 
-    if (!Icon) {
-      return null
-    }
+    if (!Icon) return null
 
     return <Icon aria-hidden />
   }, [Icon, loading])
@@ -82,9 +78,7 @@ export function Button({
    * Render the icon depending on the placement and the effect
    */
   const RenderIcon = useCallback(({ placement }: { readonly placement: 'left' | 'right' }) => {
-    if (!Icon || !iconPlacement || placement !== iconPlacement) {
-      return null
-    }
+    if (!Icon || !iconPlacement || placement !== iconPlacement) return null
 
     if (effect === 'expandIcon') {
       return (
