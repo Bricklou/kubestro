@@ -255,7 +255,7 @@ export function configApp(rootDir, ...configBlockToMerge) {
       rules: {
         // ESLint rules
         'capitalized-comments': ['warn', 'always'],
-        'curly': ['warn', 'all'],
+        'curly': ['warn', 'multi-line'],
         'eqeqeq': ['error', 'always'],
         'logical-assignment-operators': ['error', 'always'],
         'no-div-regex': 'error',
@@ -349,7 +349,8 @@ export function configApp(rootDir, ...configBlockToMerge) {
           2,
           {
             flatTernaryExpressions: false,
-            offsetTernaryExpressions: true
+            offsetTernaryExpressions: true,
+            SwitchCase: 1
           }],
         '@stylistic/array-bracket-newline': ['warn', 'consistent'],
         '@stylistic/array-bracket-spacing': 'warn',
@@ -394,25 +395,7 @@ export function configApp(rootDir, ...configBlockToMerge) {
         '@stylistic/no-multiple-empty-lines': 'warn',
         '@stylistic/no-trailing-spaces': 'warn',
         '@stylistic/no-whitespace-before-property': 'warn',
-        '@stylistic/object-curly-newline': ['warn',
-          {
-            ObjectExpression: {
-              consistent: true,
-              minProperties: 5
-            },
-            ObjectPattern: {
-              consistent: true,
-              minProperties: 5
-            },
-            ImportDeclaration: {
-              consistent: true,
-              minProperties: 3
-            },
-            ExportDeclaration: {
-              consistent: true,
-              minProperties: 3
-            }
-          }],
+        '@stylistic/object-curly-newline': 'off',
 
         // Since `@stylistic/object-curly-newline` seems broken, enable our own rule
         'custom-rules/custom-object-curly-newline': 'warn',
@@ -463,7 +446,14 @@ export function configApp(rootDir, ...configBlockToMerge) {
             ignoreStrings: true,
             comments: 120
           }],
-        '@stylistic/max-statements-per-line': 'warn',
+        '@stylistic/max-statements-per-line': ['warn',
+          {
+            ignoredNodes: ['BreakStatement',
+              'ContinueStatement',
+              'ReturnStatement',
+              'ThrowStatement',
+              'ExpressionStatement']
+          }],
         '@stylistic/no-mixed-operators': 'error',
         '@stylistic/no-mixed-spaces-and-tabs': 'warn',
         '@stylistic/no-tabs': 'warn',
