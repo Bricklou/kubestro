@@ -15,7 +15,7 @@ export function FormMessage({ children, error, ref }: FormMessageProps) {
   if (!errorBody) return null
 
   return (
-    <p className="text-xs font-medium text-danger" ref={ref}>
+    <p className="text-xs font-medium text-text-error" ref={ref}>
       {errorBody}
     </p>
   )

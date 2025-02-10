@@ -32,25 +32,29 @@ export const toastVariants = tv({
         icon: 'text-info-text',
         title: 'text-info-text',
         toast: 'bg-info border-info',
-        closeButton: 'hover:bg-info-hover'
+        closeButton: 'hover:bg-info-hover',
+        description: 'text-text'
       },
       success: {
         icon: 'text-success-text',
         title: 'text-success-text',
         toast: 'bg-success border-success',
-        closeButton: 'hover:bg-success-hover'
+        closeButton: 'hover:bg-success-hover',
+        description: 'text-text'
       },
       warning: {
         icon: 'text-warning-text',
         title: 'text-warning-text',
         toast: 'bg-warning border-warning',
-        closeButton: 'hover:bg-warning-hover'
+        closeButton: 'hover:bg-warning-hover',
+        description: 'text-text'
       },
       error: {
         icon: 'text-danger-text',
         title: 'text-danger-text',
         toast: 'bg-danger border-danger',
-        closeButton: 'hover:bg-danger-hover'
+        closeButton: 'hover:bg-danger-hover',
+        description: 'text-text'
       }
     }
   },

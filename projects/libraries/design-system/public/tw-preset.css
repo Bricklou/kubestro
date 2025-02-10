@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@plugin "tailwindcss-animate";
+
 @theme {
   /**
    * Application colors palette
@@ -119,6 +121,7 @@
 
   /* Text colors */
   --color-text: var(--color-gray-900);
+  --color-text-error: var(--color-rose-600);
   --color-text-muted: var(--color-gray-500);
 
   /* Border colors */
@@ -167,6 +170,7 @@
 
     /* Text colors */
     --color-text: oklch(98.48% 0 0deg);
+    --color-text-error: var(--color-rose-700);
 
     /* Border colors */
     --color-border: oklch(26.01% 0.0059 156.75deg);
