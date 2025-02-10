@@ -11,17 +11,21 @@
     "lint:css": "stylelint 'app/**/*.css'"
   },
   "dependencies": {
+    "@fontsource-variable/inter": "catalog:",
     "@kubestro/design-system": "workspace:../../../libraries/design-system",
     "@module-federation/runtime": "catalog:",
     "@react-router/node": "catalog:",
     "@react-router/serve": "catalog:",
+    "@tanstack/react-query": "^5.66.0",
+    "@tanstack/react-query-devtools": "^5.66.0",
     "cross-env": "catalog:",
     "isbot": "catalog:",
+    "ky": "^1.7.4",
     "lucide-react": "catalog:",
+    "motion": "^12.4.1",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-router": "catalog:",
-    "@fontsource-variable/inter": "catalog:"
+    "react-router": "catalog:"
   },
   "devDependencies": {
     "@kubestro/eslint-config": "workspace:../../../libraries/eslint-config",

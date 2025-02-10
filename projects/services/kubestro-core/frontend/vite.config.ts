@@ -15,5 +15,10 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ['lucide-react', 'tailwind-variants', 'tailwind-merge']
+  },
+  server: {
+    proxy: {
+      '/api': 'http://localhost:8001'
+    }
   }
 })

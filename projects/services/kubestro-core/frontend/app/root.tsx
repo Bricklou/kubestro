@@ -7,8 +7,12 @@ import {
   ScrollRestoration
 } from 'react-router'
 
+import { QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { Toaster } from '@kubestro/design-system'
 import type { Route } from './+types/root'
 import stylesheet from './app.css?url'
+import { queryClient } from './utils/queryClient'
 
 export const links: Route.LinksFunction = () => [
   {
@@ -50,7 +54,13 @@ export function Layout({ children }: { readonly children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Outlet />
+      <Toaster />
+      <ReactQueryDevtools buttonPosition="top-right" initialIsOpen={false} />
+    </QueryClientProvider>
+  )
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

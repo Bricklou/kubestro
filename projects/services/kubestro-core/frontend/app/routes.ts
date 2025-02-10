@@ -3,5 +3,5 @@ import type { RouteConfig } from '@react-router/dev/routes'
 
 export default [
   index('routes/home.tsx'),
-  route('/test', 'routes/test.tsx')
+  route('/login', 'routes/auth/login.tsx')
 ] satisfies RouteConfig
