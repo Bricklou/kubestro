@@ -1,2 +1,75 @@
 @import "@kubestro/design-system/preset.css";
 @import "@fontsource-variable/inter";
+
+@theme {
+  --grid-lines-opacity: 60%;
+  --grid-pattern-line: color-mix(
+    in lch,
+    var(--color-secondary) var(--grid-lines-opacity),
+    transparent calc(100% - var(--grid-lines-opacity))
+  );
+  --grid-pattern: linear-gradient(
+      to right,
+      var(--grid-pattern-line) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, var(--grid-pattern-line) 1px, transparent 1px);
+  --grid-circle-opacity: 35%;
+  --grid-gradient: radial-gradient(
+      circle 500px at 10% 100px,
+      color-mix(
+        in lch,
+        var(--color-primary) var(--grid-circle-opacity),
+        transparent calc(100% - var(--grid-circle-opacity))
+      ),
+      transparent
+    ),
+    radial-gradient(
+      circle 500px at 90% 100%,
+      color-mix(
+        in lch,
+        var(--color-primary-700) var(--grid-circle-opacity),
+        transparent calc(100% - var(--grid-circle-opacity))
+      ),
+      transparent
+    );
+  --grid-size-x: 6rem;
+  --grid-size-y: 4rem;
+  --grid-size: var(--grid-size-x) var(--grid-size-y);
+}
+
+@keyframes grid {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: var(--grid-size);
+  }
+}
+
+@layer utilities {
+  .bg-grid-pattern {
+    right: 0;
+    bottom: 0;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0 50% 0 -50%;
+      width: 200%;
+      background-image: var(--grid-pattern);
+      background-size: var(--grid-size);
+      transform: skew(-25deg);
+
+      /* Enable the animation only if motion-less isn't enabled */
+      @media (prefers-reduced-motion: no-preference) {
+        animation: grid 5s linear infinite;
+      }
+    }
+
+    & > .bg-inner-circle {
+      background-image: var(--grid-gradient);
+    }
+  }
+}

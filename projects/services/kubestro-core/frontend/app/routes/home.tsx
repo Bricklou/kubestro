@@ -21,7 +21,7 @@ export default function Home() {
   return (
     <div className="p-8">
       <Button
-        icon={<Bolt />}
+        icon={Bolt}
         onClick={onClick}
         size="lg"
         variant="primary"

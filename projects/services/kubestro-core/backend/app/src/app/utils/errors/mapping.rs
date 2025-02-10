@@ -122,7 +122,7 @@ impl From<UserCreateRepoError> for ApiError {
         match value {
             UserCreateRepoError::AlreadyExists => ApiError {
                 status: StatusCode::CONFLICT,
-                title: "User already exists".into(),
+                title: "Already exists".into(),
                 detail: Some("User with this email already exists".into()),
                 code: "USER_ALREADY_EXISTS".into(),
                 ..Default::default()

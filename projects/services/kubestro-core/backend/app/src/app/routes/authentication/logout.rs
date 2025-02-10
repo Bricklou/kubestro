@@ -1,4 +1,4 @@
-use axum::{http::StatusCode, response::IntoResponse};
+use axum::{response::IntoResponse, Json};
 use axum_session::Session;
 use axum_session_redispool::SessionRedisPool;
 use serde::Serialize;
@@ -27,5 +27,7 @@ pub(super) struct LogoutResponse {
 )]
 pub async fn handler_logout(session: Session<SessionRedisPool>) -> impl IntoResponse {
     session.destroy();
-    (StatusCode::OK, "Logout successful".to_string())
+    Json(LogoutResponse {
+        message: "Logout successful".to_string(),
+    })
 }

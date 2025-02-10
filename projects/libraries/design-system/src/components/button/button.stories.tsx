@@ -34,8 +34,16 @@ const meta: Meta<typeof Button> = {
       options: ['None', 'LucideSmile'],
       mapping: {
         None: undefined,
-        LucideSmile: <LucideSmile className="size-4" />
+        LucideSmile
       }
+    },
+    effect: {
+      control: 'select',
+      options: [undefined, ...Object.keys(buttonVariants.variants.effect)]
+    },
+    iconPlacement: {
+      control: 'select',
+      options: [undefined, 'left', 'right']
     },
     asChild: { control: { disable: true } }
   },
@@ -66,7 +74,9 @@ export const All: Story = {
     <>
       <div className="flex gap-4 p-8 bg-background">
         <Button variant="primary">Primary</Button>
+        <Button variant="primary-soft">Primary Soft</Button>
         <Button variant="secondary">Secondary</Button>
+        <Button variant="warning">Warning</Button>
         <Button variant="danger">Danger</Button>
         <Button variant="ghost">Ghost</Button>
         <Button variant="link">Link</Button>
@@ -74,7 +84,9 @@ export const All: Story = {
 
       <div className="flex gap-4 p-8 bg-background" data-theme="dark">
         <Button variant="primary">Primary</Button>
+        <Button variant="primary-soft">Primary Soft</Button>
         <Button variant="secondary">Secondary</Button>
+        <Button variant="warning">Warning</Button>
         <Button variant="danger">Danger</Button>
         <Button variant="ghost">Ghost</Button>
         <Button variant="link">Link</Button>
@@ -100,6 +112,7 @@ export const Disabled: Story = {
 export const Icon: Story = {
   args: {
     ...Template.args,
-    icon: <LucideSmile className="size-4" />
+    icon: LucideSmile,
+    iconPlacement: 'left'
   }
 }

@@ -1,26 +1,48 @@
 @import "tailwindcss";
 
+@plugin "tailwindcss-animate";
+
 @theme {
   /**
    * Application colors palette
    */
-  --color-primary: var(--color-lime-600);
+
+  /* Primary colors */
+  --color-primary: var(--color-emerald-500);
+  --color-primary-hover: color-mix(
+    in oklch,
+    var(--color-emerald-500) 80%,
+    transparent 20%
+  );
   --color-primary-text: white;
-  --color-primary-50: var(--color-lime-50);
-  --color-primary-100: var(--color-lime-100);
-  --color-primary-200: var(--color-lime-200);
-  --color-primary-300: var(--color-lime-300);
-  --color-primary-400: var(--color-lime-400);
-  --color-primary-500: var(--color-lime-500);
-  --color-primary-600: var(--color-lime-600);
-  --color-primary-700: var(--color-lime-700);
-  --color-primary-800: var(--color-lime-800);
-  --color-primary-900: var(--color-lime-900);
-  --color-primary-950: var(--color-lime-950);
-  --color-secondary: oklch(92% 0.0013 286.38deg);
-  --color-secondary-hover: oklch(86% 0.0013 286.38deg);
-  --color-secondary-text: oklch(21% 0.0059 285.88deg);
-  --color-danger: var(--color-red-700);
+  --color-primary-50: var(--color-emerald-50);
+  --color-primary-100: var(--color-emerald-100);
+  --color-primary-200: var(--color-emerald-200);
+  --color-primary-300: var(--color-emerald-300);
+  --color-primary-400: var(--color-emerald-400);
+  --color-primary-500: var(--color-emerald-500);
+  --color-primary-600: var(--color-emerald-600);
+  --color-primary-700: var(--color-emerald-700);
+  --color-primary-800: var(--color-emerald-800);
+  --color-primary-900: var(--color-emerald-900);
+  --color-primary-950: var(--color-emerald-950);
+  --color-primary-soft: var(--color-emerald-100);
+  --color-primary-soft-hover: var(--color-emerald-200);
+  --color-primary-soft-text: var(--color-emerald-600);
+
+  /* Secondary colors */
+  --color-secondary: var(--color-gray-200);
+  --color-secondary-hover: var(--color-gray-300);
+  --color-secondary-text: var(--color-gray-600);
+
+  /* Danger colors */
+  --color-danger: var(--color-red-300);
+  --color-danger-hover: color-mix(
+    in oklch,
+    var(--color-red-400) 80%,
+    transparent 20%
+  );
+  --color-danger-text: var(--color-red-800);
   --color-danger-50: var(--color-red-50);
   --color-danger-100: var(--color-red-100);
   --color-danger-200: var(--color-red-200);
@@ -32,8 +54,15 @@
   --color-danger-800: var(--color-red-800);
   --color-danger-900: var(--color-red-900);
   --color-danger-950: var(--color-red-950);
-  --color-danger-text: white;
-  --color-warning: var(--color-yellow-500);
+
+  /* Warning colors */
+  --color-warning: var(--color-yellow-300);
+  --color-warning-hover: color-mix(
+    in oklch,
+    var(--color-yellow-400) 80%,
+    transparent 20%
+  );
+  --color-warning-text: var(--color-yellow-800);
   --color-warning-50: var(--color-yellow-50);
   --color-warning-100: var(--color-yellow-100);
   --color-warning-200: var(--color-yellow-200);
@@ -45,7 +74,15 @@
   --color-warning-800: var(--color-yellow-800);
   --color-warning-900: var(--color-yellow-900);
   --color-warning-950: var(--color-yellow-950);
-  --color-success: var(--color-green-500);
+
+  /* Success colors */
+  --color-success: var(--color-green-300);
+  --color-success-hover: color-mix(
+    in oklch,
+    var(--color-green-400) 80%,
+    transparent 20%
+  );
+  --color-success-text: var(--color-green-800);
   --color-success-50: var(--color-green-50);
   --color-success-100: var(--color-green-100);
   --color-success-200: var(--color-green-200);
@@ -57,7 +94,15 @@
   --color-success-800: var(--color-green-800);
   --color-success-900: var(--color-green-900);
   --color-success-950: var(--color-green-950);
-  --color-info: var(--color-blue-500);
+
+  /* Info colors */
+  --color-info: var(--color-blue-300);
+  --color-info-hover: color-mix(
+    in oklch,
+    var(--color-blue-400) 80%,
+    transparent 20%
+  );
+  --color-info-text: var(--color-blue-800);
   --color-info-50: var(--color-blue-50);
   --color-info-100: var(--color-blue-100);
   --color-info-200: var(--color-blue-200);
@@ -69,30 +114,126 @@
   --color-info-800: var(--color-blue-800);
   --color-info-900: var(--color-blue-900);
   --color-info-950: var(--color-blue-950);
+
+  /* Background colors */
   --color-background: var(--color-gray-50);
+  --color-background-contrast: var(--color-white);
+
+  /* Text colors */
   --color-text: var(--color-gray-900);
+  --color-text-error: var(--color-rose-600);
   --color-text-muted: var(--color-gray-500);
+
+  /* Border colors */
   --color-border: oklch(92.54% 0.0036 174.47deg);
   --color-ring: var(--color-primary);
+
+  /* Link colors */
+  --color-link: var(--color-primary);
+  --color-link-hover: var(--color-primary-hover);
+  --color-link-active: var(--color-primary-800);
 
   /**
    * Application typography
    */
   --font-sans: "Inter Variable", "sans-serif";
-  --radius: 0.3rem;
+  --radius: 0.5rem;
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius-lg) - 2px);
   --radius-sm: calc(var(--radius-lg) - 4px);
+
+  /**
+   * Custom animations
+   */
+  --animate-shine: shine 3s ease-out infinite;
+
+  @keyframes shine {
+    0% {
+      background-position: 200% 0;
+    }
+
+    25% {
+      background-position: -200% 0;
+    }
+
+    100% {
+      background-position: -200% 0;
+    }
+  }
 }
 
 @layer theme {
   [data-theme="dark"] {
+    /* Background colors */
     --color-background: oklch(17.05% 0.0024 145.47deg);
+    --color-background-contrast: var(--color-black);
+
+    /* Text colors */
     --color-text: oklch(98.48% 0 0deg);
-    --color-border: oklch(24.01% 0.0059 156.75deg);
-    --color-secondary: oklch(30% 0.0013 286.38deg);
-    --color-secondary-hover: oklch(38% 0.0013 286.38deg);
-    --color-secondary-text: var(--color-text);
+    --color-text-error: var(--color-rose-700);
+
+    /* Border colors */
+    --color-border: oklch(26.01% 0.0059 156.75deg);
+
+    /* Primary colors */
+    --color-primary: var(--color-primary-600);
+    --color-primary-hover: color-mix(
+      in oklch,
+      var(--color-emerald-600) 80%,
+      transparent 20%
+    );
+    --color-primary-soft: var(--color-emerald-950);
+    --color-primary-soft-hover: var(--color-emerald-900);
+    --color-primary-soft-text: var(--color-emerald-50);
+
+    /* Secondary colors */
+    --color-secondary: oklch(80% 0 0deg / 7.75%);
+    --color-secondary-hover: oklch(85% 0 0deg / 20%);
+    --color-secondary-text: oklch(90% 0 0deg);
+
+    /* Info colors */
+    --color-info: var(--color-sky-700);
+    --color-info-text: var(--color-sky-100);
+    --color-info-hover: color-mix(
+      in oklch,
+      var(--color-sky-600) 80%,
+      transparent 20%
+    );
+
+    /* Success colors */
+    --color-success: var(--color-green-700);
+    --color-success-text: var(--color-green-100);
+    --color-success-hover: color-mix(
+      in oklch,
+      var(--color-green-600) 80%,
+      transparent 20%
+    );
+
+    /* Danger colors */
+    --color-danger: var(--color-rose-700);
+    --color-danger-text: var(--color-rose-100);
+    --color-danger-hover: color-mix(
+      in oklch,
+      var(--color-rose-600) 80%,
+      transparent 20%
+    );
+
+    /* Warning colors */
+    --color-warning: var(--color-yellow-700);
+    --color-warning-text: var(--color-yellow-300);
+    --color-warning-hover: color-mix(
+      in oklch,
+      var(--color-yellow-600) 80%,
+      transparent 20%
+    );
+
+    /* Link colors */
+    --color-link-hover: color-mix(
+      in oklch,
+      var(--color-primary) 70%,
+      var(--color-primary-100) 30%
+    );
+    --color-link-active: var(--color-primary-300);
   }
 }
 

@@ -19,7 +19,8 @@ export default {
           'variants',
           'responsive',
           'screen',
-          'theme'
+          'theme',
+          'plugin'
         ]
       }
     ],

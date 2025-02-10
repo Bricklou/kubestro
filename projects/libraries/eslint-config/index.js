@@ -79,6 +79,7 @@ export function configApp(rootDir, ...configBlockToMerge) {
       languageOptions: { parserOptions: { tsconfigRootDir: rootDir } },
       rules: {
         // Typescript ESLint rules
+        'no-void': ['error', { allowAsStatement: true }],
         '@typescript-eslint/array-type': 'warn',
         '@typescript-eslint/consistent-generic-constructors': 'warn',
         '@typescript-eslint/consistent-indexed-object-style': 'warn',
@@ -168,6 +169,7 @@ export function configApp(rootDir, ...configBlockToMerge) {
         'react/no-object-type-as-default-prop': 'error',
         'react/prefer-stateless-function': 'error',
         'react/void-dom-elements-no-children': 'error',
+        'react/prop-types': 'off',
 
         // Stylistic JSX
         '@stylistic/jsx-closing-bracket-location': 'warn',
@@ -253,7 +255,7 @@ export function configApp(rootDir, ...configBlockToMerge) {
       rules: {
         // ESLint rules
         'capitalized-comments': ['warn', 'always'],
-        'curly': ['warn', 'all'],
+        'curly': ['warn', 'multi-line'],
         'eqeqeq': ['error', 'always'],
         'logical-assignment-operators': ['error', 'always'],
         'no-div-regex': 'error',
@@ -343,7 +345,13 @@ export function configApp(rootDir, ...configBlockToMerge) {
         'import/no-unresolved': 'off',
 
         // Stylistic
-        '@stylistic/indent': ['warn', 2],
+        '@stylistic/indent': ['warn',
+          2,
+          {
+            flatTernaryExpressions: false,
+            offsetTernaryExpressions: true,
+            SwitchCase: 1
+          }],
         '@stylistic/array-bracket-newline': ['warn', 'consistent'],
         '@stylistic/array-bracket-spacing': 'warn',
         '@stylistic/array-element-newline': ['warn',
@@ -387,25 +395,8 @@ export function configApp(rootDir, ...configBlockToMerge) {
         '@stylistic/no-multiple-empty-lines': 'warn',
         '@stylistic/no-trailing-spaces': 'warn',
         '@stylistic/no-whitespace-before-property': 'warn',
-        '@stylistic/object-curly-newline': ['warn',
-          {
-            ObjectExpression: {
-              consistent: true,
-              minProperties: 5
-            },
-            ObjectPattern: {
-              consistent: true,
-              minProperties: 5
-            },
-            ImportDeclaration: {
-              consistent: true,
-              minProperties: 3
-            },
-            ExportDeclaration: {
-              consistent: true,
-              minProperties: 3
-            }
-          }],
+        '@stylistic/object-curly-newline': 'off',
+
         // Since `@stylistic/object-curly-newline` seems broken, enable our own rule
         'custom-rules/custom-object-curly-newline': 'warn',
         '@stylistic/object-curly-spacing': ['warn', 'always'],
@@ -455,7 +446,14 @@ export function configApp(rootDir, ...configBlockToMerge) {
             ignoreStrings: true,
             comments: 120
           }],
-        '@stylistic/max-statements-per-line': 'warn',
+        '@stylistic/max-statements-per-line': ['warn',
+          {
+            ignoredNodes: ['BreakStatement',
+              'ContinueStatement',
+              'ReturnStatement',
+              'ThrowStatement',
+              'ExpressionStatement']
+          }],
         '@stylistic/no-mixed-operators': 'error',
         '@stylistic/no-mixed-spaces-and-tabs': 'warn',
         '@stylistic/no-tabs': 'warn',

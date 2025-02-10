@@ -23,6 +23,7 @@ pub type ApiDeserrJson<T> = AxumJson<T, ApiDeserrError>;
 #[derive(Debug, Serialize, Clone, PartialEq)]
 pub struct JsonValidationError {
     pub detail: String,
+    #[serde(skip)]
     pub pointer: String,
 
     pub code: String,
@@ -33,7 +34,7 @@ pub struct JsonValidationError {
 /// A type representing a deserialization error. This is a custom error
 /// type used for `deserr` AwebJson deserialization errors.
 #[derive(Debug, Serialize, Clone)]
-pub struct ApiDeserrError(Vec<JsonValidationError>);
+pub struct ApiDeserrError(HashMap<String, JsonValidationError>);
 
 impl std::fmt::Display for ApiDeserrError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -135,11 +136,12 @@ impl DeserializeError for ApiDeserrError {
             },
         };
 
+        let key = error.pointer.clone();
         let errors = if let Some(ApiDeserrError(mut api_errors)) = self_ {
-            api_errors.push(error);
+            api_errors.insert(key, error);
             api_errors
         } else {
-            vec![error]
+            HashMap::from_iter([(key, error)].iter().cloned())
         };
 
         ControlFlow::Continue(ApiDeserrError(errors))
@@ -160,8 +162,8 @@ impl MergeWithError<ApiDeserrError> for ApiDeserrError {
     ) -> ControlFlow<Self, Self> {
         let mut other = other.clone();
 
-        if let Some(ApiDeserrError(mut errors)) = self_ {
-            other.0.append(&mut errors);
+        if let Some(ApiDeserrError(errors)) = self_ {
+            other.0.extend(errors);
         }
         ControlFlow::Continue(other)
     }
@@ -178,7 +180,7 @@ impl From<ApiDeserrError> for ApiError {
 
         ApiError {
             _type: None,
-            status: StatusCode::BAD_REQUEST,
+            status: StatusCode::UNPROCESSABLE_ENTITY,
             title: "Validation error".into(),
             detail: Some("The request body is invalid".into()),
             code: "VALIDATION_ERROR".into(),
@@ -214,8 +216,8 @@ fn map_value_kind_to_string(value: deserr::ValueKind) -> String {
 fn map_kind_to_error(
     field_pointer: ValuePointerRef,
     kind: &ValidationErrorsKind,
-) -> Vec<JsonValidationError> {
-    let mut errors = Vec::<JsonValidationError>::new();
+) -> HashMap<String, JsonValidationError> {
+    let mut errors = HashMap::<String, JsonValidationError>::new();
 
     match kind {
         ValidationErrorsKind::Field(field_error) => {
@@ -227,15 +229,19 @@ fn map_kind_to_error(
                 }
                 params.remove("value");
 
-                errors.push(JsonValidationError {
-                    detail: error
-                        .message
-                        .unwrap_or("No message provided".into())
-                        .into_owned(),
-                    pointer: value_pointer_ref_to_string(field_pointer),
-                    code: error.code.to_string(),
-                    params,
-                });
+                let key = value_pointer_ref_to_string(field_pointer);
+                errors.insert(
+                    key,
+                    JsonValidationError {
+                        detail: error
+                            .message
+                            .unwrap_or("No message provided".into())
+                            .into_owned(),
+                        pointer: value_pointer_ref_to_string(field_pointer),
+                        code: error.code.to_string(),
+                        params,
+                    },
+                );
             }
         }
         ValidationErrorsKind::List(list_error) => {
@@ -263,7 +269,7 @@ impl From<validator::ValidationErrors> for ApiError {
     fn from(validation_error: validator::ValidationErrors) -> Self {
         let mut extensions = HashMap::<Cow<'static, str>, serde_json::Value>::new();
 
-        let mut errors = Vec::<JsonValidationError>::new();
+        let mut errors = HashMap::<String, JsonValidationError>::new();
 
         for (field, errors_kind) in validation_error.0 {
             let loc = ValuePointerRef::Origin.push_key(&field);
@@ -276,7 +282,7 @@ impl From<validator::ValidationErrors> for ApiError {
 
         ApiError {
             _type: None,
-            status: StatusCode::BAD_REQUEST,
+            status: StatusCode::UNPROCESSABLE_ENTITY,
             title: "Validation error".into(),
             detail: Some("The request body is invalid".into()),
             code: "VALIDATION_ERROR".into(),
