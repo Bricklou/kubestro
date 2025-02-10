@@ -27,7 +27,8 @@ export function meta() {
 }
 
 export async function clientLoader() {
-  await requireGuest()
+  const result = await requireGuest()
+  if (result.type === 'redirect') return result.response
 
   return {}
 }
