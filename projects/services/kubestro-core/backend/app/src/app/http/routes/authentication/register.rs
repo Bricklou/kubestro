@@ -9,9 +9,9 @@ use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 use validator::Validate;
 
-use crate::app::{
+use crate::app::http::{
     dto::user_dto::UserDto,
-    utils::{errors::ApiError, validation::ValidatedJson},
+    helpers::{errors::ApiError, validation::ValidatedJson},
 };
 
 use super::AUTHENTICATION_TAG;

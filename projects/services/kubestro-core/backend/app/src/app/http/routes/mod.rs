@@ -12,7 +12,7 @@ use utoipa::OpenApi;
 use utoipa_axum::router::OpenApiRouter;
 use utoipa_scalar::{Scalar, Servable};
 
-use super::ApiContext;
+use crate::app::init::AppContext;
 
 mod authentication;
 mod base;
@@ -27,7 +27,7 @@ const API_DESCRIPTION: &str = "Kubestro Core API";
 )]
 struct ApiDoc;
 
-pub async fn get_routes(context: ApiContext) -> anyhow::Result<axum::Router> {
+pub async fn get_routes(context: AppContext) -> anyhow::Result<axum::Router> {
     let router = OpenApiRouter::with_openapi(ApiDoc::openapi());
 
     let router = base::register_routes(router);
@@ -41,7 +41,7 @@ pub async fn get_routes(context: ApiContext) -> anyhow::Result<axum::Router> {
     Ok(routes.merge(Scalar::with_url("/docs", api)))
 }
 
-fn register_global_services(router: OpenApiRouter, context: ApiContext) -> OpenApiRouter {
+fn register_global_services(router: OpenApiRouter, context: AppContext) -> OpenApiRouter {
     router.layer(
         ServiceBuilder::new()
             .layer(Extension(context.user_repo))
@@ -75,7 +75,7 @@ fn register_global_services(router: OpenApiRouter, context: ApiContext) -> OpenA
 
 async fn register_session_store(
     router: OpenApiRouter,
-    context: ApiContext,
+    context: AppContext,
 ) -> anyhow::Result<OpenApiRouter> {
     // Session store
     let session_config = SessionConfig::default().with_table_name("session_table");

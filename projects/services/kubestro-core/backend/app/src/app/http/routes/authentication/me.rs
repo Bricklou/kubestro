@@ -4,7 +4,7 @@ use axum_session_redispool::SessionRedisPool;
 use serde::Serialize;
 use utoipa::ToSchema;
 
-use crate::app::{dto::user_dto::UserDto, utils::errors::ApiError};
+use crate::app::http::{dto::user_dto::UserDto, helpers::errors::ApiError};
 
 use super::AUTHENTICATION_TAG;
 

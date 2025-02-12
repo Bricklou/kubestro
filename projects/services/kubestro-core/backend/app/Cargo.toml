@@ -34,6 +34,7 @@ tracing-subscriber.workspace = true
 
 # async environment
 tokio.workspace = true
+tokio-util = "0.7.13"
 
 # error handling
 anyhow.workspace = true
