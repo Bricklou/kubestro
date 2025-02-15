@@ -134,6 +134,25 @@ impl UserRepository for UserPgRepo {
     }
 
     #[tracing::instrument(skip(self))]
+    async fn find_by_username(&self, username: &str) -> Result<Option<User>, UserFindRepoError> {
+        let query = entities::user::Entity::find()
+            .filter(entities::user::Column::Username.contains(username.to_string()))
+            .one(self.db.pool())
+            .await;
+
+        match query {
+            Ok(model) => match model {
+                Some(model) => match User::try_from(model) {
+                    Ok(user) => Ok(Some(user)),
+                    Err(e) => Err(UserFindRepoError::UnexpectedError(e.to_string())),
+                },
+                None => Ok(None),
+            },
+            Err(e) => Err(UserFindRepoError::DatabaseError(e.to_string())),
+        }
+    }
+
+    #[tracing::instrument(skip(self))]
     async fn find_one(&self, id: &UserId) -> Result<Option<User>, UserFindRepoError> {
         let query = entities::user::Entity::find_by_id(id.value())
             .one(self.db.pool())

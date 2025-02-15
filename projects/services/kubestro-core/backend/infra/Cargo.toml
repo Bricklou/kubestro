@@ -13,6 +13,7 @@ validator.workspace = true
 
 # helpers
 async-trait.workspace = true
+futures = "0.3.31"
 
 # error handling
 thiserror.workspace = true

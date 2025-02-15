@@ -12,10 +12,11 @@ use utoipa::OpenApi;
 use utoipa_axum::router::OpenApiRouter;
 use utoipa_scalar::{Scalar, Servable};
 
-use crate::app::init::AppContext;
+use crate::app::context::AppContext;
 
 mod authentication;
 mod base;
+mod setup;
 
 const API_VERSION: &str = concat!(env!("CARGO_PKG_VERSION"), " (", env!("GIT_HASH"), ")");
 const API_TITLE: &str = "Kubestro Core API";
@@ -30,7 +31,9 @@ struct ApiDoc;
 pub async fn get_routes(context: AppContext) -> anyhow::Result<axum::Router> {
     let router = OpenApiRouter::with_openapi(ApiDoc::openapi());
 
-    let router = base::register_routes(router);
+    let router = router.merge(base::get_routes());
+    // let router = base::register_routes(router);
+    let router = router.merge(setup::get_routes());
     let router = router.merge(authentication::get_routes());
 
     let router = register_global_services(router, context.clone());
@@ -43,33 +46,29 @@ pub async fn get_routes(context: AppContext) -> anyhow::Result<axum::Router> {
 
 fn register_global_services(router: OpenApiRouter, context: AppContext) -> OpenApiRouter {
     router.layer(
-        ServiceBuilder::new()
-            .layer(Extension(context.user_repo))
-            .layer(Extension(context.hasher))
-            .layer(Extension(context.local_auth))
-            .layer(
-                TraceLayer::new_for_http()
-                    // Create our own span for the request and include the matched path. The matched
-                    // path is useful for figuring out which handler the request was routed to.
-                    .make_span_with(|req: &Request| {
-                        let method = req.method();
-                        let uri = req.uri();
+        ServiceBuilder::new().layer(Extension(context)).layer(
+            TraceLayer::new_for_http()
+                // Create our own span for the request and include the matched path. The matched
+                // path is useful for figuring out which handler the request was routed to.
+                .make_span_with(|req: &Request| {
+                    let method = req.method();
+                    let uri = req.uri();
 
-                        // Axum automatically adds this extension
-                        let matched_path = req
-                            .extensions()
-                            .get::<MatchedPath>()
-                            .map(|matched_path| matched_path.as_str());
+                    // Axum automatically adds this extension
+                    let matched_path = req
+                        .extensions()
+                        .get::<MatchedPath>()
+                        .map(|matched_path| matched_path.as_str());
 
-                        tracing::debug_span!("request", %method, %uri, matched_path)
-                    })
-                    // By default, `TraceLayer` will log 4xx and 5xx responses, but we're doing our
-                    // specific logging of errors so disable that
-                    .on_request(DefaultOnRequest::new().level(Level::DEBUG))
-                    // By default, `TraceLayer` will log 5xx responses, but we're doing our specific
-                    // logging of errors so disable that
-                    .on_response(DefaultOnResponse::new().level(Level::INFO)),
-            ),
+                    tracing::debug_span!("request", %method, %uri, matched_path)
+                })
+                // By default, `TraceLayer` will log 4xx and 5xx responses, but we're doing our
+                // specific logging of errors so disable that
+                .on_request(DefaultOnRequest::new().level(Level::DEBUG))
+                // By default, `TraceLayer` will log 5xx responses, but we're doing our specific
+                // logging of errors so disable that
+                .on_response(DefaultOnResponse::new().level(Level::INFO)),
+        ),
     )
 }
 

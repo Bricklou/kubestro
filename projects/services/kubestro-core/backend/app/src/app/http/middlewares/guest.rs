@@ -5,9 +5,9 @@ use axum_session_redispool::SessionRedisPool;
 use crate::app::http::{dto::user_dto::UserDto, helpers::errors::ApiError};
 
 // Add extractor that performs authentication check.
-pub struct RequireAuth;
+pub struct RequireGuest;
 
-impl<S> FromRequestParts<S> for RequireAuth
+impl<S> FromRequestParts<S> for RequireGuest
 where
     S: Send + Sync,
 {
@@ -18,15 +18,15 @@ where
         _state: &S,
     ) -> Result<Self, Self::Rejection> {
         // Extract the session
-        let session = parts
-            .extensions
-            .get::<Session<SessionRedisPool>>()
-            .ok_or(ApiError::unauthorized())?;
+        let Some(session) = parts.extensions.get::<Session<SessionRedisPool>>() else {
+            return Ok(RequireGuest);
+        };
 
-        if session.get::<UserDto>("user").is_none() {
+        // Check if there is no user in the session
+        if session.get::<UserDto>("user").is_some() {
             return Err(ApiError::unauthorized());
         }
 
-        Ok(RequireAuth)
+        Ok(RequireGuest)
     }
 }

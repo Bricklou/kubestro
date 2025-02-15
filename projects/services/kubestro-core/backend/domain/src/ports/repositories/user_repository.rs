@@ -10,6 +10,7 @@ use crate::models::{
 #[async_trait::async_trait]
 pub trait UserRepository: Send + Sync {
     async fn create(&self, user: CreateUser) -> Result<User, UserCreateRepoError>;
+    async fn find_by_username(&self, username: &str) -> Result<Option<User>, UserFindRepoError>;
     async fn find_by_email(&self, email: &Email) -> Result<Option<User>, UserFindRepoError>;
     async fn find_one(&self, id: &UserId) -> Result<Option<User>, UserFindRepoError>;
     async fn find_all(self) -> Result<Vec<User>, UserFindRepoError>;

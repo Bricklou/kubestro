@@ -3,7 +3,7 @@ use std::net::Ipv4Addr;
 use tokio::net::TcpListener;
 use tokio_util::sync::CancellationToken;
 
-use super::init::AppContext;
+use super::context::AppContext;
 
 pub mod dto;
 pub mod helpers;

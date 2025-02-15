@@ -1003,12 +1003,11 @@ dependencies = [
 [[package]]
 name = "deserr"
 version = "0.6.3"
-source = "git+https://github.com/Bricklou/deserr.git?rev=665a70a9#665a70a90dbbbdf0e8f90b03777771f64457dbbe"
+source = "git+https://github.com/meilisearch/deserr.git?rev=4f99359#4f9935948ec8163c0893997a15fa042cfda3eb65"
 dependencies = [
  "axum",
  "deserr-internal",
  "http",
- "serde",
  "serde-cs",
  "serde_json",
  "serde_urlencoded",
@@ -1018,7 +1017,7 @@ dependencies = [
 [[package]]
 name = "deserr-internal"
 version = "0.6.3"
-source = "git+https://github.com/Bricklou/deserr.git?rev=665a70a9#665a70a90dbbbdf0e8f90b03777771f64457dbbe"
+source = "git+https://github.com/meilisearch/deserr.git?rev=4f99359#4f9935948ec8163c0893997a15fa042cfda3eb65"
 dependencies = [
  "convert_case",
  "proc-macro2",
@@ -2094,6 +2093,7 @@ dependencies = [
  "kubestro-core-domain",
  "kubestro-core-infra",
  "mockall",
+ "pin-project",
  "redis",
  "redis_pool",
  "serde",
@@ -2134,6 +2134,7 @@ dependencies = [
  "argon2",
  "async-trait",
  "chrono",
+ "futures",
  "k8s-openapi",
  "kube",
  "kubestro-core-domain",

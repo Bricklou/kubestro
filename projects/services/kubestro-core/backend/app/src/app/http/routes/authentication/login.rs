@@ -1,8 +1,9 @@
-use std::sync::Arc;
-
-use crate::app::http::{
-    dto::user_dto::UserDto,
-    helpers::{errors::ApiError, validation::ValidatedJson},
+use crate::app::{
+    context::AppContext,
+    http::{
+        dto::user_dto::UserDto,
+        helpers::{errors::ApiError, validation::ValidatedJson},
+    },
 };
 
 use super::AUTHENTICATION_TAG;
@@ -10,9 +11,7 @@ use axum::{Extension, Json};
 use axum_session::Session;
 use axum_session_redispool::SessionRedisPool;
 use deserr::Deserr;
-use kubestro_core_domain::{
-    models::fields::email::Email, services::auth::local_auth::LocalAuthService,
-};
+use kubestro_core_domain::models::fields::email::Email;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 use validator::Validate;
@@ -66,13 +65,13 @@ pub(super) struct LoginResponse {
     )
 )]
 pub async fn handler_login(
-    Extension(local_auth): Extension<Arc<LocalAuthService>>,
+    Extension(ctx): Extension<AppContext>,
     session: Session<SessionRedisPool>,
     ValidatedJson(input): ValidatedJson<LoginPayload>,
 ) -> Result<Json<LoginResponse>, ApiError> {
     let email = Email::try_from(input.email.clone())?;
 
-    let user: UserDto = local_auth.login(&email, &input.password).await?.into();
+    let user: UserDto = ctx.local_auth.login(&email, &input.password).await?.into();
 
     session.renew();
     session.set("user", &user);

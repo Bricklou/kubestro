@@ -1,27 +1,41 @@
-use axum::{http::StatusCode, response::IntoResponse, Json};
+use axum::{http::StatusCode, response::IntoResponse, Extension, Json};
 use serde::Serialize;
-use utoipa::ToSchema;
+use utoipa::{OpenApi, ToSchema};
 use utoipa_axum::{router::OpenApiRouter, routes};
+
+use crate::app::context::{AppContext, ServiceStatus};
+
+pub(super) const BASE_TAG: &str = "base";
+
+/// OpenAPI documentation
+#[derive(OpenApi)]
+#[openapi(
+    tags(
+        (name = BASE_TAG, description = "Base API endpoints")
+    )
+)]
+struct ApiDoc;
 
 /// Health response
 #[derive(Serialize, ToSchema)]
-struct HealthResponse {
-    status: String,
+struct StatusResponse {
+    status: ServiceStatus,
 }
 
-/// Health check service
+/// Status check route
 #[utoipa::path(
-    method(get,head),
-    path = "/health",
+    method(get),
+    path = "/status",
+    tag = BASE_TAG,
     responses(
-        (status = OK, description = "Success", body = HealthResponse, content_type = "application/json")
+        (status = OK, description = "Success", body = StatusResponse, content_type = "application/json")
     )
 )]
+async fn handler_status(ctx: Extension<AppContext>) -> Json<StatusResponse> {
+    let shared_state_lock = ctx.shared_state.read().await;
+    let status = shared_state_lock.status.clone();
 
-async fn handler_health() -> Json<HealthResponse> {
-    Json(HealthResponse {
-        status: "ok".to_string(),
-    })
+    Json(StatusResponse { status })
 }
 
 #[derive(Serialize)]
@@ -30,7 +44,7 @@ struct NotFoundResponse {
 }
 
 /// Fallback service for handling routes to unknown paths
-pub(super) async fn handler_404() -> impl IntoResponse {
+async fn handler_404() -> impl IntoResponse {
     (
         StatusCode::NOT_FOUND,
         Json(NotFoundResponse {
@@ -39,10 +53,10 @@ pub(super) async fn handler_404() -> impl IntoResponse {
     )
 }
 
-pub fn register_routes(router: OpenApiRouter) -> OpenApiRouter {
-    router
-        // add health check service
-        .routes(routes!(handler_health))
+pub fn get_routes() -> OpenApiRouter {
+    OpenApiRouter::with_openapi(ApiDoc::openapi())
+        // add status route
+        .routes(routes!(handler_status))
         // add a fallback service for handling routes to unknown paths
         .fallback(handler_404)
 }
