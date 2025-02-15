@@ -14,6 +14,8 @@ use utoipa_scalar::{Scalar, Servable};
 
 use crate::app::context::AppContext;
 
+use super::middlewares::status::SetupLayer;
+
 mod authentication;
 mod base;
 mod setup;
@@ -29,12 +31,10 @@ const API_DESCRIPTION: &str = "Kubestro Core API";
 struct ApiDoc;
 
 pub async fn get_routes(context: AppContext) -> anyhow::Result<axum::Router> {
-    let router = OpenApiRouter::with_openapi(ApiDoc::openapi());
-
-    let router = router.merge(base::get_routes());
-    // let router = base::register_routes(router);
-    let router = router.merge(setup::get_routes());
-    let router = router.merge(authentication::get_routes());
+    let router = OpenApiRouter::with_openapi(ApiDoc::openapi())
+        .merge(base::get_routes())
+        .merge(setup::get_routes())
+        .merge(authentication::get_routes().layer(SetupLayer::setup_needed()));
 
     let router = register_global_services(router, context.clone());
     let router = register_session_store(router, context).await?;
