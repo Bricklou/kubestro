@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use anyhow::Context;
 use kubestro_core_domain::{
-    ports::{hasher::Hasher, repositories::user_repository::UserRepository},
+    ports::repositories::user_repository::UserRepository,
     services::auth::local_auth::LocalAuthService,
 };
 use kubestro_core_infra::{
@@ -10,10 +10,7 @@ use kubestro_core_infra::{
         db::{create_db_connection, DbProvider},
         user_repo::UserPgRepo,
     },
-    services::{
-        argon_hasher::Argon2Hasher, k8s_client::K8sClient,
-        password_validator::InfraPasswordValidator,
-    },
+    services::{argon_hasher::Argon2Hasher, password_validator::InfraPasswordValidator},
 };
 use redis_pool::{RedisPool, SingleRedisPool};
 use serde::Serialize;
@@ -56,18 +53,13 @@ pub struct AppContext {
     pub(crate) user_repo: Arc<dyn UserRepository>,
 
     // Services
-    pub(crate) hasher: Arc<dyn Hasher>,
     pub(crate) local_auth: Arc<LocalAuthService>,
-    pub(crate) k8s_client: Arc<K8sClient>,
 
     // Redis pool
     pub(crate) pool: SingleRedisPool,
 }
 
 pub async fn create_app_context() -> anyhow::Result<AppContext> {
-    // Initialize K8S client (needs to be initialized first since everything else depends on it)
-    let k8s_client = Arc::new(K8sClient::try_new().await?);
-
     // Initialize database connection
     let db = Arc::new(init_database().await?);
 
@@ -95,9 +87,7 @@ pub async fn create_app_context() -> anyhow::Result<AppContext> {
         shared_state,
         pool,
         local_auth,
-        hasher,
         user_repo,
-        k8s_client,
     };
 
     Ok(api_context)

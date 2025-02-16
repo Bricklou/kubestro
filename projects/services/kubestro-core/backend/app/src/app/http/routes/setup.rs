@@ -1,5 +1,4 @@
-use anyhow::Context;
-use axum::{http::StatusCode, response::IntoResponse, Extension, Json};
+use axum::{http::StatusCode, response::IntoResponse, Extension};
 use deserr::Deserr;
 use kubestro_core_domain::services::auth::local_auth::RegisterUserPayload;
 use serde::Deserialize;
@@ -11,7 +10,6 @@ use validator::Validate;
 use crate::app::{
     context::{AppContext, ServiceStatus},
     http::{
-        dto::user_dto::UserDto,
         helpers::{errors::ApiError, validation::ValidatedJson},
         middlewares::status::SetupLayer,
     },

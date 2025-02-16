@@ -50,7 +50,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: "pnpm"
 
       - name: Cache node_modules
         id: cache
@@ -90,17 +89,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: "pnpm"
 
       - name: Cache node modules
         uses: actions/cache@v4
         with:
           path: node_modules
           key: ${{ env.DEPENDENCIES_CACHE }}-${{ hashFiles('pnpm-lock.yaml') }}
-
-      # this task is a fix to reconstruct node_modules in workspace projects after the cache
-      - name: pnpm install
-        run: pnpm install --frozen-lockfile
 
       - name: Cache NX
         uses: actions/cache@v4
@@ -111,6 +105,10 @@ jobs:
             ${{ env.NX_CACHE }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ matrix.target }}-${{ matrix.jobIndex }}-
             ${{ env.NX_CACHE }}-${{ hashFiles('pnpm-lock.yaml') }}-
             ${{ env.NX_CACHE }}-
+
+      # this task is a fix to reconstruct node_modules in workspace projects after the cache
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - run: git fetch --no-tags --prune --depth=2 origin main
 

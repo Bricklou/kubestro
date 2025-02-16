@@ -6,11 +6,12 @@
   },
   "targetDefaults": {
     "build": {
-      "dependsOn": ["^build", "^typecheck"],
+      "dependsOn": ["^build", "typecheck"],
       "outputs": ["{projectRoot}/dist"],
       "cache": true
     },
     "lint:js": {
+      "dependsOn": ["typecheck"],
       "cache": true
     },
     "lint:css": {
@@ -18,6 +19,7 @@
     },
     "typecheck": {
       "outputs": ["{projectRoot}/dist"],
+      "dependsOn": ["^build"],
       "cache": true
     },
     "format": {

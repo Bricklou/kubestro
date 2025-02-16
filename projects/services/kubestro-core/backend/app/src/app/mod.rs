@@ -1,4 +1,3 @@
-use anyhow::Context;
 use context::{create_app_context, AppContext, ServiceStatus};
 use kubestro_core_domain::{
     models::fields::{email::Email, username::Username},
