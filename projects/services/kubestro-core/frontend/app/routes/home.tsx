@@ -2,6 +2,7 @@ import { Button, linkVariants } from '@kubestro/design-system'
 import { Bolt } from 'lucide-react'
 import { useCallback } from 'react'
 import { Link } from 'react-router'
+import { requireAuth } from '~/middlewares/requireAuth'
 
 export function meta() {
   return [
@@ -11,6 +12,13 @@ export function meta() {
       content: 'Welcome to React Router!'
     }
   ]
+}
+
+export async function clientLoader() {
+  const result = await requireAuth()
+  if (result.type === 'redirect') return result.response
+
+  return {}
 }
 
 export default function Home() {

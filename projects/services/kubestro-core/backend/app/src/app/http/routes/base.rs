@@ -3,7 +3,10 @@ use serde::Serialize;
 use utoipa::{OpenApi, ToSchema};
 use utoipa_axum::{router::OpenApiRouter, routes};
 
-use crate::app::context::{AppContext, ServiceStatus};
+use crate::app::{
+    context::{AppContext, ServiceStatus},
+    http::helpers::errors::ApiError,
+};
 
 pub(super) const BASE_TAG: &str = "base";
 
@@ -25,17 +28,20 @@ struct StatusResponse {
 /// Status check route
 #[utoipa::path(
     method(get),
-    path = "/status",
+    path = "/api/v1.0/status",
     tag = BASE_TAG,
     responses(
         (status = OK, description = "Success", body = StatusResponse, content_type = "application/json")
     )
 )]
-async fn handler_status(ctx: Extension<AppContext>) -> Json<StatusResponse> {
-    let shared_state_lock = ctx.shared_state.read().await;
+async fn handler_status(ctx: Extension<AppContext>) -> Result<Json<StatusResponse>, ApiError> {
+    let shared_state_lock = ctx
+        .shared_state
+        .read()
+        .map_err(|_| ApiError::unexpected_error("Failed to read shared state".to_string()))?;
     let status = shared_state_lock.status.clone();
 
-    Json(StatusResponse { status })
+    Ok(Json(StatusResponse { status }))
 }
 
 #[derive(Serialize)]

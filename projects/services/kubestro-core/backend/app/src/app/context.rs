@@ -17,7 +17,7 @@ use kubestro_core_infra::{
 };
 use redis_pool::{RedisPool, SingleRedisPool};
 use serde::Serialize;
-use tokio::sync::RwLock;
+use std::sync::RwLock;
 use utoipa::ToSchema;
 
 async fn init_database() -> anyhow::Result<DbProvider> {

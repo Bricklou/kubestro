@@ -1,3 +1,4 @@
+use anyhow::Context;
 use context::{create_app_context, AppContext, ServiceStatus};
 use kubestro_core_domain::{
     models::fields::{email::Email, username::Username},
@@ -60,9 +61,13 @@ async fn init_app(ctx: AppContext) -> anyhow::Result<()> {
             };
             local_auth.register(register_user).await?;
 
-            // Return early since we don't need to check the
-            let mut shared_state_lock = ctx.shared_state.write().await;
-            shared_state_lock.status = ServiceStatus::Installed;
+            {
+                let mut shared_state_lock = ctx
+                    .shared_state
+                    .write()
+                    .map_err(|e| anyhow::anyhow!("Failed to acquire shared state lock: {}", e))?;
+                shared_state_lock.status = ServiceStatus::Installed;
+            }
 
             return Ok(());
         }
@@ -74,8 +79,13 @@ async fn init_app(ctx: AppContext) -> anyhow::Result<()> {
             Alternatively, you can create the user manually through the dashboard."
         );
 
-        let mut shared_state_lock = ctx.shared_state.write().await;
-        shared_state_lock.status = ServiceStatus::NotInstalled;
+        {
+            let mut shared_state_lock = ctx
+                .shared_state
+                .write()
+                .map_err(|e| anyhow::anyhow!("Failed to acquire shared state lock: {}", e))?;
+            shared_state_lock.status = ServiceStatus::NotInstalled;
+        }
 
         return Ok(());
     }
@@ -84,7 +94,10 @@ async fn init_app(ctx: AppContext) -> anyhow::Result<()> {
     info!("System already installed, skipping setup...");
 
     // Set the status to `Installed`
-    let mut shared_state_lock = ctx.shared_state.write().await;
+    let mut shared_state_lock = ctx
+        .shared_state
+        .write()
+        .map_err(|e| anyhow::anyhow!("Failed to acquire shared state lock: {}", e))?;
     shared_state_lock.status = ServiceStatus::Installed;
 
     Ok(())

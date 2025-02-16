@@ -1,4 +1,4 @@
-use std::{future::Future, pin::Pin, process::Output, task::Poll};
+use std::{future::Future, pin::Pin, task::Poll};
 
 use axum::{
     http::Request,
@@ -85,9 +85,17 @@ where
         let fut = self.inner.call(req);
 
         let f = async move {
-            let shared_state = shared_state.read().await;
-
-            let status = shared_state.status.clone();
+            // Scope the lock guard to drop it before the await
+            let status = {
+                let shared_state = match shared_state.read() {
+                    Ok(shared_state) => shared_state,
+                    Err(e) => {
+                        error!("Failed to acquire shared state lock: {}", e);
+                        return Ok(ApiError::unexpected_error(e.to_string()).into_response());
+                    }
+                };
+                shared_state.status.clone()
+            }; // Lock guard is dropped here
 
             // If the middleware require the app to be setup
             if needs_setup && status == ServiceStatus::NotInstalled {
