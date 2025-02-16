@@ -78,6 +78,13 @@ jobs:
         with:
           version: "10.x"
 
+      - name: Setup Node.JS
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+          cache-dependency-path: pnpm-lock.yaml
+
       - name: Cache node modules
         uses: actions/cache@v4
         with:
