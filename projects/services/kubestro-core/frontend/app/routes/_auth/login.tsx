@@ -5,8 +5,7 @@ import {
 import { HTTPError } from 'ky'
 import {
   Button, FormMessage, Input, Label, linkVariants,
-  toast,
-  ToastProvider
+  toast
 } from '@kubestro/design-system'
 import { LucideLogIn } from 'lucide-react'
 import type { Route } from './+types/login'
@@ -19,6 +18,7 @@ import type {
 } from '~/data/api/generic-errors'
 import { queryClient } from '~/utils/queryClient'
 import { transformErrors } from '~/data/api/transform-errors'
+import { AUTH_GET_USER_KEY } from '~/data/queries/user'
 
 export function meta() {
   return [
@@ -38,15 +38,7 @@ interface FormFields {
   password: string
 }
 
-function LoginBackground() {
-  return (
-    <div className="inset-0 -z-10 bg-white bg-grid-pattern bg-[size:6rem_4rem]">
-      <div className="absolute bottom-0 left-0 right-0 top-0 bg-inner-circle" />
-    </div>
-  )
-}
-
-function LoginForm() {
+export default function LoginPage() {
   const fetcher = useFetcher<typeof clientAction>()
   const error = fetcher.data?.error
 
@@ -132,30 +124,6 @@ function LoginForm() {
   )
 }
 
-export default function LoginPage() {
-  return (
-    <div className="flex flex-row min-h-svh overflow-hidden">
-      <div className="relative hidden lg:block overflow-hidden flex-1">
-        <LoginBackground />
-      </div>
-
-      <div className="flex flex-col gap-4 p-6 md:p-10 border-l border-border bg-background w-full lg:max-w-[45vw] flex-1">
-        <div className="flex justify-center gap-2 md:justify-start">
-          <h1 className="text-2xl font-bold">Kubestro</h1>
-        </div>
-
-        <div className="flex flex-1 items-center justify-center">
-          <div className="w-full max-w-sm">
-            <ToastProvider>
-              <LoginForm />
-            </ToastProvider>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 export async function clientAction({ request }: Route.ActionArgs) {
   const formData = await request.formData()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- I trust the form data
@@ -163,7 +131,7 @@ export async function clientAction({ request }: Route.ActionArgs) {
 
   try {
     const user = await authLoginApi(body)
-    void queryClient.invalidateQueries({ queryKey: ['authentication', 'currentUser'] })
+    void queryClient.invalidateQueries({ queryKey: AUTH_GET_USER_KEY })
 
     console.log(user)
   }
@@ -190,8 +158,10 @@ export async function clientAction({ request }: Route.ActionArgs) {
     }
 
     toast({
-      title: 'An unexpected error occurred.'
+      title: 'An unexpected error occurred.',
+      variant: 'error'
     })
+    return {}
   }
 
   return redirect('/dashboard')

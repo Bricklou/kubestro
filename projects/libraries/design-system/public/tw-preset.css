@@ -237,12 +237,19 @@
   }
 }
 
-@layer base {
+@layer theme {
   * {
     @apply border-border;
   }
 
   body {
     @apply bg-background text-text;
+  }
+}
+
+@layer components {
+  input[type="password"]::-ms-reveal,
+  input[type="password"]::-ms-clear {
+    display: none;
   }
 }

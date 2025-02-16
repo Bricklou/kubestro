@@ -134,6 +134,9 @@
             cargo-workspaces
             cargo-watch
             sea-orm-cli
+
+            # github action local runner
+            act
           ]
           ++ self.checks.${system}.pre-commit-check.enabledPackages;
 

@@ -47,6 +47,16 @@ impl ApiError {
             ..Default::default()
         }
     }
+
+    pub fn forbidden(detail: &'static str) -> Self {
+        Self {
+            status: StatusCode::FORBIDDEN,
+            title: "Forbidden".into(),
+            detail: Some(Cow::Borrowed(detail)),
+            code: "forbidden".into(),
+            ..Default::default()
+        }
+    }
 }
 
 impl From<EmailError> for ApiError {

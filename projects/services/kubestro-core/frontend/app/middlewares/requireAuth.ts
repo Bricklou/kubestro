@@ -12,7 +12,7 @@ export async function logout(): Promise<Response> {
     console.error('Failed to logout', error)
   }
 
-  return redirect('/')
+  return redirect('/login')
 }
 
 type AuthResponse = {
@@ -64,9 +64,6 @@ export async function requireGuest(): Promise<GuestResponse> {
   }
   // eslint-disable-next-line unused-imports/no-unused-vars -- I don't care about the error
   catch (error) {
-    return {
-      type: 'redirect',
-      response: new Response()
-    }
+    return { type: 'result' }
   }
 }

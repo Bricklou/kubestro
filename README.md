@@ -37,6 +37,7 @@ https://opensource.org/license/mit.
 ## Acknowledgements
 
 - [Kubebuilder](https://book.kubebuilder.io/)
+- [kube-rs](https://kube.rs/)
 - [Kubecraft](https://github.com/serainville/Kubecraft) and
   [kubernetes-minecraft-operator](https://github.com/JamesLaverack/kubernetes-minecraft-operator)
   for the inspirations for my own operator implementation.

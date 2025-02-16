@@ -349,7 +349,7 @@ export function configApp(rootDir, ...configBlockToMerge) {
           2,
           {
             flatTernaryExpressions: false,
-            offsetTernaryExpressions: true,
+            offsetTernaryExpressions: false,
             SwitchCase: 1
           }],
         '@stylistic/array-bracket-newline': ['warn', 'consistent'],

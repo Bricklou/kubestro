@@ -1,6 +1,7 @@
 // Base components
 export * from './button'
 export * from './link'
+export * from './progress'
 
 // Layout components
 export * from './card'
