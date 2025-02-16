@@ -65,7 +65,7 @@ jobs:
 
     strategy:
       matrix:
-        target: [build, lint:js, lint:css]
+        target: [build, "lint:js", "lint:css"]
         jobIndex: [1, 2, 3, 4]
 
     env:
@@ -75,6 +75,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: "10.x"
 
       - name: Cache node modules
         uses: actions/cache@v4
@@ -88,8 +93,8 @@ jobs:
           path: node_modules/.cache/nx
           key: cache-nx-${{ hashFiles('pnpm-lock.yaml') }}-${{ matrix.target }}-${{ github.sha }}
           restore-keys: |
-            cache-nx-${{ hashFiles('pnpm-lock.yaml') }}-${{ matrix.target }}-
-            cache-nx-${{ hashFiles('pnpm-lock.yaml') }}-
+            cache-nx-${{ hashFiles('pnpm-lock.yaml') }}-${{ matrix.target }}-${{ github.sha }}
+            cache-nx-${{ hashFiles('pnpm-lock.yaml') }}
 
       - run: git fetch --no-tags --prune --depth=1 origin main
 

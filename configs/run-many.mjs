@@ -7,7 +7,7 @@ const isMain = process.argv[5] === 'refs/heads/main'
 const baseSha = isMain ? 'origin/master~1' : 'origin/main'
 
 const affected = execSync(
-  `pnpm exec nx print-affected --base=${baseSha} --target=${target}`
+  `pnpm exec nx show projects --affected --base="${baseSha}" --target="${target}"`
 ).toString('utf8')
 
 const array = JSON.parse(affected)
@@ -17,8 +17,8 @@ const array = JSON.parse(affected)
 
 const slideSize = Math.max(Math.floor(array.length / jobCount), 1)
 const projects = jobIndex < jobCount ?
-  array.slide(slideSize * (jobIndex - 1), slideSize * jobIndex) :
-  array.slice(slideSize * (jobIndex - 1))
+    array.slide(slideSize * (jobIndex - 1), slideSize * jobIndex) :
+    array.slice(slideSize * (jobIndex - 1))
 
 if (projects.length > 0) {
   execSync(
