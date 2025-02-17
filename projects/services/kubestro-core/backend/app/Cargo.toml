@@ -15,7 +15,7 @@ utoipa-axum = "0.2.0"
 axum_session = { version = "0.16.0", features = ["advanced"] }
 axum_session_redispool = "0.5.0"
 axum_session_auth = "0.16.0"
-redis = "0.28.1"
+redis = "0.28.2"
 redis_pool = "0.7.0"
 
 # data transformation & manipulation
@@ -27,6 +27,7 @@ deserr = { git = "https://github.com/meilisearch/deserr.git", features = [
   "axum",
 ], rev = "4f99359" }
 chrono.workspace = true
+url = { version = "2.5.4", features = ["serde"] }
 
 # logging
 tracing.workspace = true
