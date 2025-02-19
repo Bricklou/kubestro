@@ -43,6 +43,9 @@ pub struct AppContext {
 
     // Redis pool
     pub(crate) pool: SingleRedisPool,
+
+    // OIDC configuration
+    pub(crate) oidc_config: Option<oidc::OidcConfig>,
 }
 
 pub async fn create_app_context() -> anyhow::Result<AppContext> {
@@ -53,7 +56,7 @@ pub async fn create_app_context() -> anyhow::Result<AppContext> {
     let pool = db::init_cache().await?;
 
     // Initialize OIDC configuration
-    let oidc_config = oidc::init_oidc_config();
+    let oidc_config = oidc::init_oidc_config().await;
 
     // Infrastructure Services
     let hasher = Arc::new(Argon2Hasher::default());
@@ -77,6 +80,7 @@ pub async fn create_app_context() -> anyhow::Result<AppContext> {
         pool,
         local_auth,
         user_repo,
+        oidc_config,
     };
 
     Ok(api_context)

@@ -18,6 +18,9 @@ axum_session_auth = "0.16.0"
 redis = "0.28.2"
 redis_pool = "0.7.0"
 
+# security
+openidconnect = { version = "4.0.0", features = ["reqwest"] }
+
 # data transformation & manipulation
 dotenvy.workspace = true
 serde.workspace = true
