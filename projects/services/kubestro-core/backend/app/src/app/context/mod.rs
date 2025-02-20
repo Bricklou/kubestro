@@ -13,8 +13,10 @@ use serde::Serialize;
 use std::sync::RwLock;
 use utoipa::ToSchema;
 
+use super::services::oidc_auth::OidcAuthService;
+
 mod db;
-mod oidc;
+pub mod oidc;
 
 #[derive(Debug, Clone, Serialize, ToSchema, Eq, PartialEq)]
 #[serde(rename_all = "snake_case")]
@@ -40,12 +42,10 @@ pub struct AppContext {
 
     // Services
     pub(crate) local_auth: Arc<LocalAuthService>,
+    pub(crate) oidc_auth: Option<Arc<OidcAuthService>>,
 
     // Redis pool
     pub(crate) pool: SingleRedisPool,
-
-    // OIDC configuration
-    pub(crate) oidc_config: Option<oidc::OidcConfig>,
 }
 
 pub async fn create_app_context() -> anyhow::Result<AppContext> {
@@ -69,6 +69,8 @@ pub async fn create_app_context() -> anyhow::Result<AppContext> {
         hasher.clone(),
         password_validator.clone(),
     ));
+    let oidc_auth =
+        oidc_config.map(|config| Arc::new(OidcAuthService::new(user_repo.clone(), config)));
 
     // Shared states
     let shared_state = Arc::new(RwLock::new(SharedState {
@@ -79,8 +81,8 @@ pub async fn create_app_context() -> anyhow::Result<AppContext> {
         shared_state,
         pool,
         local_auth,
+        oidc_auth,
         user_repo,
-        oidc_config,
     };
 
     Ok(api_context)

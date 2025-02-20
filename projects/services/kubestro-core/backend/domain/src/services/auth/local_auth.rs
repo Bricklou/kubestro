@@ -58,8 +58,12 @@ impl LocalAuthService {
             return Err(LocalAuthServiceError::InvalidCredentials);
         };
 
+        let Some(user_password) = &user.password else {
+            return Err(LocalAuthServiceError::PasswordAuthNotAvailable);
+        };
+
         self.hasher
-            .verify(password, &user.password)
+            .verify(password, user_password)
             .map_err(|_| LocalAuthServiceError::InvalidCredentials)?;
 
         Ok(user)
@@ -69,11 +73,11 @@ impl LocalAuthService {
         let create_user = CreateUser {
             username: user.username,
             email: user.email,
-            password: Password::from_string(
+            password: Some(Password::from_string(
                 &user.password,
                 self.hasher.clone(),
                 self.pass_validator.clone(),
-            )?,
+            )?),
         };
         let user = self.user_repo.create(create_user).await?;
         Ok(user)
@@ -84,6 +88,9 @@ impl LocalAuthService {
 pub enum LocalAuthServiceError {
     #[error("Invalid credentials")]
     InvalidCredentials,
+
+    #[error("Password authentication is not available for this account")]
+    PasswordAuthNotAvailable,
 
     #[error(transparent)]
     PasswordError(#[from] PasswordError),
@@ -154,7 +161,7 @@ mod tests {
             UserId::new(),
             USERNAME.try_into().unwrap(),
             EMAIL.try_into().unwrap(),
-            PASSWORD.to_string().into(),
+            Some(PASSWORD.to_string().into()),
             Utc::now(),
         );
 
@@ -193,7 +200,7 @@ mod tests {
             UserId::new(),
             USERNAME.try_into().unwrap(),
             EMAIL.try_into().unwrap(),
-            PASSWORD.to_string().into(),
+            Some(PASSWORD.to_string().into()),
             Utc::now(),
         );
 
@@ -306,7 +313,7 @@ mod tests {
             UserId::new(),
             user.username.clone(),
             user.email.clone(),
-            Password::from_hash(PASSWORD.into()),
+            Some(Password::from_hash(PASSWORD.into())),
             Utc::now(),
         );
 

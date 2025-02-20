@@ -43,7 +43,7 @@ pub struct User {
     /// The email of the user.
     pub email: Email,
     /// The password of the user.
-    pub password: Password,
+    pub password: Option<Password>,
     /// The date and time the user was created.
     pub created_at: DateTime<Utc>,
     /// The date and time the user was last updated.
@@ -56,7 +56,7 @@ impl User {
         id: UserId,
         username: Username,
         email: Email,
-        password: Password,
+        password: Option<Password>,
         created_at: DateTime<Utc>,
     ) -> Self {
         Self {
@@ -97,13 +97,13 @@ mod tests {
             id.clone(),
             username.clone(),
             email.clone(),
-            password.clone(),
+            Some(password.clone()),
             Utc::now(),
         );
 
         assert_eq!(user.id(), id);
         assert_eq!(user.username, username);
         assert_eq!(user.email, email);
-        assert_eq!(user.password, password);
+        assert_eq!(user.password, Some(password));
     }
 }

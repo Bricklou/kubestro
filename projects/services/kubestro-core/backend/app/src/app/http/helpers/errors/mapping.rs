@@ -8,6 +8,8 @@ use kubestro_core_domain::{
 };
 use serde::{Serialize, Serializer};
 
+use crate::app::services::oidc_auth::OidcAuthServiceError;
+
 use super::ApiError;
 
 pub fn map_status_code<S: Serializer>(
@@ -57,6 +59,17 @@ impl ApiError {
             ..Default::default()
         }
     }
+
+    #[allow(dead_code)]
+    pub fn not_implemented(detail: &'static str) -> Self {
+        Self {
+            status: StatusCode::NOT_IMPLEMENTED,
+            title: "Not Implemented".into(),
+            detail: Some(Cow::Borrowed(detail)),
+            code: "not_implemented".into(),
+            ..Default::default()
+        }
+    }
 }
 
 impl From<EmailError> for ApiError {
@@ -96,6 +109,10 @@ impl From<LocalAuthServiceError> for ApiError {
             LocalAuthServiceError::UserFind(e) => e.into(),
             LocalAuthServiceError::UserRegister(e) => e.into(),
             LocalAuthServiceError::PasswordError(e) => e.into(),
+            LocalAuthServiceError::PasswordAuthNotAvailable => ApiError {
+                detail: Some(value.to_string().into()),
+                ..ApiError::unauthorized()
+            },
         }
     }
 }
@@ -148,6 +165,16 @@ impl From<UserFindRepoError> for ApiError {
         match value {
             UserFindRepoError::DatabaseError(e) => ApiError::database_error(e.to_string()),
             UserFindRepoError::UnexpectedError(e) => ApiError::unexpected_error(e.to_string()),
+        }
+    }
+}
+
+impl From<OidcAuthServiceError> for ApiError {
+    fn from(value: OidcAuthServiceError) -> Self {
+        match value {
+            OidcAuthServiceError::LoginFailed => ApiError::unauthorized(),
+            OidcAuthServiceError::OidcClientError(e) => ApiError::unexpected_error(e.to_string()),
+            e => e.into(),
         }
     }
 }

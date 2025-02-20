@@ -11,6 +11,9 @@ chrono.workspace = true
 passwords = "3.1.16"
 validator.workspace = true
 
+# security
+openidconnect = { version = "4.0.0", features = ["reqwest"] }
+
 # helpers
 async-trait.workspace = true
 futures = "0.3.31"

@@ -89,7 +89,7 @@
               enable = true;
               description = "Format backend code";
               entry = "cargo fmt -- --config-path=./configs/rustfmt.toml";
-              files = "projects/[^/]+/backend/.+\.rs";
+              files = "projects/.+/backend/.+\.rs";
             };
             format-javascript = {
               enable = true;

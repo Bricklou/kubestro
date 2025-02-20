@@ -23,4 +23,5 @@ pub fn get_routes() -> OpenApiRouter {
         .routes(routes!(register::handler_register))
         .routes(routes!(me::handler_me, logout::handler_logout))
         .routes(routes!(oidc::handler_oidc_redirect))
+        .routes(routes!(oidc::handler_oidc_callback))
 }

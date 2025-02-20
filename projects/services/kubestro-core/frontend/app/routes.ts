@@ -6,7 +6,8 @@ export default [
     index('routes/home.tsx'),
 
     layout('layouts/double-side-layout.tsx', { id: 'auth-layout' }, [
-      route('/login', 'routes/_auth/login.tsx')
+      route('/login', 'routes/_auth/login.tsx'),
+      route('/login/callback', 'routes/_auth/oidc-callback.tsx')
     ])
   ]),
   layout('layouts/double-side-layout.tsx', { id: 'setup-layout' }, [

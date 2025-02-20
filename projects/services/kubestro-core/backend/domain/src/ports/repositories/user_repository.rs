@@ -12,10 +12,20 @@ pub trait UserRepository: Send + Sync {
     async fn create(&self, user: CreateUser) -> Result<User, UserCreateRepoError>;
     async fn find_by_username(&self, username: &str) -> Result<Option<User>, UserFindRepoError>;
     async fn find_by_email(&self, email: &Email) -> Result<Option<User>, UserFindRepoError>;
+    async fn find_by_oidc_subject(
+        &self,
+        oidc_subject: &str,
+    ) -> Result<Option<User>, UserFindRepoError>;
     async fn find_one(&self, id: &UserId) -> Result<Option<User>, UserFindRepoError>;
     async fn find_all(self) -> Result<Vec<User>, UserFindRepoError>;
     async fn update(&self, user: User) -> Result<User, UserUpdateRepoError>;
     async fn delete(&self, id: &UserId) -> Result<(), UserDeleteRepoError>;
+
+    async fn create_oidc_association(
+        &self,
+        id: &UserId,
+        oidc_subject: &str,
+    ) -> Result<(), UserCreateRepoError>;
 }
 
 #[derive(Debug, PartialEq, thiserror::Error)]

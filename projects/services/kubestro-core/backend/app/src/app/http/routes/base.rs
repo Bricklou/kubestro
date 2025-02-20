@@ -52,8 +52,8 @@ async fn handler_status(ctx: Extension<AppContext>) -> Result<Json<StatusRespons
 
     let status = shared_state_lock.status.clone();
 
-    let oidc_config = ctx.oidc_config.clone().map(|config| OidcInfo {
-        display_name: config.display_name.clone(),
+    let oidc_config = ctx.oidc_auth.clone().map(|config| OidcInfo {
+        display_name: config.display_name(),
         redirect_url: "/api/v1.0/authentication/redirect".into(),
     });
 
