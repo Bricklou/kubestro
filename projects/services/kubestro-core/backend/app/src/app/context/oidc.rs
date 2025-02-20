@@ -76,6 +76,8 @@ pub async fn init_oidc_config() -> Option<OidcConfig> {
 
     // At this point, we know all mandatory fields are present and valid.
     // We can safely unwrap the values.
+    // NOTE: for now, only OpenID Connect service with discovery are supported. We can
+    // probably add support for manual configuration in the future.
     let mut config = OidcDiscoverConfig::new(
         oidc_config_url.unwrap().to_string(),
         oidc_client_id.unwrap(),
