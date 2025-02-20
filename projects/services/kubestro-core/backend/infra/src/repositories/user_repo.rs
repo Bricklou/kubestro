@@ -47,7 +47,7 @@ impl TryFrom<User> for entities::user::ActiveModel {
             id: ActiveValue::Set(value.id().value()),
             username: ActiveValue::Set(value.username.to_string()),
             email: ActiveValue::Set(value.email.to_string()),
-            password: ActiveValue::Set(value.password.and_then(|p| Some(p.to_string()))),
+            password: ActiveValue::Set(value.password.map(|p| p.to_string())),
             created_at: ActiveValue::Set(value.created_at.into()),
             updated_at: ActiveValue::Set(value.updated_at.into()),
         })
@@ -61,10 +61,7 @@ impl TryFrom<entities::user::Model> for User {
         let id = UserId::from(value.id);
         let username = Username::try_from(value.username)?;
         let email = Email::try_from(value.email)?;
-        let password = match value.password {
-            Some(password) => Some(Password::from_hash(password)),
-            None => None,
-        };
+        let password = value.password.map(Password::from_hash);
         let created_at: DateTime<Utc> = value.created_at.into();
 
         Ok(User::new(id, username, email, password, created_at))
@@ -94,7 +91,7 @@ impl UserRepository for UserPgRepo {
             id: ActiveValue::Set(UserId::new().value()),
             username: ActiveValue::Set(user_data.username.to_string()),
             email: ActiveValue::Set(user_data.email.to_string()),
-            password: ActiveValue::Set(user_data.password.and_then(|p| Some(p.to_string()))),
+            password: ActiveValue::Set(user_data.password.map(|p| p.to_string())),
             ..Default::default()
         };
 
