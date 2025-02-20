@@ -8,6 +8,7 @@ import {
   toast
 } from '@kubestro/design-system'
 import { LucideLogIn } from 'lucide-react'
+import { useRootLayoutData } from '../_root-layout'
 import type { Route } from './+types/login'
 import { requireGuest } from '~/middlewares/requireAuth'
 import { authLoginApi } from '~/data/api/user'
@@ -41,6 +42,8 @@ interface FormFields {
 export default function LoginPage() {
   const fetcher = useFetcher<typeof clientAction>()
   const error = fetcher.data?.error
+
+  const data = useRootLayoutData()
 
   return (
     <fetcher.Form className="flex flex-col gap-6" method="post">
@@ -96,20 +99,29 @@ export default function LoginPage() {
           Login
         </Button>
 
-        <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-          <span className="relative z-10 bg-background px-2 text-text-muted">
-            Or continue with
-          </span>
-        </div>
+        {data.oidc ?
+          (
+            <>
+              <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+                <span className="relative z-10 bg-background px-2 text-text-muted">
+                  Or continue with
+                </span>
+              </div>
 
-        <Button
-          className="w-full"
-          icon={LucideLogIn}
-          iconPlacement="right"
-          variant="secondary"
-        >
-          External auth provider
-        </Button>
+              <Button
+                className="w-full"
+                icon={LucideLogIn}
+                iconPlacement="right"
+                variant="secondary"
+                asChild
+              >
+                <a href={data.oidc.redirect_url}>
+                {data.oidc.display_name ?? 'External auth provider'}
+                </a>
+              </Button>
+            </>
+          ) :
+          null}
       </div>
 
       <div className="text-center text-sm">

@@ -18,12 +18,12 @@ use kubestro_core_domain::{
     },
 };
 use sea_orm::{
-    prelude::async_trait, sqlx, ActiveModelTrait, ActiveValue, ColumnTrait, DbErr, EntityTrait,
-    QueryFilter, RuntimeErr,
+    prelude::{async_trait, Uuid},
+    sqlx, ActiveModelTrait, ActiveValue, ColumnTrait, DbErr, EntityTrait, QueryFilter, RuntimeErr,
 };
 use tracing::trace;
 
-use crate::entities;
+use crate::entities::{self, user_oidc};
 
 use super::db::DbProvider;
 
@@ -47,7 +47,7 @@ impl TryFrom<User> for entities::user::ActiveModel {
             id: ActiveValue::Set(value.id().value()),
             username: ActiveValue::Set(value.username.to_string()),
             email: ActiveValue::Set(value.email.to_string()),
-            password: ActiveValue::Set(value.password.to_string()),
+            password: ActiveValue::Set(value.password.map(|p| p.to_string())),
             created_at: ActiveValue::Set(value.created_at.into()),
             updated_at: ActiveValue::Set(value.updated_at.into()),
         })
@@ -61,7 +61,7 @@ impl TryFrom<entities::user::Model> for User {
         let id = UserId::from(value.id);
         let username = Username::try_from(value.username)?;
         let email = Email::try_from(value.email)?;
-        let password = Password::from_hash(value.password);
+        let password = value.password.map(Password::from_hash);
         let created_at: DateTime<Utc> = value.created_at.into();
 
         Ok(User::new(id, username, email, password, created_at))
@@ -91,7 +91,7 @@ impl UserRepository for UserPgRepo {
             id: ActiveValue::Set(UserId::new().value()),
             username: ActiveValue::Set(user_data.username.to_string()),
             email: ActiveValue::Set(user_data.email.to_string()),
-            password: ActiveValue::Set(user_data.password.to_string()),
+            password: ActiveValue::Set(user_data.password.map(|p| p.to_string())),
             ..Default::default()
         };
 
@@ -216,5 +216,54 @@ impl UserRepository for UserPgRepo {
             Ok(_) => Ok(()),
             Err(e) => Err(UserDeleteRepoError::DatabaseError(e.to_string())),
         }
+    }
+
+    #[tracing::instrument(skip(self))]
+    async fn find_by_oidc_subject(&self, subject: &str) -> Result<Option<User>, UserFindRepoError> {
+        let user_model = entities::user_oidc::Entity::find()
+            .filter(user_oidc::Column::OidcSubject.eq(subject))
+            .find_also_related(entities::user::Entity)
+            .one(self.db.pool())
+            .await
+            .map_err(|e| UserFindRepoError::DatabaseError(e.to_string()))?
+            .and_then(|(_, user_model)| user_model);
+
+        match user_model {
+            Some(user_model) => match User::try_from(user_model) {
+                Ok(user) => Ok(Some(user)),
+                Err(e) => Err(UserFindRepoError::UnexpectedError(e.to_string())),
+            },
+            None => Ok(None),
+        }
+    }
+
+    #[tracing::instrument(skip(self))]
+    async fn create_oidc_association(
+        &self,
+        user_id: &UserId,
+        subject: &str,
+    ) -> Result<(), UserCreateRepoError> {
+        let oidc_user = entities::user_oidc::ActiveModel {
+            id: ActiveValue::Set(Uuid::new_v4()),
+            user_id: ActiveValue::Set(user_id.value()),
+            oidc_subject: ActiveValue::Set(subject.to_string()),
+        };
+
+        oidc_user
+            .insert(self.db.pool())
+            .await
+            .map_err(|err| match err {
+                DbErr::Query(RuntimeErr::SqlxError(sqlx::Error::Database(db_err))) => {
+                    trace!("Database error: {}", db_err.to_string());
+                    if db_err.is_unique_violation() {
+                        UserCreateRepoError::AlreadyExists
+                    } else {
+                        UserCreateRepoError::DatabaseError(db_err.to_string())
+                    }
+                }
+                e => UserCreateRepoError::UnexpectedError(e.to_string()),
+            })?;
+
+        Ok(())
     }
 }

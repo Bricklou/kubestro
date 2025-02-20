@@ -19,10 +19,20 @@ pub(super) const BASE_TAG: &str = "base";
 )]
 struct ApiDoc;
 
+/// OpenID Connect information
+#[derive(Serialize, ToSchema)]
+struct OidcInfo {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    display_name: Option<String>,
+    redirect_url: String,
+}
+
 /// Health response
 #[derive(Serialize, ToSchema)]
 struct StatusResponse {
     status: ServiceStatus,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    oidc: Option<OidcInfo>,
 }
 
 /// Status check route
@@ -39,9 +49,18 @@ async fn handler_status(ctx: Extension<AppContext>) -> Result<Json<StatusRespons
         .shared_state
         .read()
         .map_err(|_| ApiError::unexpected_error("Failed to read shared state".to_string()))?;
+
     let status = shared_state_lock.status.clone();
 
-    Ok(Json(StatusResponse { status }))
+    let oidc_config = ctx.oidc_auth.clone().map(|config| OidcInfo {
+        display_name: config.display_name(),
+        redirect_url: "/api/v1.0/authentication/redirect".into(),
+    });
+
+    Ok(Json(StatusResponse {
+        status,
+        oidc: oidc_config,
+    }))
 }
 
 #[derive(Serialize)]

@@ -8,5 +8,5 @@ pub struct CreateUser {
     /// The email of the user
     pub email: Email,
     /// The password of the user
-    pub password: Password,
+    pub password: Option<Password>,
 }

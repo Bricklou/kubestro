@@ -1,32 +1,25 @@
-use axum::extract::FromRequestParts;
+use axum::{
+    extract::Request,
+    middleware::Next,
+    response::{IntoResponse, Response},
+};
 use axum_session::Session;
 use axum_session_redispool::SessionRedisPool;
 
 use crate::app::http::{dto::user_dto::UserDto, helpers::errors::ApiError};
 
-// Add extractor that performs authentication check.
-pub struct RequireGuest;
+pub async fn guest_middleware(request: Request, next: Next) -> Response {
+    // Extract session from request parts
+    let (parts, body) = request.into_parts();
 
-impl<S> FromRequestParts<S> for RequireGuest
-where
-    S: Send + Sync,
-{
-    type Rejection = ApiError;
-
-    async fn from_request_parts(
-        parts: &mut axum::http::request::Parts,
-        _state: &S,
-    ) -> Result<Self, Self::Rejection> {
-        // Extract the session
-        let Some(session) = parts.extensions.get::<Session<SessionRedisPool>>() else {
-            return Ok(RequireGuest);
-        };
-
-        // Check if there is no user in the session
+    if let Some(session) = &parts.extensions.get::<Session<SessionRedisPool>>() {
+        // Check for the presence of a user data in the session
         if session.get::<UserDto>("user").is_some() {
-            return Err(ApiError::unauthorized());
+            return ApiError::unauthorized().into_response();
         }
-
-        Ok(RequireGuest)
     }
+
+    // If there is no session, continue
+    let request = Request::from_parts(parts, body);
+    next.run(request).await
 }

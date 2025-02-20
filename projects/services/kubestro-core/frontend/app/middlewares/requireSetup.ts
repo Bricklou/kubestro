@@ -1,5 +1,6 @@
 import { redirect } from 'react-router'
 import { globalGetStatus } from '~/data/queries/global'
+import type { ServiceStatus } from '~/data/types/global'
 import { queryGetOrFetch } from '~/utils/queryClient'
 
 type SetupResponse = {
@@ -7,6 +8,7 @@ type SetupResponse = {
   response: Response
 } | {
   type: 'result'
+  data: ServiceStatus
 }
 
 export async function requireSetup(setupNeeded = true): Promise<SetupResponse> {
@@ -30,7 +32,10 @@ export async function requireSetup(setupNeeded = true): Promise<SetupResponse> {
       }
     }
 
-    return { type: 'result' }
+    return {
+      type: 'result',
+      data: status
+    }
   }
   // eslint-disable-next-line unused-imports/no-unused-vars -- I don't care about the error
   catch (error) {

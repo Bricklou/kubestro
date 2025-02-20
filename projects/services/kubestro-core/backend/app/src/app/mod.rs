@@ -9,6 +9,7 @@ use tokio_util::sync::CancellationToken;
 mod context;
 mod http;
 mod k8s;
+mod services;
 
 /// Start the Kubestro Core application
 pub async fn start() -> anyhow::Result<()> {

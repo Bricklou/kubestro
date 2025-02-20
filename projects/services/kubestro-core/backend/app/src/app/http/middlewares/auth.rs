@@ -1,11 +1,16 @@
-use axum::extract::FromRequestParts;
+use axum::{
+    extract::{FromRequestParts, Request},
+    middleware::Next,
+    response::{IntoResponse, Response},
+};
 use axum_session::Session;
 use axum_session_redispool::SessionRedisPool;
 
 use crate::app::http::{dto::user_dto::UserDto, helpers::errors::ApiError};
 
 // Add extractor that performs authentication check.
-pub struct RequireAuth;
+#[derive(Debug, Clone)]
+pub struct RequireAuth(pub UserDto);
 
 impl<S> FromRequestParts<S> for RequireAuth
 where
@@ -23,10 +28,26 @@ where
             .get::<Session<SessionRedisPool>>()
             .ok_or(ApiError::unauthorized())?;
 
-        if session.get::<UserDto>("user").is_none() {
+        let Some(user) = session.get::<UserDto>("user") else {
             return Err(ApiError::unauthorized());
-        }
+        };
 
-        Ok(RequireAuth)
+        Ok(RequireAuth(user))
     }
+}
+
+pub async fn auth_middleware(request: Request, next: Next) -> Response {
+    // Extract session from request parts
+    let (mut parts, body) = request.into_parts();
+    let require_auth = match RequireAuth::from_request_parts(&mut parts, &()).await {
+        Ok(require_auth) => require_auth,
+        Err(e) => return e.into_response(),
+    };
+
+    // Now you can use the session data
+    let mut request = Request::from_parts(parts, body);
+    request.extensions_mut().insert(require_auth);
+
+    // Continue with the next middleware or handler
+    next.run(request).await
 }

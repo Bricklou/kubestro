@@ -19,3 +19,13 @@ export async function authLoginApi(body: {
     .json()
     .then(data => data.user)
 }
+
+export async function authLoginOidcApi(code: string, state: string): Promise<User> {
+  const searchParams = new URLSearchParams()
+  searchParams.set('code', code)
+  searchParams.set('state', state)
+
+  return ky.get<{ user: User }>('/api/v1.0/authentication/callback', {
+    searchParams
+  }).json()
+}

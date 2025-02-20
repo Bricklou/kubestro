@@ -1,10 +1,8 @@
-use axum::Json;
-use axum_session::Session;
-use axum_session_redispool::SessionRedisPool;
+use axum::{Extension, Json};
 use serde::Serialize;
 use utoipa::ToSchema;
 
-use crate::app::http::{dto::user_dto::UserDto, helpers::errors::ApiError};
+use crate::app::http::{dto::user_dto::UserDto, middlewares::auth::RequireAuth};
 
 use super::AUTHENTICATION_TAG;
 
@@ -20,9 +18,6 @@ pub struct MeResponse {
     description = "Get the current user",
     tag = AUTHENTICATION_TAG
 )]
-pub async fn handler_me(session: Session<SessionRedisPool>) -> Result<Json<MeResponse>, ApiError> {
-    session
-        .get::<UserDto>("user")
-        .ok_or(ApiError::unauthorized())
-        .map(|user| Json(MeResponse { user }))
+pub async fn handler_me(Extension(RequireAuth(user)): Extension<RequireAuth>) -> Json<MeResponse> {
+    Json(MeResponse { user })
 }
