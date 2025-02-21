@@ -58,11 +58,15 @@ export function SidebarProvider({
   const isDesktop = useMediaQuery('md')
   const [openMobile, setOpenMobile] = useState(false)
 
+  // Read initial value from localStorage
+  const lsValue = localStorage.getItem('sidebarOpen')
+  const initialState = lsValue === 'true' || (lsValue !== 'false' && defaultOpen)
+
   /*
    * This is the internal state of the sidebar
    * We use openProp and setOpenProp for control from outside the component.
    */
-  const [open_internal, setOpen_internal] = useState(defaultOpen)
+  const [open_internal, setOpen_internal] = useState(initialState)
   const open = openProp ?? open_internal
   const setOpen = useCallback((value: boolean | ((value: boolean) => boolean)) => {
     const openState = typeof value === 'function' ? value(open) : value

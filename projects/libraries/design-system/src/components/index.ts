@@ -2,6 +2,7 @@
 export * from './button'
 export * from './link'
 export * from './progress'
+export * from './dropdown'
 
 // Layout components
 export * from './card'

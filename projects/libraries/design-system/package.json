@@ -13,8 +13,21 @@
       "import": "./dist/design-system.es.js",
       "types": "./dist/index.d.ts"
     },
-    "./*": {
-      "types": "./dist/*.d.ts"
+    "./components": {
+      "import": "./dist/design-system.es.js",
+      "types": "./dist/components/index.d.ts"
+    },
+    "./components/*": {
+      "import": "./dist/design-system.es.js",
+      "types": "./dist/components/*.d.ts"
+    },
+    "./hooks": {
+      "import": "./dist/design-system.es.js",
+      "types": "./dist/hooks/index.d.ts"
+    },
+    "./hooks/*": {
+      "import": "./dist/design-system.es.js",
+      "types": "./dist/hooks/*.d.ts"
     },
     "./preset.css": "./dist/tw-preset.css"
   },
@@ -31,6 +44,7 @@
   "dependencies": {
     "@radix-ui/react-checkbox": "catalog:",
     "@radix-ui/react-dialog": "^1.1.6",
+    "@radix-ui/react-dropdown-menu": "^2.1.6",
     "@radix-ui/react-label": "catalog:",
     "@radix-ui/react-progress": "catalog:",
     "@radix-ui/react-separator": "^1.1.2",

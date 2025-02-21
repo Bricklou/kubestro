@@ -57,7 +57,7 @@ export const Default: Story = {
         <SidebarMenu>
 
           <SidebarMenuItem className="inline-flex gap-2">
-            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-text">
               <LayoutDashboardIcon className="size-4" />
             </div>
 
