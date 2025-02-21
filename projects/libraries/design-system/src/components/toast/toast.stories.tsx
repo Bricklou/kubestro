@@ -6,7 +6,7 @@ import { useToast } from './use-toast'
 
 const meta: Meta<typeof Toaster> = {
   component: Toaster,
-  title: 'Base/Toaster',
+  title: 'Utilities/Toaster',
   decorators: [
     Story => (
       <div className="p-4">

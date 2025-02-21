@@ -147,6 +147,18 @@
    */
   --animate-shine: shine 3s ease-out infinite;
 
+  /**
+   * Components themes
+   */
+  --color-sidebar-background: var(--color-background);
+  --color-sidebar-text: var(--color-text);
+  --color-sidebar-primary: var(--color-primary);
+  --color-sidebar-primary-text: var(--color-primary-text);
+  --color-sidebar-hover: var(--color-primary-soft);
+  --color-sidebar-hover-text: var(--color-primary-soft-text);
+  --color-sidebar-border: var(--color-border);
+  --color-sidebar-ring: var(--color-ring);
+
   @keyframes shine {
     0% {
       background-position: 200% 0;
