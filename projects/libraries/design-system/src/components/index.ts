@@ -16,3 +16,4 @@ export * from './form'
 // Utilities components
 export * from './toast'
 export * from './tooltip'
+export * from './avatar'

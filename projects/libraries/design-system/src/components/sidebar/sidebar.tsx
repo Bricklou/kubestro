@@ -173,7 +173,7 @@ export function Sidebar({
     return (
       <div
         className={twMerge(
-          'flex h-full w-(--sidebar-width) flex-col bg-background text-text',
+          'flex h-full w-(--sidebar-width) flex-col bg-sidebar-background text-text',
           className
         )}
         ref={ref}
@@ -190,7 +190,7 @@ export function Sidebar({
         <SheetTitle className="sr-only" />
 
         <SheetContent
-          className="w-(--sidebar-width) bg-background p-0 text-text [&>button]:hidden"
+          className="w-(--sidebar-width) bg-sidebar-background p-0 text-text [&>button]:hidden"
           data-mobile="true"
           data-sidebar="sidebar"
           side={side}
@@ -242,7 +242,7 @@ export function Sidebar({
         {...props}
       >
         <div
-          className="flex h-full w-full flex-col bg-background group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
+          className="flex h-full w-full flex-col bg-sidebar-background group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
           data-sidebar="sidebar"
         >
           {children}
@@ -291,7 +291,7 @@ export function SidebarInset({
   return (
     <main
       className={twMerge(
-        'relative flex min-h-svh flex-1 flex-col bg-background',
+        'relative flex min-h-svh flex-1 flex-col bg-sidebar-background',
         'peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow',
         className
       )}
@@ -306,7 +306,7 @@ export function SidebarInput({ className, ref, ...props }: ComponentProps<typeof
   return (
     <Input
       className={twMerge(
-        'h-8 w-full bg-background shadow-none focus-visible:ring-2 focus-visible:ring-sidebar-ring',
+        'h-8 w-full bg-sidebar-background shadow-none focus-visible:ring-2 focus-visible:ring-sidebar-ring',
         className
       )}
       data-sidebar="input"
@@ -471,7 +471,7 @@ const sidebarMenuButtonVariants = tv(
       variant: {
         default: 'hover:bg-sidebar-hover hover:text-sidebar-hover-text',
         outline:
-          'bg-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:bg-sidebar-hover hover:text-sidebar-hover-text hover:shadow-[0_0_0_1px_hsl(var(--sidebar-hover))]'
+          'bg-sidebar-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:bg-sidebar-hover hover:text-sidebar-hover-text hover:shadow-[0_0_0_1px_hsl(var(--sidebar-hover))]'
       },
       size: {
         default: 'h-8 text-sm',
