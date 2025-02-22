@@ -9,4 +9,5 @@ export async function clientLoader() {
 }
 
 export default function Index() {
+  return null
 }

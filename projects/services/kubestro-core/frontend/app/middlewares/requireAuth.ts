@@ -36,8 +36,7 @@ export async function requireAuth(): Promise<AuthResponse> {
       user
     }
   }
-  // eslint-disable-next-line unused-imports/no-unused-vars -- I don't care about the error
-  catch (error) {
+  catch (_) {
     return {
       type: 'redirect',
       response: await logout()
@@ -63,8 +62,7 @@ export async function requireGuest(): Promise<GuestResponse> {
       response: redirect('/dashboard')
     }
   }
-  // eslint-disable-next-line unused-imports/no-unused-vars -- I don't care about the error
-  catch (error) {
+  catch (_) {
     return { type: 'result' }
   }
 }
