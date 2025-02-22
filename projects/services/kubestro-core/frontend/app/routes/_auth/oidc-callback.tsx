@@ -6,6 +6,10 @@ import { authLoginOidcApi } from '~/data/api/user'
 import { queryClient } from '~/utils/queryClient'
 import { AUTH_GET_USER_KEY } from '~/data/queries/user'
 
+export const meta: Route.MetaFunction = () => [
+  { title: 'Logging you in...' }
+]
+
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   // In this loader, our goal will be to login the user and then redirect him to the dashboard page
 

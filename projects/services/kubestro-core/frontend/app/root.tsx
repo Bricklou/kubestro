@@ -21,6 +21,10 @@ export const links: Route.LinksFunction = () => [
   }
 ]
 
+export const meta: Route.MetaFunction = () => [
+  { title: 'Kubestro' }
+]
+
 export function Layout({ children }: { readonly children: React.ReactNode }) {
   return (
     <html lang="en">

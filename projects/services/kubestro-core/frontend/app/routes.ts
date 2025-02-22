@@ -3,7 +3,7 @@ import type { RouteConfig } from '@react-router/dev/routes'
 
 export default [
   layout('routes/_root-layout.tsx', [
-    index('routes/home.tsx'),
+    index('routes/index.tsx'),
 
     layout('layouts/double-side-layout.tsx', { id: 'auth-layout' }, [
       route('/login', 'routes/_auth/login.tsx'),

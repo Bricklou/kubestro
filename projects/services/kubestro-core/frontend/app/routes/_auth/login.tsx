@@ -21,11 +21,9 @@ import { queryClient } from '~/utils/queryClient'
 import { transformErrors } from '~/data/api/transform-errors'
 import { AUTH_GET_USER_KEY } from '~/data/queries/user'
 
-export function meta() {
-  return [
-    { title: 'Login' }
-  ]
-}
+export const meta: Route.MetaFunction = () => [
+  { title: 'Login' }
+]
 
 export async function clientLoader() {
   const result = await requireGuest()
@@ -109,14 +107,14 @@ export default function LoginPage() {
               </div>
 
               <Button
+                asChild
                 className="w-full"
                 icon={LucideLogIn}
                 iconPlacement="right"
                 variant="secondary"
-                asChild
               >
                 <a href={data.oidc.redirect_url}>
-                {data.oidc.display_name ?? 'External auth provider'}
+                  {data.oidc.display_name ?? 'External auth provider'}
                 </a>
               </Button>
             </>

@@ -2,20 +2,18 @@
 @import "@fontsource-variable/inter";
 
 @theme {
-  --grid-lines-opacity: 60%;
+  --grid-lines-opacity: 80%;
   --grid-pattern-line: color-mix(
     in lch,
     var(--color-secondary) var(--grid-lines-opacity),
     transparent calc(100% - var(--grid-lines-opacity))
   );
-  --grid-pattern: linear-gradient(
-      to right,
-      var(--grid-pattern-line) 1px,
-      transparent 1px
-    ),
+  --grid-pattern:
+    linear-gradient(to right, var(--grid-pattern-line) 1px, transparent 1px),
     linear-gradient(to bottom, var(--grid-pattern-line) 1px, transparent 1px);
   --grid-circle-opacity: 35%;
-  --grid-gradient: radial-gradient(
+  --grid-gradient:
+    radial-gradient(
       circle 500px at 10% 100px,
       color-mix(
         in lch,
