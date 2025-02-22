@@ -25,7 +25,7 @@ export function DropdownMenuSubTrigger({
   return (
     <SubTrigger
       className={twMerge(
-        'flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent data-[state=open]:bg-accent [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+        'flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-primary-soft data-[state=open]:bg-primary-soft [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
         inset && 'pl-8',
         className
       )}
@@ -91,7 +91,7 @@ export function DropdownMenuItem({
   return (
     <Item
       className={twMerge(
-        'relative flex cursor-default hover:bg-secondary-hover select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-text data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0',
+        'relative flex cursor-default hover:bg-secondary-hover select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-primary-soft focus:text-primary-soft-text data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0',
         inset && 'pl-8',
         className
       )}
@@ -113,7 +113,7 @@ export function DropdownMenuCheckboxItem({
     <CheckboxItem
       checked={checked}
       className={twMerge(
-        'relative flex cursor-default hover:bg-secondary-hover select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-text data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+        'relative flex cursor-default hover:bg-secondary-hover select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-primary-soft focus:text-accent-text data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
         className
       )}
       ref={ref}
@@ -141,7 +141,7 @@ export function DropdownMenuRadioItem({
   return (
     <RadioItem
       className={twMerge(
-        'relative flex cursor-default hover:bg-secondary-hover select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-text data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+        'relative flex cursor-default hover:bg-secondary-hover select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-primary-soft focus:text-accent-text data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
         className
       )}
       ref={ref}
@@ -186,7 +186,7 @@ export function DropdownMenuSeparator({
 }: ComponentProps<typeof Separator>) {
   return (
     <Separator
-      className={twMerge('-mx-1 my-1 h-px bg-muted', className)}
+      className={twMerge('-mx-1 my-1 h-px bg-border', className)}
       ref={ref}
       {...props}
     />
