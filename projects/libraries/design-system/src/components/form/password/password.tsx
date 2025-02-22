@@ -5,8 +5,8 @@ import { z } from 'zod'
 import { motion } from 'motion/react'
 import { twMerge } from 'tailwind-merge'
 import { Input } from '../input'
-import { Progress } from '@/components/progress'
-import { Button } from '@/components/button'
+import { Progress } from '@/components/base/progress'
+import { Button } from '@/components/base/button'
 
 // Define a Zod schema for password validation
 const passwordSchema = z.string().superRefine((val, ctx) => {

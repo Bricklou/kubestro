@@ -1,6 +1,6 @@
 import { twJoin } from 'tailwind-merge'
 import { tv } from 'tailwind-variants'
-import { buttonVariants } from '../button'
+import { buttonVariants } from '@/components/base/button'
 
 export const toastVariants = tv({
   slots: {
