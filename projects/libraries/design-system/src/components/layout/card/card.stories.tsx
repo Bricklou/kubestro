@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { BellRing, Check } from 'lucide-react'
-import { Button } from '../button'
-import { Switch } from '../form/switch'
 import {
   Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle
 } from './card'
+import { Switch } from '@/components/form/switch'
+import { Button } from '@/components/base'
 
 const meta: Meta<typeof Card> = {
   title: 'Layout/Card',

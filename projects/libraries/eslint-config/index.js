@@ -464,6 +464,8 @@ export function configApp(rootDir, ...configBlockToMerge) {
         'unused-imports/no-unused-imports': 'error',
         'unused-imports/no-unused-vars': ['warn',
           {
+            caughtErrors: 'all',
+            caughtErrorsIgnorePattern: '^_',
             vars: 'all',
             varsIgnorePattern: '^_',
             args: 'after-used',

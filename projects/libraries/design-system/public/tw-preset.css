@@ -2,6 +2,8 @@
 
 @plugin "tailwindcss-animate";
 
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
 @theme {
   /**
    * Application colors palette
@@ -31,9 +33,9 @@
   --color-primary-soft-text: var(--color-emerald-600);
 
   /* Secondary colors */
-  --color-secondary: var(--color-gray-200);
-  --color-secondary-hover: var(--color-gray-300);
-  --color-secondary-text: var(--color-gray-600);
+  --color-secondary: oklch(93.8% 0.006 264.531deg);
+  --color-secondary-hover: oklch(90.2% 0.01 258.338deg);
+  --color-secondary-text: oklch(44.6% 0.03 256.802deg);
 
   /* Danger colors */
   --color-danger: var(--color-red-300);
@@ -146,6 +148,20 @@
    * Custom animations
    */
   --animate-shine: shine 3s ease-out infinite;
+
+  /**
+   * Components themes
+   */
+  --color-sidebar-background: var(--color-background-contrast);
+  --color-sidebar-text: var(--color-text);
+  --color-sidebar-primary: var(--color-primary);
+  --color-sidebar-primary-text: var(--color-primary-text);
+  --color-sidebar-hover: var(--color-primary-soft);
+  --color-sidebar-hover-text: var(--color-primary-soft-text);
+  --color-sidebar-border: var(--color-border);
+  --color-sidebar-ring: var(--color-ring);
+  --color-popover: var(--color-background-contrast);
+  --color-popover-text: var(--color-text);
 
   @keyframes shine {
     0% {

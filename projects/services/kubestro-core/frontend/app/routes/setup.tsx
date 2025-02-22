@@ -11,11 +11,9 @@ import { GLOBAL_GET_STATUS_KEY } from '~/data/queries/global'
 import { requireSetup } from '~/middlewares/requireSetup'
 import type { ServiceStatus } from '~/data/types/global'
 
-export function meta() {
-  return [
-    { title: 'Setup' }
-  ]
-}
+export const meta: Route.MetaFunction = () => [
+  { title: 'Setup' }
+]
 
 interface FormFields {
   email: string

@@ -20,7 +20,8 @@ export default {
           'responsive',
           'screen',
           'theme',
-          'plugin'
+          'plugin',
+          'custom-variant'
         ]
       }
     ],

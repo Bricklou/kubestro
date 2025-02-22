@@ -1,13 +1,11 @@
 // Base components
-export * from './button'
-export * from './link'
-export * from './progress'
+export * from './base'
 
 // Layout components
-export * from './card'
+export * from './layout'
 
 // Form-related components
 export * from './form'
 
 // Utilities components
-export * from './toast'
+export * from './utilities'

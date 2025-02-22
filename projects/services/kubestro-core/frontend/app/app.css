@@ -2,7 +2,7 @@
 @import "@fontsource-variable/inter";
 
 @theme {
-  --grid-lines-opacity: 60%;
+  --grid-lines-opacity: 80%;
   --grid-pattern-line: color-mix(
     in lch,
     var(--color-secondary) var(--grid-lines-opacity),

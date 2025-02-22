@@ -25,7 +25,8 @@
     "motion": "^12.4.3",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-router": "catalog:"
+    "react-router": "catalog:",
+    "tailwind-merge": "catalog:"
   },
   "devDependencies": {
     "@kubestro/eslint-config": "workspace:../../../libraries/eslint-config",

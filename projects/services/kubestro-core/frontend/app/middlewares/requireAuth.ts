@@ -1,18 +1,19 @@
-import { redirect } from 'react-router'
+import { href, redirect } from 'react-router'
 import { authLogoutApi } from '~/data/api/user'
-import { authGetUser } from '~/data/queries/user'
+import { AUTH_GET_USER_KEY, authGetUser } from '~/data/queries/user'
 import type { User } from '~/data/types/user'
-import { queryGetOrFetch } from '~/utils/queryClient'
+import { queryClient, queryGetOrFetch } from '~/utils/queryClient'
 
 export async function logout(): Promise<Response> {
   try {
     await authLogoutApi()
+    queryClient.removeQueries({ queryKey: AUTH_GET_USER_KEY })
   }
   catch (error) {
     console.error('Failed to logout', error)
   }
 
-  return redirect('/login')
+  return redirect(href('/login'))
 }
 
 type AuthResponse = {
@@ -35,8 +36,7 @@ export async function requireAuth(): Promise<AuthResponse> {
       user
     }
   }
-  // eslint-disable-next-line unused-imports/no-unused-vars -- I don't care about the error
-  catch (error) {
+  catch (_) {
     return {
       type: 'redirect',
       response: await logout()
@@ -62,8 +62,7 @@ export async function requireGuest(): Promise<GuestResponse> {
       response: redirect('/dashboard')
     }
   }
-  // eslint-disable-next-line unused-imports/no-unused-vars -- I don't care about the error
-  catch (error) {
+  catch (_) {
     return { type: 'result' }
   }
 }

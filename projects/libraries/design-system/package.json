@@ -13,8 +13,21 @@
       "import": "./dist/design-system.es.js",
       "types": "./dist/index.d.ts"
     },
-    "./*": {
-      "types": "./dist/*.d.ts"
+    "./components": {
+      "import": "./dist/design-system.es.js",
+      "types": "./dist/components/index.d.ts"
+    },
+    "./components/*": {
+      "import": "./dist/design-system.es.js",
+      "types": "./dist/components/*.d.ts"
+    },
+    "./hooks": {
+      "import": "./dist/design-system.es.js",
+      "types": "./dist/hooks/index.d.ts"
+    },
+    "./hooks/*": {
+      "import": "./dist/design-system.es.js",
+      "types": "./dist/hooks/*.d.ts"
     },
     "./preset.css": "./dist/tw-preset.css"
   },
@@ -29,12 +42,19 @@
     "typecheck": "tsc --noEmit --project tsconfig.json"
   },
   "dependencies": {
+    "@radix-ui/react-avatar": "catalog:",
     "@radix-ui/react-checkbox": "catalog:",
+    "@radix-ui/react-dialog": "catalog:",
+    "@radix-ui/react-dropdown-menu": "catalog:",
     "@radix-ui/react-label": "catalog:",
     "@radix-ui/react-progress": "catalog:",
+    "@radix-ui/react-scroll-area": "^1.2.3",
+    "@radix-ui/react-separator": "catalog:",
     "@radix-ui/react-slot": "catalog:",
     "@radix-ui/react-switch": "catalog:",
     "@radix-ui/react-toast": "catalog:",
+    "@radix-ui/react-tooltip": "catalog:",
+    "cmdk": "catalog:",
     "motion": "^12.4.1",
     "zod": "catalog:"
   },

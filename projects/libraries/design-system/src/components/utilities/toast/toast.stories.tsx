@@ -1,12 +1,12 @@
 /* eslint-disable react/jsx-no-bind */
 import type { Meta, StoryObj } from '@storybook/react'
-import { Button } from '../button'
 import { Toaster } from './toaster'
 import { useToast } from './use-toast'
+import { Button } from '@/components/base/button'
 
 const meta: Meta<typeof Toaster> = {
   component: Toaster,
-  title: 'Base/Toaster',
+  title: 'Utilities/Toaster',
   decorators: [
     Story => (
       <div className="p-4">

@@ -16,7 +16,7 @@ const preview: Preview = {
     },
     options: {
       storySort: {
-        order: ['Getting Started', 'Colors', '*']
+        order: ['Getting Started', 'Colors', 'Base', '*']
       }
     }
   },

@@ -9,7 +9,7 @@ import {
 
 import { QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { Toaster } from '@kubestro/design-system'
+import { ThemeProvider, Toaster } from '@kubestro/design-system'
 import type { Route } from './+types/root'
 import stylesheet from './app.css?url'
 import { queryClient } from './utils/queryClient'
@@ -19,6 +19,10 @@ export const links: Route.LinksFunction = () => [
     rel: 'stylesheet',
     href: stylesheet
   }
+]
+
+export const meta: Route.MetaFunction = () => [
+  { title: 'Kubestro' }
 ]
 
 export function Layout({ children }: { readonly children: React.ReactNode }) {
@@ -43,9 +47,12 @@ export function Layout({ children }: { readonly children: React.ReactNode }) {
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
-      <Toaster />
-      <ReactQueryDevtools buttonPosition="top-right" initialIsOpen={false} />
+      <ThemeProvider>
+        <Outlet />
+        <Toaster />
+      </ThemeProvider>
+
+      <ReactQueryDevtools buttonPosition="bottom-left" initialIsOpen={false} />
     </QueryClientProvider>
   )
 }

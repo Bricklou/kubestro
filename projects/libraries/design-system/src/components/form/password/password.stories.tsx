@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { PasswordVerification } from './password'
 
 const meta: Meta<typeof PasswordVerification> = {
-  title: 'Base/PasswordVerification',
+  title: 'Form/PasswordVerification',
   component: PasswordVerification,
   decorators: [
     Story => (

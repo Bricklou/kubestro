@@ -3,7 +3,7 @@ import { Skeleton } from './skeleton'
 import { skeletonVariant } from './style'
 
 const meta: Meta<typeof Skeleton> = {
-  title: 'Base/Skeleton',
+  title: 'Utilities/Skeleton',
   component: Skeleton,
   decorators: [
     Story => (
