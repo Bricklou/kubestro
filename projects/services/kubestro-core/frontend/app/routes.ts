@@ -6,17 +6,21 @@ export default [
     index('routes/index.tsx'),
 
     layout('layouts/double-side-layout.tsx', { id: 'auth-layout' }, [
-      route('/login', 'routes/_auth/login.tsx'),
-      route('/login/callback', 'routes/_auth/oidc-callback.tsx')
+      route('login', 'routes/_auth/login.tsx'),
+      route('login/callback', 'routes/_auth/oidc-callback.tsx')
     ]),
 
-    route('/logout', 'routes/_auth/logout.tsx'),
+    route('logout', 'routes/_auth/logout.tsx'),
 
-    route('/dashboard', 'routes/dashboard/_layout.tsx', [
-      index('routes/dashboard/index.tsx')
+    route('dashboard', 'routes/dashboard/_layout.tsx', { id: 'dashboard-layout' }, [
+      index('routes/dashboard/index.tsx'),
+
+      route('settings', 'routes/dashboard/settings/_layout.tsx', { id: 'settings-layout' }, [
+        index('routes/dashboard/settings/profile.tsx')
+      ])
     ])
   ]),
   layout('layouts/double-side-layout.tsx', { id: 'setup-layout' }, [
-    route('/setup', 'routes/setup.tsx')
+    route('setup', 'routes/setup.tsx')
   ])
 ] satisfies RouteConfig

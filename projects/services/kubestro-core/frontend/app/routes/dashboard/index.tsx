@@ -17,9 +17,11 @@ export default function DashboardHome() {
       <Header>
         <TopNav />
 
-        <div className="ml-auto flex items-center space-x-4">
-          {/* Top Heading */}
-          <Search />
+        <div className="flex w-full items-center space-x-4">
+          <div className="flex-1 flex flex-row items-center justify-center">
+            <Search />
+          </div>
+
           <ThemeSwitch />
           <ProfileDropdown />
         </div>

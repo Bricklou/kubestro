@@ -21,7 +21,7 @@ export function Search({
   return (
     <Button
       className={twMerge(
-        'cursor-pointer relative h-8 w-full inline-flex items-center justify-start rounded-md bg-background-contrast text-sm font-normal text-text-muted shadow-none hover:bg-background-contrast/90 sm:pr-12 md:w-40 md:flex-none lg:w-56 xl:w-64',
+        'cursor-pointer relative h-8 w-full inline-flex items-center justify-start rounded-md bg-background-contrast text-sm font-normal text-text-muted shadow-none hover:bg-background-contrast/90 sm:pr-12 md:w-40 md:flex-none lg:w-86 xl:w-112',
         'active:scale-100',
         className
       )}

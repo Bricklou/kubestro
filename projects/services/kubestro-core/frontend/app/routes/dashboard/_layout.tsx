@@ -16,7 +16,7 @@ export async function clientLoader() {
 }
 
 export function useDashboardLayoutData() {
-  const data = useRouteLoaderData<Info['loaderData']>('routes/dashboard/_layout' satisfies Info['id'])
+  const data = useRouteLoaderData<Info['loaderData']>('dashboard-layout' satisfies Info['id'])
   if (!data) {
     throw new Error('useDashboardLayoutData() was called outside of a route that uses the dashboard/_layout')
   }
