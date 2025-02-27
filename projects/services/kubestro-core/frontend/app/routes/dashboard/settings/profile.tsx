@@ -73,7 +73,7 @@ export default function SettingsProfile() {
           </p>
         </div>
 
-        <Button disabled={oidc || fetcher.state === 'submitting'} type="submit">Update profile</Button>
+        <Button className="w-full md:w-[unset]" disabled={oidc || fetcher.state === 'submitting'} type="submit">Update profile</Button>
       </fetcher.Form>
     </ContentSection>
   )

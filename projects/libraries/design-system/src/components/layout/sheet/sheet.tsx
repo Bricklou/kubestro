@@ -28,7 +28,7 @@ export function SheetOverlay({ className, ref, ...props }: ComponentProps<typeof
 SheetOverlay.displayName = Overlay.displayName
 
 const sheetVariants = tv({
-  base: 'fixed z-50 gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500 data-[state=open]:animate-in data-[state=closed]:animate-out',
+  base: 'fixed z-50 gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500 data-[state=open]:animate-in data-[state=closed]:animate-out border-border',
   variants: {
     side: {
       top: 'inset-x-0 top-0 border-b data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top',

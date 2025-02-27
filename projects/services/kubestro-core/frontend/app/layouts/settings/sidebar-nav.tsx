@@ -29,7 +29,7 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
       <div className="p-1 md:hidden">
         {/* Mobile menu button */}
         <Select onValueChange={handleSelect} value={val}>
-          <SelectTrigger className="h-12 sm:w-48">
+          <SelectTrigger className="h-12">
             <SelectValue placeholder="Theme" />
           </SelectTrigger>
 

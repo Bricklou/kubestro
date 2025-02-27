@@ -99,6 +99,7 @@ function SecurityForm() {
         </div>
 
         <Button
+          className="w-full md:w-[unset]"
           disabled={oidc || fetcher.state === 'submitting'}
           name="submit"
           type="submit"
@@ -128,7 +129,7 @@ function SecurityForm() {
           </p>
         </div>
 
-        <Button disabled={oidc || fetcher.state === 'submitting'} type="submit">Update 2FA</Button>
+        <Button className="w-full md:w-[unset]" disabled={oidc || fetcher.state === 'submitting'} type="submit">Update 2FA</Button>
       </fetcher.Form>
     </div>
   )
