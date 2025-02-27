@@ -31,7 +31,7 @@ export function AvatarFallback({ className, ref, ...props }: ComponentProps<type
   return (
     <Fallback
       className={twMerge(
-        'flex h-full w-full items-center justify-center rounded-full bg-primary-soft',
+        'flex h-full w-full items-center justify-center rounded-full bg-primary-soft text-primary-soft-text',
         className
       )}
       ref={ref}
