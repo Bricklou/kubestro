@@ -10,7 +10,7 @@ tasks:
     desc: "Start development server"
     dotenv:
       - .env
-    cmd: cargo watch -x 'run --bin kubestro-core {{.CLI_ARGS}}'
+    cmd: cargo watch -c -x 'run --bin kubestro-core {{.CLI_ARGS}}'
 
   lint:
     desc: Lint the project

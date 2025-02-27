@@ -13,7 +13,7 @@ use deserr::{
 use serde::Serialize;
 use validator::{Validate, ValidationErrorsKind};
 
-use super::errors::ApiError;
+use crate::app::http::helpers::errors::ApiError;
 
 /// A type alias for `AxumJson` with `ApiDeserrError` as the rejection type.
 pub type ApiDeserrJson<T> = AxumJson<T, ApiDeserrError>;
@@ -79,7 +79,7 @@ impl DeserializeError for ApiDeserrError {
                 JsonValidationError {
                     code: "missing_field".into(),
                     pointer: value_pointer_ref_to_string(tmp_loc),
-                    detail: format!("The field '{}' is required", field),
+                    detail: "The field is required".into(),
                     params: [].into(),
                 }
             }

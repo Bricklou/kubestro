@@ -1,7 +1,7 @@
 use anyhow::Context;
 use axum::{
     extract::{MatchedPath, Request},
-    Extension,
+    middleware, Extension,
 };
 use axum_session::{SessionConfig, SessionLayer, SessionStore};
 use axum_session_redispool::SessionRedisPool;
@@ -14,10 +14,11 @@ use utoipa_scalar::{Scalar, Servable};
 
 use crate::app::context::AppContext;
 
-use super::middlewares::status::SetupLayer;
+use super::middlewares::{self, status::SetupLayer};
 
 mod authentication;
 mod base;
+mod settings;
 mod setup;
 
 const API_VERSION: &str = concat!(env!("CARGO_PKG_VERSION"), " (", env!("GIT_HASH"), ")");
@@ -31,10 +32,22 @@ const API_DESCRIPTION: &str = "Kubestro Core API";
 struct ApiDoc;
 
 pub async fn get_routes(context: AppContext) -> anyhow::Result<axum::Router> {
+    // This router is only accessible is the user is authenticated
+    let router_with_auth = OpenApiRouter::new()
+        .merge(settings::get_routes())
+        .layer(middleware::from_fn(middlewares::auth::auth_middleware));
+
+    // This router is only accessible if the setup is done
+    let router_with_setup = OpenApiRouter::new()
+        .merge(authentication::get_routes())
+        .merge(router_with_auth)
+        .layer(SetupLayer::setup_needed());
+
+    // This is all the routes of the application
     let router = OpenApiRouter::with_openapi(ApiDoc::openapi())
         .merge(base::get_routes())
         .merge(setup::get_routes())
-        .merge(authentication::get_routes().layer(SetupLayer::setup_needed()));
+        .merge(router_with_setup);
 
     let router = register_global_services(router, context.clone());
     let router = register_session_store(router, context).await?;

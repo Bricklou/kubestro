@@ -1,4 +1,4 @@
-import { BellDotIcon, LayoutDashboardIcon, PaletteIcon, SettingsIcon, ShieldIcon, UserIcon, WrenchIcon } from 'lucide-react'
+import { BellDotIcon, LayoutDashboardIcon, PaletteIcon, SettingsIcon, ShieldIcon, UserIcon } from 'lucide-react'
 import type { ElementType } from 'react'
 import { href } from 'react-router'
 
@@ -16,7 +16,7 @@ export type NavLink = BaseNavItem & {
 }
 
 export type NavCollapsible = BaseNavItem & {
-  items: (BaseNavItem & { url: LinkTo })[]
+  items: (BaseNavItem & { to: LinkTo })[]
   url?: never
 }
 
@@ -52,27 +52,22 @@ export const sidebarData: SidebarData = {
           items: [
             {
               title: 'Profile',
-              url: href('/dashboard/settings'),
+              to: href('/dashboard/settings'),
               icon: UserIcon
             },
             {
-              title: 'Account',
-              url: '/dashboard/settings/account',
-              icon: WrenchIcon
-            },
-            {
               title: 'Security',
-              url: '/dashboard/settings/security',
+              to: '/dashboard/settings/security',
               icon: ShieldIcon
             },
             {
               title: 'Appearance',
-              url: '/dashboard/settings/appearance',
+              to: '/dashboard/settings/appearance',
               icon: PaletteIcon
             },
             {
               title: 'Notifications',
-              url: '/dashboard/settings/notifications',
+              to: '/dashboard/settings/notifications',
               icon: BellDotIcon
             }
           ]

@@ -47,6 +47,7 @@ pub(super) struct LoginResponse {
                 "username" : "admin",
                 "created_at": "2021-08-31T12:00:00Z",
                 "updated_at": "2021-08-31T12:00:00Z",
+                "provider": "local"
             }
         })),
         (status = BAD_REQUEST, description = "Invalid input data", body = ApiError, example = json!({

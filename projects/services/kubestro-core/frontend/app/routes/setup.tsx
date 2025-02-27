@@ -9,7 +9,6 @@ import { globalSetupApi } from '~/data/api/global'
 import { queryClient } from '~/utils/queryClient'
 import { GLOBAL_GET_STATUS_KEY } from '~/data/queries/global'
 import { requireSetup } from '~/middlewares/requireSetup'
-import type { ServiceStatus } from '~/data/types/global'
 
 export const meta: Route.MetaFunction = () => [
   { title: 'Setup' }
@@ -102,8 +101,7 @@ export async function clientAction({ request }: Route.ActionArgs) {
   try {
     // Do something with the form data
     await globalSetupApi(body)
-    await queryClient.invalidateQueries(({ queryKey: GLOBAL_GET_STATUS_KEY }))
-    await queryClient.setQueryData(GLOBAL_GET_STATUS_KEY, { status: 'installed' } satisfies ServiceStatus)
+    await queryClient.refetchQueries(({ queryKey: GLOBAL_GET_STATUS_KEY }))
     return redirect('/login')
   }
   catch (error) {

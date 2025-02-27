@@ -16,7 +16,8 @@ export default [
       index('routes/dashboard/index.tsx'),
 
       route('settings', 'routes/dashboard/settings/_layout.tsx', { id: 'settings-layout' }, [
-        index('routes/dashboard/settings/profile.tsx')
+        index('routes/dashboard/settings/profile.tsx', { id: 'settings-profile' }),
+        route('security', 'routes/dashboard/settings/security.tsx', { id: 'settings-security' })
       ])
     ])
   ]),

@@ -1,5 +1,5 @@
 import { Separator } from '@kubestro/design-system'
-import { BellDotIcon, PaletteIcon, ShieldIcon, UserIcon, WrenchIcon } from 'lucide-react'
+import { BellDotIcon, PaletteIcon, ShieldIcon, UserIcon } from 'lucide-react'
 import { href, Outlet } from 'react-router'
 import { Header } from '~/layouts/dashboard/header'
 import { Main } from '~/layouts/dashboard/main'
@@ -16,14 +16,9 @@ const sidebarNavItems: SidebarNavItem[] = [
     to: href('/dashboard/settings')
   },
   {
-    title: 'Account',
-    icon: <WrenchIcon size={18} />,
-    to: '/settings/account'
-  },
-  {
     title: 'Security',
     icon: <ShieldIcon size={18} />,
-    to: '/settings/security'
+    to: href('/dashboard/settings/security')
   },
   {
     title: 'Appearance',

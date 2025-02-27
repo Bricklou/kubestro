@@ -29,7 +29,7 @@ export function ProfileDropdown() {
       <DropdownMenuTrigger asChild>
         <Button className="relative size-10 rounded-full hover:ring-2 hover:ring-secondary-hover transition-shadow data-[state=open]:ring-2 data-[state=open]:ring-offset-2 data-[state=open]:ring-primary" variant="ghost">
           <Avatar className="size-10">
-            <AvatarFallback className="bg-primary hover:bg-primary-hover transition-colors">{initials}</AvatarFallback>
+            <AvatarFallback className="bg-primary text-primary-text hover:bg-primary-hover transition-colors">{initials}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>

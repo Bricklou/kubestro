@@ -32,6 +32,9 @@ impl Hasher for Argon2Hasher<'_> {
 
         self.argon2
             .verify_password(value.to_string().as_bytes(), &hash)
-            .map_err(|err| HasherError::VerifyError(err.to_string()))
+            .map_err(|err| match err {
+                argon2::password_hash::Error::Password => HasherError::InvalidPassword,
+                e => HasherError::VerifyError(e.to_string()),
+            })
     }
 }

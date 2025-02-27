@@ -14,7 +14,6 @@ import { requireGuest } from '~/middlewares/requireAuth'
 import { authLoginApi } from '~/data/api/user'
 import type {
   UnauthorizedError,
-  AllHttpErrors,
   ValidationError
 } from '~/data/api/generic-errors'
 import { queryClient } from '~/utils/queryClient'
@@ -54,8 +53,6 @@ export default function LoginPage() {
       </div>
 
       <div className="grid gap-6">
-        {error && 'title' in error && error.title ? <FormMessage error={error.title} /> : null}
-
         <div className="grid gap-2">
           <Label htmlFor="email">Email</Label>
 
@@ -140,10 +137,8 @@ export async function clientAction({ request }: Route.ActionArgs) {
   const body = Object.fromEntries(formData) as unknown as FormFields
 
   try {
-    const user = await authLoginApi(body)
+    await authLoginApi(body)
     void queryClient.invalidateQueries({ queryKey: AUTH_GET_USER_KEY })
-
-    console.log(user)
   }
   catch (error) {
     if (error instanceof HTTPError) {
@@ -162,9 +157,6 @@ export async function clientAction({ request }: Route.ActionArgs) {
         })
         return {}
       }
-
-      // Other
-      return { error: await error.response.json<AllHttpErrors>() }
     }
 
     toast({

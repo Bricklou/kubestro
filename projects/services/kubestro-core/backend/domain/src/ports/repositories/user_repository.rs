@@ -56,6 +56,8 @@ pub enum UserUpdateRepoError {
     UnexpectedError(String),
     #[error("Invalid user: {0}")]
     InvalidUser(String),
+    #[error("User already exists")]
+    AlreadyExists,
 }
 
 #[derive(Debug, PartialEq, thiserror::Error)]

@@ -11,7 +11,8 @@ export async function clientLoader() {
   if (result.type === 'redirect') return result.response
 
   return {
-    user: result.user
+    user: result.user,
+    oidc: result.oidc
   }
 }
 

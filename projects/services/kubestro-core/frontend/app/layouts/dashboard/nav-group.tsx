@@ -21,7 +21,7 @@ function useActive(item: NavItem, mainNav = false) {
 
   // Check child items - avoid this computation if no items exist
   if (item.items?.length) {
-    if (item.items.some(i => i.url === pathname)) {
+    if (item.items.some(i => i.to === pathname)) {
       return true
     }
   }
@@ -81,7 +81,7 @@ function SidebarMenuCollapsibleItem({ item }: SidebarMenuCollapsibleItemProps) {
   return (
     <SidebarMenuSubItem key={item.title}>
       <SidebarMenuButton asChild isActive={active}>
-        <Link to={item.url}>
+        <Link to={item.to}>
           {item.icon ? <item.icon /> : null}
           <span>{item.title}</span>
           {item.badge ? <NavBadge>{item.badge}</NavBadge> : null}
@@ -129,7 +129,7 @@ function SidebarMenuCollapsedDropdownItem({ item }: SidebarMenuCollapsedDropdown
   const active = useActive(item)
   return (
     <DropdownMenuItem asChild>
-      <Link className={active ? 'bg-secondary' : ''} to={item.url}>
+      <Link className={active ? 'bg-secondary' : ''} to={item.to}>
         {item.icon ? <item.icon /> : null}
         <span>{item.title}</span>
         {item.badge ? <span className="ml-auto text-xs">{item.badge}</span> : null}
