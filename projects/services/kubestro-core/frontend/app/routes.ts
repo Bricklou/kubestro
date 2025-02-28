@@ -17,7 +17,9 @@ export default [
 
       route('settings', 'routes/dashboard/settings/_layout.tsx', { id: 'settings-layout' }, [
         index('routes/dashboard/settings/profile.tsx', { id: 'settings-profile' }),
-        route('security', 'routes/dashboard/settings/security.tsx', { id: 'settings-security' })
+        route('security', 'routes/dashboard/settings/security.tsx', { id: 'settings-security' }),
+        route('appearance', 'routes/dashboard/settings/appearance.tsx', { id: 'settings-appearance' }),
+        route('notifications', 'routes/dashboard/settings/notifications.tsx', { id: 'settings-notifications' })
       ])
     ])
   ]),

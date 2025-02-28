@@ -23,12 +23,12 @@ const sidebarNavItems: SidebarNavItem[] = [
   {
     title: 'Appearance',
     icon: <PaletteIcon size={18} />,
-    to: '/settings/appearance'
+    to: href('/dashboard/settings/appearance')
   },
   {
     title: 'Notifications',
     icon: <BellDotIcon size={18} />,
-    to: '/settings/notifications'
+    to: href('/dashboard/settings/notifications')
   }
 ]
 
