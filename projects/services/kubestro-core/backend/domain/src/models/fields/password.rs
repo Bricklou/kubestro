@@ -1,12 +1,10 @@
 use std::{ops::Deref, sync::Arc};
 
-use serde::{Deserialize, Serialize};
-use tracing::debug;
-
 use crate::ports::{
     hasher::{Hasher, HasherError},
     validators::PasswordValidator,
 };
+use serde::{Deserialize, Serialize};
 
 /// [`Password`] field represent a password object.
 /// When created, it will validate the password.

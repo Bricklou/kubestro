@@ -1,7 +1,5 @@
 use std::sync::Arc;
 
-use tracing::debug;
-
 use crate::{
     models::{
         create_user::CreateUser,

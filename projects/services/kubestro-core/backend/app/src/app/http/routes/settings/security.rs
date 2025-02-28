@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use axum::{http::StatusCode, response::IntoResponse, Extension, Json};
+use axum::{Extension, Json};
 use deserr::Deserr;
 use kubestro_core_domain::models::user::UserProvider;
 use serde::{Deserialize, Serialize};
