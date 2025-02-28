@@ -40,5 +40,5 @@ export async function settingsUpdatePassword(body: {
   new_password: string
   confirm_password: string
 }): Promise<void> {
-  await ky.put<{ success: true }>('/api/v1.0/settings/password', { json: body })
+  await ky.put('/api/v1.0/settings/password', { json: body })
 }

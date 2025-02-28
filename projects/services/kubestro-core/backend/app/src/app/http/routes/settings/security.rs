@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use axum::{Extension, Json};
+use axum::{http::StatusCode, response::IntoResponse, Extension, Json};
 use deserr::Deserr;
 use kubestro_core_domain::models::user::UserProvider;
 use serde::{Deserialize, Serialize};
@@ -84,7 +84,7 @@ pub(super) struct PasswordUpdateResponse {
 )]
 pub async fn handler_update_password(
     Extension(ctx): Extension<AppContext>,
-    RequireAuth(user): RequireAuth,
+    Extension(RequireAuth(user)): Extension<RequireAuth>,
     ValidatedJson(input): ValidatedJson<PasswordUpdatePayload>,
 ) -> Result<Json<PasswordUpdateResponse>, ApiError> {
     // Ensure the user isn't logged in through a provider
