@@ -25,7 +25,7 @@ console.log('Projects to run:', projects)
 
 if (projects.length > 0) {
   execSync(
-    `pnpm exec nx affected --target=${target} --projects=${projects.join(',')} --parallel`,
+    `pnpm exec nx run-many --target=${target} --projects=${projects.join(',')} --parallel`,
     {
       stdio: [0, 1, 2]
     }

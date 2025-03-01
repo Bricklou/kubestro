@@ -1,7 +1,7 @@
 {
   "name": "kubestro-core-migration",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
-  "projectType": "library",
+  "projectType": "application",
   "sourceRoot": "projects/services/kubestro-core/backend/migration/src",
   "targets": {
     "build": {
@@ -17,11 +17,7 @@
       }
     },
     "lint": {
-      "executor": "@monodon/rust:lint",
-      "outputs": [
-        "{workspaceRoot}/target/kubestro-core-migration{,.d}",
-        "{workspaceRoot}/target/libmigration.{rlib,d}"
-      ]
+      "executor": "@monodon/rust:lint"
     },
     "run": {
       "executor": "@monodon/rust:run",

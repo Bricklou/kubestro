@@ -112,6 +112,9 @@ jobs:
 
       - run: git fetch --no-tags --prune --depth=1 origin main
 
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v4
+
       - name: Print Environment Info
         run: pnpm exec nx report
 

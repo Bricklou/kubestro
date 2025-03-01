@@ -97,6 +97,12 @@
               entry = "eslint --flag unstable_config_lookup_from_file";
               files = ".+\.(m?jsx?|tsx?)";
             };
+            renovate-validator = {
+              enable = true;
+              description = "Validate renovate configs";
+              entry = "pnpm --package renovate dlx renovate-config-validator";
+              files = ".github/(renovate\.json5|renovate/.*\.json5)";
+            };
             lint-css = {
               enable = true;
               description = "Format and lint css code";

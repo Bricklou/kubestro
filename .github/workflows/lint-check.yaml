@@ -12,10 +12,12 @@ on:
       - develop
     paths:
       # Check if a project file changed
-      - "projects/**/src/**/*.{tsx,ts,css}"
+      - "projects/**/src/**/*.{tsx,ts,css,rs}"
       # Check if a dependency changed
-      - "projects/**/package.json"
+      - "**/package.json"
       - "**/pnpm-workspace.yaml"
+      - "**/Cargo.toml"
+      - "**/Cargo.lock"
       # Check if a configuration file changed
       - "**/eslint.config.mjs"
       - "**/stylelint.config.mjs"
