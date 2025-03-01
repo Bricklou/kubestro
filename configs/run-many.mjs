@@ -4,8 +4,11 @@ const target = process.argv[2]
 const jobIndex = Number(process.argv[3])
 const jobCount = Number(process.argv[4])
 const isMain = process.argv[5] === 'refs/heads/main'
-const baseSha = isMain ? 'origin/main~1' : 'origin/main'
+const baseSha = process.argv[6]?.length > 0 ?
+  process.argv[6] :
+  (isMain ? 'origin/main~1' : 'origin/main')
 
+console.log('Target:', target, 'Job index:', jobIndex, 'Job count:', jobCount, 'Base sha:', baseSha)
 const affected = execSync(
   `pnpm exec nx show projects --affected -t "${target}" --base="${baseSha}" --json`
 ).toString('utf8')

@@ -12,9 +12,8 @@ on:
       - develop
   push:
     branches:
-      - "*"
-    paths:
-      - "**/*.{json,yaml,yml,toml,md}"
+      - main
+      - develop
 
   workflow_dispatch:
 
@@ -62,7 +61,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: pnpm install --frozen-lockfile
 
-  lint:
+  format:
     runs-on: ubuntu-latest
     needs: [install-deps]
 
@@ -103,7 +102,7 @@ jobs:
       - name: Cache NX
         uses: actions/cache@v4
         with:
-          path: node_modules/.cache/nx
+          path: .nx
           key: ${{ env.NX_CACHE }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ matrix.target }}-${{ github.sha }}
           restore-keys: |
             ${{ env.NX_CACHE }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ matrix.target }}-${{ matrix.jobIndex }}-
@@ -115,8 +114,5 @@ jobs:
       - name: Derive appropriate SHAs for base and head for `nx affected` commands
         uses: nrwl/nx-set-shas@v4
 
-      - name: Print Environment Info
-        run: pnpm exec nx report
-
       - name: nx run-many:${{ matrix.target }}
-        run: node ./configs/run-many.mjs "${{ matrix.target }}" "${{ matrix.jobIndex }}" "${{ env.jobCount }}" "$GITHUB_REF"
+        run: node ./configs/run-many.mjs "${{ matrix.target }}" "${{ matrix.jobIndex }}" "${{ env.jobCount }}" "$GITHUB_REF" "${{ env.NX_BASE }}"
