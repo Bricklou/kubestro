@@ -21,7 +21,7 @@ export function Search({
   return (
     <Button
       className={twMerge(
-        'cursor-pointer relative h-8 w-full inline-flex items-center justify-start rounded-md bg-background-contrast text-sm font-normal text-text-muted shadow-none hover:bg-background-contrast/90 sm:pr-12 md:w-40 md:flex-none lg:w-56 xl:w-64',
+        'cursor-pointer relative h-8 w-full inline-flex items-center justify-start rounded-md border border-border bg-background-contrast text-sm font-normal text-text-muted shadow-none hover:bg-background-contrast/90 hover:border-primary sm:pr-12 md:w-40 md:flex-none lg:w-86 xl:w-112',
         'active:scale-100',
         className
       )}
@@ -33,7 +33,7 @@ export function Search({
       <span className="ml-4">{placeholder}</span>
 
       <kbd className="pointer-events-none absolute right-[0.3rem] hidden h-5 select-none items-center gap-1 rounded border border-border bg-secondary px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
-        <span className="text-xs">⌘</span>K
+        <span className="text-xs">^</span>K
       </kbd>
     </Button>
   )

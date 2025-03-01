@@ -8,11 +8,13 @@ use crate::{
             password::{Password, PasswordError},
             username::Username,
         },
-        user::User,
+        user::{User, UserProvider},
     },
     ports::{
         hasher::Hasher,
-        repositories::user_repository::{UserCreateRepoError, UserFindRepoError, UserRepository},
+        repositories::user_repository::{
+            UserCreateRepoError, UserFindRepoError, UserRepository, UserUpdateRepoError,
+        },
         validators::PasswordValidator,
     },
 };
@@ -78,9 +80,38 @@ impl LocalAuthService {
                 self.hasher.clone(),
                 self.pass_validator.clone(),
             )?),
+            provider: UserProvider::Local,
         };
         let user = self.user_repo.create(create_user).await?;
         Ok(user)
+    }
+
+    pub async fn verify_password(
+        &self,
+        password: &str,
+        hash: &Password,
+    ) -> Result<(), PasswordError> {
+        hash.verify(password, self.hasher.clone())
+    }
+
+    #[tracing::instrument(skip(self, new_password))]
+    pub async fn update_password(
+        &self,
+        user: User,
+        new_password: &str,
+    ) -> Result<(), LocalAuthServiceError> {
+        let new_password = Password::from_string(
+            new_password,
+            self.hasher.clone(),
+            self.pass_validator.clone(),
+        )?;
+
+        let mut current_user = user;
+        current_user.password = Some(new_password);
+
+        self.user_repo.update(current_user).await?;
+
+        Ok(())
     }
 }
 
@@ -97,6 +128,9 @@ pub enum LocalAuthServiceError {
 
     #[error(transparent)]
     UserFind(#[from] UserFindRepoError),
+
+    #[error(transparent)]
+    UserUpdate(#[from] UserUpdateRepoError),
 
     #[error(transparent)]
     UserRegister(#[from] UserCreateRepoError),

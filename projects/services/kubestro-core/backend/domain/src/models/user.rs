@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -27,9 +29,42 @@ impl Default for UserId {
     }
 }
 
+impl Display for UserId {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
+
 impl From<Uuid> for UserId {
     fn from(id: Uuid) -> Self {
         Self(id)
+    }
+}
+
+impl TryFrom<String> for UserId {
+    type Error = uuid::Error;
+
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        Uuid::parse_str(value.as_str()).map(Self)
+    }
+}
+
+/// This model represents the user provider
+#[derive(Debug, Clone, PartialEq, Default)]
+pub enum UserProvider {
+    /// The user is a local user
+    #[default]
+    Local,
+    /// The user is a OIDC user
+    Oidc,
+}
+
+impl Display for UserProvider {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            UserProvider::Local => write!(f, "local"),
+            UserProvider::Oidc => write!(f, "oidc"),
+        }
     }
 }
 
@@ -48,6 +83,9 @@ pub struct User {
     pub created_at: DateTime<Utc>,
     /// The date and time the user was last updated.
     pub updated_at: DateTime<Utc>,
+
+    /// Provider of the user
+    pub provider: UserProvider,
 }
 
 impl User {
@@ -66,7 +104,13 @@ impl User {
             password,
             created_at,
             updated_at: created_at,
+            provider: UserProvider::default(),
         }
+    }
+
+    pub fn set_provider(&mut self, provider: UserProvider) -> &Self {
+        self.provider = provider;
+        self
     }
 }
 

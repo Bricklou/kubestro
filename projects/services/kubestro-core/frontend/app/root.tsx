@@ -8,7 +8,6 @@ import {
 } from 'react-router'
 
 import { QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { ThemeProvider, Toaster } from '@kubestro/design-system'
 import type { Route } from './+types/root'
 import stylesheet from './app.css?url'
@@ -51,8 +50,6 @@ export default function App() {
         <Outlet />
         <Toaster />
       </ThemeProvider>
-
-      <ReactQueryDevtools buttonPosition="bottom-left" initialIsOpen={false} />
     </QueryClientProvider>
   )
 }

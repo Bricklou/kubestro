@@ -1,11 +1,10 @@
 use std::{ops::Deref, sync::Arc};
 
-use serde::{Deserialize, Serialize};
-
 use crate::ports::{
     hasher::{Hasher, HasherError},
     validators::PasswordValidator,
 };
+use serde::{Deserialize, Serialize};
 
 /// [`Password`] field represent a password object.
 /// When created, it will validate the password.
@@ -31,9 +30,9 @@ impl Password {
             return Err(PasswordError::Empty);
         }
 
-        if let Err(err) = password_validator.validate(value) {
-            return Err(PasswordError::Validation(err));
-        }
+        password_validator
+            .validate(value)
+            .map_err(PasswordError::Validation)?;
 
         let hashed_pass = hasher.hash(value)?;
         let hashed_pass = Self(hashed_pass.into_boxed_str());
@@ -42,6 +41,13 @@ impl Password {
 
     pub fn from_hash(value: String) -> Password {
         Self(value.into_boxed_str())
+    }
+
+    pub fn verify(&self, password: &str, hasher: Arc<dyn Hasher>) -> Result<(), PasswordError> {
+        hasher.verify(password, self).map_err(|e| match e {
+            HasherError::InvalidPassword => PasswordError::InvalidPassword,
+            e => PasswordError::Hashing(e),
+        })
     }
 }
 
@@ -74,6 +80,10 @@ pub enum PasswordError {
     /// An error occurred while hashing the password.
     #[error("An error occurred while hashing the password: {0}")]
     Hashing(#[from] HasherError),
+
+    /// Invalid password.
+    #[error("Invalid password")]
+    InvalidPassword,
 
     /// An error occurred while validating the password.
     #[error("An error occurred while validating the password: {0}")]

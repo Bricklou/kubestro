@@ -64,7 +64,7 @@
     var(--color-yellow-400) 80%,
     transparent 20%
   );
-  --color-warning-text: var(--color-yellow-800);
+  --color-warning-text: var(--color-yellow-700);
   --color-warning-50: var(--color-yellow-50);
   --color-warning-100: var(--color-yellow-100);
   --color-warning-200: var(--color-yellow-200);
@@ -230,17 +230,17 @@
     --color-danger-text: var(--color-rose-100);
     --color-danger-hover: color-mix(
       in oklch,
-      var(--color-rose-600) 80%,
-      transparent 20%
+      var(--color-rose-600) 70%,
+      transparent 30%
     );
 
     /* Warning colors */
-    --color-warning: var(--color-yellow-700);
-    --color-warning-text: var(--color-yellow-300);
+    --color-warning: var(--color-yellow-800);
+    --color-warning-text: var(--color-yellow-400);
     --color-warning-hover: color-mix(
       in oklch,
-      var(--color-yellow-600) 80%,
-      transparent 20%
+      var(--color-yellow-700) 70%,
+      transparent 30%
     );
 
     /* Link colors */

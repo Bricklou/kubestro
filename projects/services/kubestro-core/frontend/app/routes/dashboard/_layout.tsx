@@ -11,12 +11,13 @@ export async function clientLoader() {
   if (result.type === 'redirect') return result.response
 
   return {
-    user: result.user
+    user: result.user,
+    oidc: result.oidc
   }
 }
 
 export function useDashboardLayoutData() {
-  const data = useRouteLoaderData<Info['loaderData']>('routes/dashboard/_layout' satisfies Info['id'])
+  const data = useRouteLoaderData<Info['loaderData']>('dashboard-layout' satisfies Info['id'])
   if (!data) {
     throw new Error('useDashboardLayoutData() was called outside of a route that uses the dashboard/_layout')
   }

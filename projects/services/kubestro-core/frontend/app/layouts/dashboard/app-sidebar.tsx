@@ -2,6 +2,8 @@ import { SidebarHeader, Sidebar, SidebarContent, SidebarFooter, SidebarMenuButto
 import { LayoutDashboardIcon } from 'lucide-react'
 import type { ComponentProps } from 'react'
 import { href, Link } from 'react-router'
+import { sidebarData } from './sidebar-data'
+import { NavGroup } from './nav-group'
 
 function AppSidebarLogo() {
   return (
@@ -34,6 +36,9 @@ export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
 
       <SidebarContent>
         {/* Sidebar content */}
+        {sidebarData.navGroups.map(groupProps => (
+          <NavGroup key={groupProps.title} {...groupProps} />
+        ))}
       </SidebarContent>
 
       <SidebarFooter>

@@ -4,6 +4,9 @@
     "libsDir": "./projects/libraries/",
     "appsDir": "./projects/services/"
   },
+  "cli": {
+    "packageManager": "pnpm"
+  },
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build", "typecheck"],

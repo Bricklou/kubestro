@@ -16,10 +16,7 @@
       }
     },
     "lint": {
-      "executor": "@monodon/rust:lint",
-      "outputs": [
-        "{workspaceRoot}/target/debug/libkubestro_core_domain.{d,rlib}"
-      ]
+      "executor": "@monodon/rust:lint"
     },
     "run": {
       "executor": "@monodon/rust:run",

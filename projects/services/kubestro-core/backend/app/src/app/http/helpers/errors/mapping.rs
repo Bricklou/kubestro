@@ -3,7 +3,9 @@ use std::{borrow::Cow, collections::HashMap};
 use axum::http::StatusCode;
 use kubestro_core_domain::{
     models::fields::{email::EmailError, password::PasswordError, username::UsernameError},
-    ports::repositories::user_repository::{UserCreateRepoError, UserFindRepoError},
+    ports::repositories::user_repository::{
+        UserCreateRepoError, UserFindRepoError, UserUpdateRepoError,
+    },
     services::auth::local_auth::LocalAuthServiceError,
 };
 use serde::{Serialize, Serializer};
@@ -50,23 +52,51 @@ impl ApiError {
         }
     }
 
-    pub fn forbidden(detail: &'static str) -> Self {
+    pub fn forbidden(detail: impl ToString) -> Self {
         Self {
             status: StatusCode::FORBIDDEN,
             title: "Forbidden".into(),
-            detail: Some(Cow::Borrowed(detail)),
+            detail: Some(detail.to_string().into()),
             code: "forbidden".into(),
             ..Default::default()
         }
     }
 
     #[allow(dead_code)]
-    pub fn not_implemented(detail: &'static str) -> Self {
+    pub fn not_implemented(detail: impl ToString) -> Self {
         Self {
             status: StatusCode::NOT_IMPLEMENTED,
             title: "Not Implemented".into(),
-            detail: Some(Cow::Borrowed(detail)),
+            detail: Some(detail.to_string().into()),
             code: "not_implemented".into(),
+            ..Default::default()
+        }
+    }
+
+    pub fn not_found(detail: impl ToString) -> Self {
+        Self {
+            status: StatusCode::NOT_FOUND,
+            title: "Not Found".into(),
+            detail: Some(detail.to_string().into()),
+            code: "not_found".into(),
+            ..Default::default()
+        }
+    }
+
+    pub fn conflict(detail: impl ToString, fields: HashMap<String, serde_json::Value>) -> Self {
+        // Convert the fields into a { fields: {} } object
+        let mut extensions = HashMap::new();
+        extensions.insert(
+            Cow::Borrowed("fields"),
+            serde_json::Value::Object(fields.into_iter().collect()),
+        );
+
+        Self {
+            status: StatusCode::CONFLICT,
+            title: "Conflict".into(),
+            detail: Some(detail.to_string().into()),
+            code: "conflict".into(),
+            extensions,
             ..Default::default()
         }
     }
@@ -106,13 +136,12 @@ impl From<LocalAuthServiceError> for ApiError {
                 code: "UNAUTHORIZED".into(),
                 ..Default::default()
             },
-            LocalAuthServiceError::UserFind(e) => e.into(),
-            LocalAuthServiceError::UserRegister(e) => e.into(),
-            LocalAuthServiceError::PasswordError(e) => e.into(),
             LocalAuthServiceError::PasswordAuthNotAvailable => ApiError {
                 detail: Some(value.to_string().into()),
                 ..ApiError::unauthorized()
             },
+            LocalAuthServiceError::PasswordError(e) => ApiError::forbidden(e),
+            e => ApiError::unexpected_error(e),
         }
     }
 }
@@ -120,10 +149,10 @@ impl From<LocalAuthServiceError> for ApiError {
 impl From<PasswordError> for ApiError {
     fn from(value: PasswordError) -> Self {
         match value {
-            PasswordError::Empty => ApiError {
-                status: StatusCode::BAD_REQUEST,
+            PasswordError::Empty | PasswordError::InvalidPassword => ApiError {
+                status: StatusCode::FORBIDDEN,
                 title: "Invalid password".into(),
-                detail: Some("Password cannot be empty".into()),
+                detail: Some("Invalid password".into()),
                 code: "INVALID_PASSWORD".into(),
                 ..Default::default()
             },
@@ -165,6 +194,20 @@ impl From<UserFindRepoError> for ApiError {
         match value {
             UserFindRepoError::DatabaseError(e) => ApiError::database_error(e.to_string()),
             UserFindRepoError::UnexpectedError(e) => ApiError::unexpected_error(e.to_string()),
+        }
+    }
+}
+
+impl From<UserUpdateRepoError> for ApiError {
+    fn from(value: UserUpdateRepoError) -> Self {
+        match value {
+            UserUpdateRepoError::DatabaseError(e) => ApiError::database_error(e.to_string()),
+            UserUpdateRepoError::UnexpectedError(e) => ApiError::unexpected_error(e.to_string()),
+            UserUpdateRepoError::InvalidUser(e) => ApiError::unexpected_error(e.to_string()),
+            UserUpdateRepoError::NotFound => ApiError::not_found("User not found"),
+            UserUpdateRepoError::AlreadyExists => {
+                ApiError::conflict("User already exists", HashMap::new())
+            }
         }
     }
 }

@@ -1,5 +1,8 @@
 use chrono::{DateTime, Utc};
-use kubestro_core_domain::models::{user::User, Entity, EntityId};
+use kubestro_core_domain::models::{
+    user::{User, UserProvider},
+    Entity, EntityId,
+};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
@@ -10,6 +13,14 @@ pub struct UserDto {
     pub email: String,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
+    pub provider: String,
+}
+
+fn parse_provider(provider: &UserProvider) -> String {
+    match provider {
+        UserProvider::Oidc => "oidc".to_string(),
+        _ => "local".to_string(),
+    }
 }
 
 impl From<User> for UserDto {
@@ -20,6 +31,7 @@ impl From<User> for UserDto {
             email: user.email.to_string(),
             created_at: user.created_at,
             updated_at: user.updated_at,
+            provider: parse_provider(&user.provider),
         }
     }
 }
@@ -32,6 +44,7 @@ impl From<&User> for UserDto {
             email: user.email.to_string(),
             created_at: user.created_at,
             updated_at: user.updated_at,
+            provider: parse_provider(&user.provider),
         }
     }
 }

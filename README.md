@@ -41,3 +41,5 @@ https://opensource.org/license/mit.
 - [Kubecraft](https://github.com/serainville/Kubecraft) and
   [kubernetes-minecraft-operator](https://github.com/JamesLaverack/kubernetes-minecraft-operator)
   for the inspirations for my own operator implementation.
+- [Shadcn Admin](https://github.com/satnaing/shadcn-admin) for the design
+  inspiration.

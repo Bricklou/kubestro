@@ -19,5 +19,5 @@ pub struct MeResponse {
     tag = AUTHENTICATION_TAG
 )]
 pub async fn handler_me(Extension(RequireAuth(user)): Extension<RequireAuth>) -> Json<MeResponse> {
-    Json(MeResponse { user })
+    Json(MeResponse { user: user.into() })
 }

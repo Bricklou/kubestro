@@ -1,4 +1,4 @@
-use axum::{Extension, Json};
+use axum::{http::StatusCode, response::IntoResponse, Extension, Json};
 use axum_session::Session;
 use axum_session_redispool::SessionRedisPool;
 use deserr::Deserr;
@@ -43,7 +43,7 @@ pub(super) struct RegisterResponse {
 
     request_body(content = RegisterPayload, content_type = "application/json"),
     responses(
-        (status = OK, description = "Registration successful", body = RegisterResponse, example = json!({
+        (status = CREATED, description = "Registration successful", body = RegisterResponse, example = json!({
             "user": {
                 "id": "1",
                 "username": "user",
@@ -71,7 +71,7 @@ pub async fn handler_register(
     Extension(ctx): Extension<AppContext>,
     session: Session<SessionRedisPool>,
     ValidatedJson(input): ValidatedJson<RegisterPayload>,
-) -> Result<Json<RegisterResponse>, ApiError> {
+) -> Result<impl IntoResponse, ApiError> {
     let user_data = RegisterUserPayload {
         username: input.username.try_into()?,
         email: input.email.try_into()?,
@@ -83,5 +83,5 @@ pub async fn handler_register(
     session.renew();
     session.set("user", &user);
 
-    Ok(Json(RegisterResponse { user }))
+    Ok((StatusCode::CREATED, Json(RegisterResponse { user })))
 }

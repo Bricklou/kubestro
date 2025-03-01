@@ -26,9 +26,13 @@ export function ScrollBar({
     </ScrollAreaScrollbar>
   )
 }
-
 ScrollBar.displayName = ScrollAreaScrollbar.displayName
-export function ScrollArea({ className, children, ref, ...props }: ComponentProps<typeof Root>) {
+
+interface ScrollAreaProps extends ComponentProps<typeof Root> {
+  readonly orientation?: 'vertical' | 'horizontal'
+}
+
+export function ScrollArea({ className, orientation, children, ref, ...props }: ScrollAreaProps) {
   return (
     <Root
       className={twMerge('relative overflow-hidden', className)}
@@ -39,7 +43,7 @@ export function ScrollArea({ className, children, ref, ...props }: ComponentProp
         {children}
       </Viewport>
 
-      <ScrollBar />
+      <ScrollBar orientation={orientation} />
       <Corner />
     </Root>
   )

@@ -14,4 +14,6 @@ pub enum HasherError {
     HashError(String),
     #[error("An error occurred while verifying the value: {0}")]
     VerifyError(String),
+    #[error("Invalid password")]
+    InvalidPassword,
 }

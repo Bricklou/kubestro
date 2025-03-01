@@ -1,10 +1,9 @@
 import ky from 'ky'
-import type { User } from '../types/user'
+import type { UserData } from '../types/user'
 
-export async function authGetUserApi(): Promise<User> {
-  return ky.get<{ user: User }>('/api/v1.0/authentication')
+export async function authGetUserApi(): Promise<UserData> {
+  return ky.get<UserData>('/api/v1.0/authentication')
     .json()
-    .then(data => data.user)
 }
 
 export async function authLogoutApi(): Promise<void> {
@@ -14,18 +13,32 @@ export async function authLogoutApi(): Promise<void> {
 export async function authLoginApi(body: {
   email: string
   password: string
-}): Promise<User> {
-  return ky.post<{ user: User }>('/api/v1.0/authentication', { json: body })
+}): Promise<UserData> {
+  return ky.post<UserData>('/api/v1.0/authentication', { json: body })
     .json()
-    .then(data => data.user)
 }
 
-export async function authLoginOidcApi(code: string, state: string): Promise<User> {
+export async function authLoginOidcApi(code: string, state: string): Promise<UserData> {
   const searchParams = new URLSearchParams()
   searchParams.set('code', code)
   searchParams.set('state', state)
 
-  return ky.get<{ user: User }>('/api/v1.0/authentication/callback', {
+  return ky.get<UserData>('/api/v1.0/authentication/callback', {
     searchParams
   }).json()
+}
+
+export async function settingsUpdateProfile(body: {
+  username: string
+  email: string
+}): Promise<void> {
+  await ky.put<UserData>('/api/v1.0/settings/profile', { json: body })
+}
+
+export async function settingsUpdatePassword(body: {
+  current_password: string
+  new_password: string
+  confirm_password: string
+}): Promise<void> {
+  await ky.put('/api/v1.0/settings/password', { json: body })
 }

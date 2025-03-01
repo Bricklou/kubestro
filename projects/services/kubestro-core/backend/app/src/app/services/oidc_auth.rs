@@ -5,7 +5,7 @@ use kubestro_core_domain::{
     models::{
         create_user::CreateUser,
         fields::{email::EmailError, password::PasswordError, username::UsernameError},
-        user::User,
+        user::{User, UserProvider},
         Entity,
     },
     ports::repositories::user_repository::{
@@ -85,6 +85,7 @@ impl OidcAuthService {
             username: given_name.to_string().try_into()?,
             email: email.to_string().try_into()?,
             password: None,
+            provider: UserProvider::Oidc,
         };
         let user = self.user_repo.create(user_data).await?;
 

@@ -1,2 +1,3 @@
 [default]
 binary = false
+extend-ignore-re = ["ist", "IST"]

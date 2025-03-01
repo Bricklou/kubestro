@@ -12,10 +12,12 @@ on:
       - develop
     paths:
       # Check if a project file changed
-      - "projects/**/src/**/*.{tsx,ts,css}"
+      - "projects/**/src/**/*.{tsx,ts,css,rs}"
       # Check if a dependency changed
-      - "projects/**/package.json"
+      - "**/package.json"
       - "**/pnpm-workspace.yaml"
+      - "**/Cargo.toml"
+      - "**/Cargo.lock"
       # Check if a configuration file changed
       - "**/eslint.config.mjs"
       - "**/stylelint.config.mjs"
@@ -51,9 +53,9 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Cache node_modules
-        id: cache
+      - name: Restore Cache if it exists
         uses: actions/cache@v4
+        id: cache
         with:
           path: node_modules
           key: ${{ env.DEPENDENCIES_CACHE }}-${{ hashFiles('pnpm-lock.yaml') }}
@@ -69,7 +71,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: ["build", "lint:js", "lint:css"]
+        target: ["lint:js", "lint:css"]
         jobIndex: [1, 2, 3, 4]
 
     env:
@@ -111,9 +113,6 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - run: git fetch --no-tags --prune --depth=2 origin main
-
-      - name: Print Environment Info
-        run: pnpm exec nx report
 
       - name: nx run-many:${{ matrix.target }}
         run: node ./configs/run-many.mjs "${{ matrix.target }}" "${{ matrix.jobIndex }}" "${{ env.jobCount }}" "$GITHUB_REF"

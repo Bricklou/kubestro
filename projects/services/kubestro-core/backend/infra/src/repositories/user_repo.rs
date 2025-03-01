@@ -9,7 +9,7 @@ use kubestro_core_domain::{
             password::{Password, PasswordError},
             username::{Username, UsernameError},
         },
-        user::{User, UserId},
+        user::{User, UserId, UserProvider},
         Entity, EntityId,
     },
     ports::repositories::user_repository::{
@@ -39,6 +39,24 @@ pub enum UserError {
     UnexpectedError(String),
 }
 
+impl From<UserProvider> for entities::sea_orm_active_enums::UserProvider {
+    fn from(provider: UserProvider) -> Self {
+        match provider {
+            UserProvider::Local => entities::sea_orm_active_enums::UserProvider::Local,
+            UserProvider::Oidc => entities::sea_orm_active_enums::UserProvider::Oidc,
+        }
+    }
+}
+
+impl From<entities::sea_orm_active_enums::UserProvider> for UserProvider {
+    fn from(provider: entities::sea_orm_active_enums::UserProvider) -> UserProvider {
+        match provider {
+            entities::sea_orm_active_enums::UserProvider::Local => UserProvider::Local,
+            entities::sea_orm_active_enums::UserProvider::Oidc => UserProvider::Oidc,
+        }
+    }
+}
+
 impl TryFrom<User> for entities::user::ActiveModel {
     type Error = UserError;
 
@@ -50,6 +68,7 @@ impl TryFrom<User> for entities::user::ActiveModel {
             password: ActiveValue::Set(value.password.map(|p| p.to_string())),
             created_at: ActiveValue::Set(value.created_at.into()),
             updated_at: ActiveValue::Set(value.updated_at.into()),
+            provider: ActiveValue::Set(value.provider.into()),
         })
     }
 }
@@ -63,8 +82,12 @@ impl TryFrom<entities::user::Model> for User {
         let email = Email::try_from(value.email)?;
         let password = value.password.map(Password::from_hash);
         let created_at: DateTime<Utc> = value.created_at.into();
+        let provider = UserProvider::from(value.provider);
 
-        Ok(User::new(id, username, email, password, created_at))
+        let mut user = User::new(id, username, email, password, created_at);
+        user.set_provider(provider);
+
+        Ok(user)
     }
 }
 
@@ -92,6 +115,7 @@ impl UserRepository for UserPgRepo {
             username: ActiveValue::Set(user_data.username.to_string()),
             email: ActiveValue::Set(user_data.email.to_string()),
             password: ActiveValue::Set(user_data.password.map(|p| p.to_string())),
+            provider: ActiveValue::Set(user_data.provider.into()),
             ..Default::default()
         };
 
@@ -195,7 +219,17 @@ impl UserRepository for UserPgRepo {
         let user = entities::user::ActiveModel::try_from(user_data)
             .map_err(|err| UserUpdateRepoError::UnexpectedError(err.to_string()))?;
 
-        let query = user.update(self.db.pool()).await;
+        let query = user.update(self.db.pool()).await.map_err(|err| match err {
+            DbErr::Query(RuntimeErr::SqlxError(sqlx::Error::Database(db_err))) => {
+                trace!("Database error: {}", db_err.to_string());
+                if db_err.is_unique_violation() {
+                    UserCreateRepoError::AlreadyExists
+                } else {
+                    UserCreateRepoError::DatabaseError(db_err.to_string())
+                }
+            }
+            e => UserCreateRepoError::UnexpectedError(e.to_string()),
+        });
 
         match query {
             Ok(model) => match User::try_from(model) {

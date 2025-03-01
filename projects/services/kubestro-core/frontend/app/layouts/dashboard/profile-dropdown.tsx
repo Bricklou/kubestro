@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, Button, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@kubestro/design-system/components'
 import { LogOutIcon, SettingsIcon } from 'lucide-react'
 import { useMemo } from 'react'
-import { Form, href } from 'react-router'
+import { Form, href, Link } from 'react-router'
 import { useDashboardLayoutData } from '~/routes/dashboard/_layout'
 
 function LogoutItem() {
@@ -29,7 +29,7 @@ export function ProfileDropdown() {
       <DropdownMenuTrigger asChild>
         <Button className="relative size-10 rounded-full hover:ring-2 hover:ring-secondary-hover transition-shadow data-[state=open]:ring-2 data-[state=open]:ring-offset-2 data-[state=open]:ring-primary" variant="ghost">
           <Avatar className="size-10">
-            <AvatarFallback className="bg-primary hover:bg-primary-hover transition-colors">{initials}</AvatarFallback>
+            <AvatarFallback className="bg-primary text-primary-text hover:bg-primary-hover transition-colors">{initials}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
@@ -42,9 +42,13 @@ export function ProfileDropdown() {
           </div>
         </DropdownMenuLabel>
 
-        <DropdownMenuItem>
-          <SettingsIcon />
-          Settings
+        <DropdownMenuSeparator />
+
+        <DropdownMenuItem asChild>
+          <Link to={href('/dashboard/settings')}>
+            <SettingsIcon />
+            Settings
+          </Link>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />

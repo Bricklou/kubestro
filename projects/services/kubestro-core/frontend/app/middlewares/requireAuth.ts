@@ -22,6 +22,7 @@ type AuthResponse = {
 } | {
   type: 'result'
   user: User
+  oidc?: boolean
 }
 
 export async function requireAuth(): Promise<AuthResponse> {
@@ -29,11 +30,11 @@ export async function requireAuth(): Promise<AuthResponse> {
   const query = authGetUser()
 
   try {
-    const user = await queryGetOrFetch(query)
+    const userData = await queryGetOrFetch(query)
 
     return {
       type: 'result',
-      user
+      ...userData
     }
   }
   catch (_) {
