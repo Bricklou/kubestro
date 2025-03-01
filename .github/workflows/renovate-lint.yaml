@@ -20,4 +20,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check renovate config
-        run: npx -p renovate renovate-config-validator
+        uses: rinchsan/renovate-config-validator@main
+        with:
+          pattern: "*.json"

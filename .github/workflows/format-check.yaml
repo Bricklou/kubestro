@@ -37,24 +37,26 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Restore Cache if it exists
+        uses: actions/cache@v4
+        id: cache
+        with:
+          path: node_modules
+          key: ${{ env.DEPENDENCIES_CACHE }}-${{ hashFiles('pnpm-lock.yaml') }}
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: "10.x"
           run_install: false
+        if: steps.cache.outputs.cache-hit != 'true'
 
       - name: Setup Node.JS
         uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: "pnpm"
-
-      - name: Cache node_modules
-        id: cache
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ env.DEPENDENCIES_CACHE }}-${{ hashFiles('pnpm-lock.yaml') }}
+        if: steps.cache.outputs.cache-hit != 'true'
 
       - name: pnpm install
         if: steps.cache.outputs.cache-hit != 'true'
