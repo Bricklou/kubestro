@@ -15,6 +15,11 @@ export default [
     route('dashboard', 'routes/dashboard/_layout.tsx', { id: 'dashboard-layout' }, [
       index('routes/dashboard/index.tsx'),
 
+      route('game-managers', 'routes/dashboard/game-managers/_layout.tsx', { id: 'game-managers-layout' }, [
+        index('routes/dashboard/game-managers/overview.tsx', { id: 'game-managers-overview' }),
+        route('add', 'routes/dashboard/game-managers/add.tsx', { id: 'game-managers-add' })
+      ]),
+
       route('settings', 'routes/dashboard/settings/_layout.tsx', { id: 'settings-layout' }, [
         index('routes/dashboard/settings/profile.tsx', { id: 'settings-profile' }),
         route('security', 'routes/dashboard/settings/security.tsx', { id: 'settings-security' }),

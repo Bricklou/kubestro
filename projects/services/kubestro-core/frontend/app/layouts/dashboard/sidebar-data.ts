@@ -1,6 +1,7 @@
-import { BellDotIcon, LayoutDashboardIcon, PaletteIcon, SettingsIcon, ShieldIcon, UserIcon } from 'lucide-react'
+import { ActivityIcon, BellDotIcon, LayoutDashboardIcon, PaletteIcon, PlusIcon, SettingsIcon, ShieldIcon, UserIcon, UserSearchIcon, UsersIcon } from 'lucide-react'
 import type { ElementType } from 'react'
 import { href } from 'react-router'
+import type { XOR } from '~/types/xor'
 
 interface BaseNavItem {
   title: string
@@ -11,13 +12,13 @@ interface BaseNavItem {
 type LinkTo = string
 
 export type NavLink = BaseNavItem & {
-  url: LinkTo
+  to: LinkTo
   items?: never
 }
 
 export type NavCollapsible = BaseNavItem & {
   items: (BaseNavItem & { to: LinkTo })[]
-  url?: never
+  to?: never
 }
 
 export type NavItem = NavCollapsible | NavLink
@@ -25,6 +26,10 @@ export type NavItem = NavCollapsible | NavLink
 export interface NavGroup {
   title: string
   items: NavItem[]
+  action?: {
+    title: string
+    icon: ElementType
+  } & XOR<{ to: LinkTo }, { onClick: () => void }>
 }
 
 export interface SidebarData {
@@ -38,8 +43,49 @@ export const sidebarData: SidebarData = {
       items: [
         {
           title: 'Dashboard',
-          url: href('/dashboard'),
+          to: href('/dashboard'),
           icon: LayoutDashboardIcon
+        }
+      ]
+    },
+    {
+      title: 'Games Managers',
+      action: {
+        title: 'Add a Game Manager',
+        icon: PlusIcon,
+        to: href('/dashboard/game-managers/add')
+      },
+      items: [
+        {
+          title: 'Overview',
+          to: href('/dashboard/game-managers'),
+          icon: LayoutDashboardIcon
+        }
+      ]
+    },
+    {
+      title: 'Admin',
+      items: [
+        {
+          title: 'Users & Groups',
+          icon: UsersIcon,
+          items: [
+            {
+              title: 'Users',
+              to: '/dashboard/admin/users',
+              icon: UsersIcon
+            },
+            {
+              title: 'Groups',
+              to: '/dashboard/admin/groups',
+              icon: UserSearchIcon
+            }
+          ]
+        },
+        {
+          title: 'Activity Log',
+          icon: ActivityIcon,
+          to: '/dashboard/admin/activity'
         }
       ]
     },
@@ -57,17 +103,17 @@ export const sidebarData: SidebarData = {
             },
             {
               title: 'Security',
-              to: '/dashboard/settings/security',
+              to: href('/dashboard/settings/security'),
               icon: ShieldIcon
             },
             {
               title: 'Appearance',
-              to: '/dashboard/settings/appearance',
+              to: href('/dashboard/settings/appearance'),
               icon: PaletteIcon
             },
             {
               title: 'Notifications',
-              to: '/dashboard/settings/notifications',
+              to: href('/dashboard/settings/notifications'),
               icon: BellDotIcon
             }
           ]

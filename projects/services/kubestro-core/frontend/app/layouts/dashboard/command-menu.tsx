@@ -43,11 +43,11 @@ export function CommandMenu() {
           {sidebarData.navGroups.map(group => (
             <CommandGroup heading={group.title} key={group.title}>
               {group.items.map((navItem, i) => {
-                if (navItem.url) {
+                if (navItem.to) {
                   return (
                     <CommandItem
-                      key={`${navItem.url}-${i.toString()}`}
-                      onSelect={onItemSelect(navItem.url)}
+                      key={`${navItem.to}-${i.toString()}`}
+                      onSelect={onItemSelect(navItem.to)}
                       value={navItem.title}
                     >
                       <div className="mr-2 flex size-4 items-center justify-center">

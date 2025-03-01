@@ -8,14 +8,12 @@
     var(--color-secondary) var(--grid-lines-opacity),
     transparent calc(100% - var(--grid-lines-opacity))
   );
-  --grid-pattern: linear-gradient(
-      to right,
-      var(--grid-pattern-line) 1px,
-      transparent 1px
-    ),
+  --grid-pattern:
+    linear-gradient(to right, var(--grid-pattern-line) 1px, transparent 1px),
     linear-gradient(to bottom, var(--grid-pattern-line) 1px, transparent 1px);
   --grid-circle-opacity: 35%;
-  --grid-gradient: radial-gradient(
+  --grid-gradient:
+    radial-gradient(
       circle 500px at 10% 100px,
       color-mix(
         in lch,
@@ -71,5 +69,21 @@
     & > .bg-inner-circle {
       background-image: var(--grid-gradient);
     }
+  }
+
+  .faded-bottom::after {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: calc(var(--spacing) * 24);
+    width: 100%;
+    background: linear-gradient(
+      180deg,
+      transparent 5%,
+      var(--color-background) 70%
+    );
+    display: block;
   }
 }

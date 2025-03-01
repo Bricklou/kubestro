@@ -1,6 +1,6 @@
-import { Badge, Collapsible, CollapsibleContent, CollapsibleTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubItem, useSidebar } from '@kubestro/design-system/components'
+import { Badge, Collapsible, CollapsibleContent, CollapsibleTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, SidebarGroup, SidebarGroupAction, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubItem, Tooltip, TooltipContent, TooltipTrigger, useSidebar } from '@kubestro/design-system/components'
 import { Link, useLocation } from 'react-router'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import type { ReactNode } from 'react'
 import { ChevronRight } from 'lucide-react'
 import type { NavCollapsible, NavGroup, NavItem, NavLink } from './sidebar-data'
@@ -9,13 +9,13 @@ function useActive(item: NavItem, mainNav = false) {
   const { pathname } = useLocation()
 
   // Early return for exact match
-  if (pathname === item.url) {
+  if (pathname === item.to) {
     return true
   }
 
   // Only split pathname once, and only if needed
   const [currentPath] = pathname.split('?')
-  if (currentPath === item.url) {
+  if (currentPath === item.to) {
     return true
   }
 
@@ -29,8 +29,8 @@ function useActive(item: NavItem, mainNav = false) {
   // Only check main section if mainNav is true
   if (mainNav) {
     const [, mainSection] = pathname.split('/')
-    if (mainSection && item.url) {
-      return mainSection === item.url.split('/')[1]
+    if (mainSection && item.to) {
+      return mainSection === item.to.split('/')[1]
     }
   }
 
@@ -58,7 +58,7 @@ function SidebarMenuLink({ item }: SidebarMenuLinkProps) {
         isActive={active}
         tooltip={item.title}
       >
-        <Link onClick={handleClick} to={item.url}>
+        <Link onClick={handleClick} to={item.to}>
           {item.icon ? <item.icon /> : null}
           <span>{item.title}</span>
           {item.badge ? <NavBadge>{item.badge}</NavBadge> : null}
@@ -171,16 +171,55 @@ function SidebarMenuCollapsedDropdown({ item }: SidebarMenuCollapsedDropdownProp
   )
 }
 
-export function NavGroup({ title, items }: NavGroup) {
+export function NavGroup({ title, action, items }: NavGroup) {
   const { state } = useSidebar()
+
+  const groupAction = useMemo(() => {
+    if (!action) return null
+
+    let el: ReactNode
+    if (action.to) {
+      el = (
+        <SidebarGroupAction asChild>
+          <Link to={action.to}>
+            <action.icon />
+            <span className="sr-only">{action.title}</span>
+          </Link>
+        </SidebarGroupAction>
+      )
+    }
+    else {
+      el = (
+        <SidebarGroupAction onClick={action.onClick}>
+          <action.icon />
+          <span className="sr-only">{action.title}</span>
+        </SidebarGroupAction>
+      )
+    }
+
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>
+          {el}
+        </TooltipTrigger>
+
+        <TooltipContent side="right">
+          {action.title}
+        </TooltipContent>
+      </Tooltip>
+    )
+  }, [action])
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>{title}</SidebarGroupLabel>
+      <SidebarGroupLabel>
+        {title}
+        {groupAction}
+      </SidebarGroupLabel>
 
       <SidebarMenu>
         {items.map((item) => {
-          const key = item.url ? `${item.title}-${item.url}` : item.title
+          const key = item.to ? `${item.title}-${item.to}` : item.title
 
           if (!item.items) return <SidebarMenuLink item={item} key={key} />
 
@@ -189,6 +228,6 @@ export function NavGroup({ title, items }: NavGroup) {
           return <SidebarMenuCollapsible item={item} key={key} />
         })}
       </SidebarMenu>
-    </SidebarGroup>
+    </SidebarGroup >
   )
 }
