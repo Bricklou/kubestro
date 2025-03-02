@@ -104,6 +104,13 @@ pub(super) struct AddRepositoryResponse {
                 }
             }
         })),
+
+        (status = CONFLICT, description = "Repository already exists", body = ApiError, example = json!({
+            "status": 409,
+            "title": "Conflict",
+            "detail": "Repository already exists",
+            "code": "CONFLICT"
+        })),
     ),
 )]
 pub async fn handler_add_repository(

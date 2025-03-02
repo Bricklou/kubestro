@@ -8,8 +8,8 @@ import {
   toast
 } from '@kubestro/design-system'
 import { LucideLogIn } from 'lucide-react'
-import { useRootLayoutData } from '../_root-layout'
 import type { Route } from './+types/login'
+import { useRootLayoutData } from '~/layouts/root-layout'
 import { requireGuest } from '~/middlewares/requireAuth'
 import { authLoginApi } from '~/data/api/user'
 import type {

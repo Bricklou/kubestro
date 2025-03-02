@@ -37,10 +37,8 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
 
   // Now, we need to make a request to the backend to exchange the code and the state
   try {
-    const user = await authLoginOidcApi(code, state)
+    await authLoginOidcApi(code, state)
     void queryClient.invalidateQueries({ queryKey: AUTH_GET_USER_KEY })
-
-    console.log(user)
   }
   catch (_ignored) {
     toast({

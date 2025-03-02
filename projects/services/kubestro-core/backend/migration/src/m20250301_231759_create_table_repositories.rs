@@ -13,7 +13,7 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(pk_uuid(Repository::Id))
                     .col(string(Repository::Name))
-                    .col(string(Repository::Url))
+                    .col(string(Repository::Url).unique_key())
                     .to_owned(),
             )
             .await

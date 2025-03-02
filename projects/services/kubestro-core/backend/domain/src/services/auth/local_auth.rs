@@ -11,9 +11,7 @@ use crate::{
     },
     ports::{
         hasher::Hasher,
-        repositories::user_repository::{
-            UserCreateRepoError, UserFindRepoError, UserRepository, UserUpdateRepoError,
-        },
+        repositories::user_repository::{UserRepoError, UserRepository},
         validators::PasswordValidator,
     },
 };
@@ -126,13 +124,7 @@ pub enum LocalAuthServiceError {
     PasswordError(#[from] PasswordError),
 
     #[error(transparent)]
-    UserFind(#[from] UserFindRepoError),
-
-    #[error(transparent)]
-    UserUpdate(#[from] UserUpdateRepoError),
-
-    #[error(transparent)]
-    UserRegister(#[from] UserCreateRepoError),
+    User(#[from] UserRepoError),
 }
 
 #[cfg(test)]
@@ -306,7 +298,7 @@ mod tests {
         user_repo
             .expect_create()
             .times(1)
-            .returning(|_| Err(UserCreateRepoError::AlreadyExists));
+            .returning(|_| Err(UserRepoError::AlreadyExists));
         let mut hasher = MockHasher::new();
         hasher
             .expect_hash()
@@ -330,7 +322,7 @@ mod tests {
         assert!(result.is_err());
         assert_eq!(
             result.unwrap_err(),
-            LocalAuthServiceError::UserRegister(UserCreateRepoError::AlreadyExists)
+            LocalAuthServiceError::User(UserRepoError::AlreadyExists)
         );
     }
 

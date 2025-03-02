@@ -1,4 +1,4 @@
-import { ActivityIcon, BellDotIcon, LayoutDashboardIcon, PaletteIcon, PlusIcon, SettingsIcon, ShieldIcon, UserIcon, UserSearchIcon, UsersIcon } from 'lucide-react'
+import { ActivityIcon, BellDotIcon, BookMarkedIcon, LayoutDashboardIcon, PaletteIcon, PlusIcon, SettingsIcon, ShieldIcon, UserIcon, UserSearchIcon, UsersIcon } from 'lucide-react'
 import type { ElementType } from 'react'
 import { href } from 'react-router'
 import type { XOR } from '~/types/xor'
@@ -60,6 +60,11 @@ export const sidebarData: SidebarData = {
           title: 'Overview',
           to: href('/dashboard/game-managers'),
           icon: LayoutDashboardIcon
+        },
+        {
+          title: 'Repositories',
+          to: '/dashboard/game-managers/repositories',
+          icon: BookMarkedIcon
         }
       ]
     },

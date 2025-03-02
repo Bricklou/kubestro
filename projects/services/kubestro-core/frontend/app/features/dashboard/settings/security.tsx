@@ -4,8 +4,8 @@ import { HTTPError } from 'ky'
 import { useEffect, useRef } from 'react'
 import { useDashboardLayoutData } from '../_layout'
 import type { Route } from './+types/security'
-import { ContentSection } from '~/layouts/settings/content-section'
-import { settingsUpdatePassword } from '~/data/api/user'
+import { ContentSection } from './_components/content-section'
+import { settingsUpdatePasswordApi } from '~/data/api/user'
 import type { ConflictError, ForbiddenError, ValidationError } from '~/data/api/generic-errors'
 import { transformErrors } from '~/data/api/transform-errors'
 
@@ -133,7 +133,7 @@ export async function clientAction({ request }: Route.ActionArgs) {
 
   // Password update
   try {
-    await settingsUpdatePassword({
+    await settingsUpdatePasswordApi({
       current_password: body.current_password,
       new_password: body.new_password,
       confirm_password: body.confirm_password

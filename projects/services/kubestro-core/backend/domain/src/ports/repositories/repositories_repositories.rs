@@ -16,4 +16,6 @@ pub enum RepositoryRepoError {
     DatabaseError(String),
     #[error("Unexpected error: {0}")]
     UnexpectedError(String),
+    #[error("Repository already exists")]
+    AlreadyExists,
 }

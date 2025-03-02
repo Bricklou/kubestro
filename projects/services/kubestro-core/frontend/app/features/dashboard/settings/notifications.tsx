@@ -1,23 +1,22 @@
 import { TriangleAlertIcon } from 'lucide-react'
-import type { Route } from './+types/appearance'
-import { ContentSection } from '~/layouts/settings/content-section'
+import type { Route } from './+types/notifications'
+import { ContentSection } from './_components/content-section'
 
 export const meta: Route.MetaFunction = () => [
-  { title: 'Appearance' }
+  { title: 'Notifications' }
 ]
 
-export default function SettingsAppearance() {
+export default function SettingsNotifications() {
   return (
     <ContentSection
-      desc="Customize the appearance of the app."
-      title="Appearance"
+      desc="Manage your notifications here."
+      title="Notifications"
     >
-
       <p className="text-sm text-warning-text inline-flex gap-2">
         <TriangleAlertIcon className="size-4" />
 
         <span>
-          Appearance are not implemented yet.
+          Notifications are not implemented yet.
         </span>
       </p>
     </ContentSection>

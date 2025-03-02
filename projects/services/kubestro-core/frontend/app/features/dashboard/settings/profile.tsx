@@ -3,10 +3,10 @@ import { Button, FormMessage, Input, Label, toast } from '@kubestro/design-syste
 import { HTTPError } from 'ky'
 import { useDashboardLayoutData } from '../_layout'
 import type { Route } from './+types/profile'
-import { ContentSection } from '~/layouts/settings/content-section'
+import { ContentSection } from './_components/content-section'
 import { queryClient } from '~/utils/queryClient'
 import { AUTH_GET_USER_KEY } from '~/data/queries/user'
-import { settingsUpdateProfile } from '~/data/api/user'
+import { settingsUpdateProfileApi } from '~/data/api/user'
 import type { ConflictError, ForbiddenError, ValidationError } from '~/data/api/generic-errors'
 import { transformErrors } from '~/data/api/transform-errors'
 
@@ -85,7 +85,7 @@ export async function clientAction({ request }: Route.ActionArgs) {
   const body = Object.fromEntries(formData) as unknown as FormFields
 
   try {
-    await settingsUpdateProfile(body)
+    await settingsUpdateProfileApi(body)
     await queryClient.refetchQueries({ queryKey: AUTH_GET_USER_KEY })
   }
   catch (error) {

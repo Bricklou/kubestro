@@ -100,7 +100,11 @@ impl RepositoriesRepository for RepositoriesPgRepo {
             .map_err(|err| match err {
                 DbErr::Query(RuntimeErr::SqlxError(sqlx::Error::Database(db_err))) => {
                     trace!("Database error: {:?}", db_err.to_string());
-                    RepositoryRepoError::DatabaseError(db_err.to_string())
+                    if db_err.is_unique_violation() {
+                        RepositoryRepoError::AlreadyExists
+                    } else {
+                        RepositoryRepoError::DatabaseError(db_err.to_string())
+                    }
                 }
                 e => RepositoryRepoError::UnexpectedError(e.to_string()),
             })

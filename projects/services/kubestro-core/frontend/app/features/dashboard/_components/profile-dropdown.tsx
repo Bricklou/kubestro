@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, Button, DropdownMenu, DropdownMenuContent, Drop
 import { LogOutIcon, SettingsIcon } from 'lucide-react'
 import { useMemo } from 'react'
 import { Form, href, Link } from 'react-router'
-import { useDashboardLayoutData } from '~/routes/dashboard/_layout'
+import type { User } from '~/data/types/user'
 
 function LogoutItem() {
   return (
@@ -17,9 +17,11 @@ function LogoutItem() {
   )
 }
 
-export function ProfileDropdown() {
-  const { user } = useDashboardLayoutData()
+interface ProfileDropdownProps {
+  readonly user: User
+}
 
+export function ProfileDropdown({ user }: ProfileDropdownProps) {
   // Generate a string from initials of the user's username
   const initials = useMemo(() => user.username.split(' ').map(name => name[0])
     .join(''), [user.username])

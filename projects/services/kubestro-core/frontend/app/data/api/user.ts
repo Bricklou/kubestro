@@ -28,14 +28,14 @@ export async function authLoginOidcApi(code: string, state: string): Promise<Use
   }).json()
 }
 
-export async function settingsUpdateProfile(body: {
+export async function settingsUpdateProfileApi(body: {
   username: string
   email: string
 }): Promise<void> {
   await ky.put<UserData>('/api/v1.0/settings/profile', { json: body })
 }
 
-export async function settingsUpdatePassword(body: {
+export async function settingsUpdatePasswordApi(body: {
   current_password: string
   new_password: string
   confirm_password: string

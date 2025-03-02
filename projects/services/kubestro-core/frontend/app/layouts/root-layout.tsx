@@ -1,5 +1,5 @@
 import { Outlet, useRouteLoaderData } from 'react-router'
-import type { Info } from './+types/_root-layout'
+import type { Info } from './+types/root-layout'
 import { requireSetup } from '~/middlewares/requireSetup'
 
 export async function clientLoader() {

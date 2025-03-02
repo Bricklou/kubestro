@@ -123,6 +123,7 @@ pub async fn handler_update_profile(
     if !errors.is_empty() {
         return Err(ApiError::conflict(
             "A user with the same data already exists",
+            "USER_DATA_ALREADY_EXISTS",
             errors,
         ));
     }

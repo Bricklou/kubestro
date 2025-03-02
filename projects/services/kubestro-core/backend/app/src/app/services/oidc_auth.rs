@@ -7,9 +7,7 @@ use kubestro_core_domain::{
         user::{CreateUser, User, UserProvider},
         Entity,
     },
-    ports::repositories::user_repository::{
-        UserCreateRepoError, UserFindRepoError, UserRepository,
-    },
+    ports::repositories::user_repository::{UserRepoError, UserRepository},
 };
 use kubestro_core_infra::services::oidc::{OidcClient, OidcError};
 use openidconnect::{Nonce, TokenResponse};
@@ -94,7 +92,7 @@ impl OidcAuthService {
             .await
             .map_err(|e| {
                 debug!("Failed to create the OIDC association: {:?}", e);
-                OidcAuthServiceError::UserRegister(e)
+                OidcAuthServiceError::User(e)
             })?;
 
         Ok(user)
@@ -119,8 +117,5 @@ pub enum OidcAuthServiceError {
     EmailError(#[from] EmailError),
 
     #[error(transparent)]
-    UserFind(#[from] UserFindRepoError),
-
-    #[error(transparent)]
-    UserRegister(#[from] UserCreateRepoError),
+    User(#[from] UserRepoError),
 }
