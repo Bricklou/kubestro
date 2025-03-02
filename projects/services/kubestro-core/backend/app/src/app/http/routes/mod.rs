@@ -18,6 +18,7 @@ use super::middlewares::{self, status::SetupLayer};
 
 mod authentication;
 mod base;
+mod game_managers;
 mod settings;
 mod setup;
 
@@ -35,6 +36,7 @@ pub async fn get_routes(context: AppContext) -> anyhow::Result<axum::Router> {
     // This router is only accessible is the user is authenticated
     let router_with_auth = OpenApiRouter::new()
         .merge(settings::get_routes())
+        .merge(game_managers::get_routes())
         .layer(middleware::from_fn(middlewares::auth::auth_middleware));
 
     // This router is only accessible if the setup is done
@@ -91,10 +93,12 @@ async fn register_session_store(
 ) -> anyhow::Result<OpenApiRouter> {
     // Session store
     let session_config = SessionConfig::default().with_table_name("session_table");
-    let session_store =
-        SessionStore::<SessionRedisPool>::new(Some(context.pool.clone().into()), session_config)
-            .await
-            .context("failed to create session store")?;
+    let session_store = SessionStore::<SessionRedisPool>::new(
+        Some(context.cache_pool.clone().into()),
+        session_config,
+    )
+    .await
+    .context("failed to create session store")?;
 
     Ok(router.layer(SessionLayer::new(session_store)))
 }

@@ -5,7 +5,7 @@ use kubestro_core_domain::{
     services::auth::local_auth::LocalAuthService,
 };
 use kubestro_core_infra::{
-    repositories::user_repo::UserPgRepo,
+    repositories::{repositories_repo::RepositoriesPgRepo, user_repo::UserPgRepo},
     services::{argon_hasher::Argon2Hasher, password_validator::InfraPasswordValidator},
 };
 use redis_pool::SingleRedisPool;
@@ -39,13 +39,14 @@ pub struct AppContext {
 
     // Repositories
     pub(crate) user_repo: Arc<dyn UserRepository>,
+    pub(crate) repository_repo: Arc<RepositoriesPgRepo>,
 
     // Services
     pub(crate) local_auth: Arc<LocalAuthService>,
     pub(crate) oidc_auth: Option<Arc<OidcAuthService>>,
 
     // Redis pool
-    pub(crate) pool: SingleRedisPool,
+    pub(crate) cache_pool: SingleRedisPool,
 }
 
 pub async fn create_app_context() -> anyhow::Result<AppContext> {
@@ -71,6 +72,7 @@ pub async fn create_app_context() -> anyhow::Result<AppContext> {
     ));
     let oidc_auth =
         oidc_config.map(|config| Arc::new(OidcAuthService::new(user_repo.clone(), config)));
+    let repository_repo = Arc::new(RepositoriesPgRepo::new(db.clone()));
 
     // Shared states
     let shared_state = Arc::new(RwLock::new(SharedState {
@@ -79,10 +81,11 @@ pub async fn create_app_context() -> anyhow::Result<AppContext> {
 
     let api_context = AppContext {
         shared_state,
-        pool,
+        cache_pool: pool,
         local_auth,
         oidc_auth,
         user_repo,
+        repository_repo,
     };
 
     Ok(api_context)

@@ -1,12 +1,9 @@
-use mockall::automock;
-
 use crate::models::{
-    create_user::CreateUser,
     fields::email::Email,
-    user::{User, UserId},
+    user::{CreateUser, User, UserId},
 };
 
-#[automock]
+#[cfg_attr(test, mockall::automock)]
 #[async_trait::async_trait]
 pub trait UserRepository: Send + Sync {
     async fn create(&self, user: CreateUser) -> Result<User, UserCreateRepoError>;

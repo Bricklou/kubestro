@@ -3,8 +3,9 @@ use std::{borrow::Cow, collections::HashMap};
 use axum::http::StatusCode;
 use kubestro_core_domain::{
     models::fields::{email::EmailError, password::PasswordError, username::UsernameError},
-    ports::repositories::user_repository::{
-        UserCreateRepoError, UserFindRepoError, UserUpdateRepoError,
+    ports::repositories::{
+        repositories_repositories::RepositoryRepoError,
+        user_repository::{UserCreateRepoError, UserFindRepoError, UserUpdateRepoError},
     },
     services::auth::local_auth::LocalAuthServiceError,
 };
@@ -218,6 +219,15 @@ impl From<OidcAuthServiceError> for ApiError {
             OidcAuthServiceError::LoginFailed => ApiError::unauthorized(),
             OidcAuthServiceError::OidcClientError(e) => ApiError::unexpected_error(e.to_string()),
             e => e.into(),
+        }
+    }
+}
+
+impl From<RepositoryRepoError> for ApiError {
+    fn from(value: RepositoryRepoError) -> Self {
+        match value {
+            RepositoryRepoError::DatabaseError(e) => ApiError::database_error(e.to_string()),
+            RepositoryRepoError::UnexpectedError(e) => ApiError::unexpected_error(e.to_string()),
         }
     }
 }

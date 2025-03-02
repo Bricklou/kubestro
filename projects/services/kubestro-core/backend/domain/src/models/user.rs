@@ -1,53 +1,18 @@
 use std::fmt::Display;
 
 use chrono::{DateTime, Utc};
-use serde::{Deserialize, Serialize};
-use uuid::Uuid;
+
+use crate::impl_entity_id;
 
 use super::{
     fields::{email::Email, password::Password, username::Username},
-    Entity, EntityId,
+    Entity,
 };
 
-/// User Id
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
-pub struct UserId(Uuid);
-
-impl EntityId for UserId {
-    fn new() -> Self {
-        Self(Uuid::new_v4())
-    }
-
-    fn value(&self) -> Uuid {
-        self.0
-    }
-}
-
-impl Default for UserId {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
-impl Display for UserId {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.0)
-    }
-}
-
-impl From<Uuid> for UserId {
-    fn from(id: Uuid) -> Self {
-        Self(id)
-    }
-}
-
-impl TryFrom<String> for UserId {
-    type Error = uuid::Error;
-
-    fn try_from(value: String) -> Result<Self, Self::Error> {
-        Uuid::parse_str(value.as_str()).map(Self)
-    }
-}
+impl_entity_id!(
+    /// User Id
+    UserId
+);
 
 /// This model represents the user provider
 #[derive(Debug, Clone, PartialEq, Default)]
@@ -122,6 +87,8 @@ impl Entity<UserId> for User {
 
 #[cfg(test)]
 mod tests {
+    use crate::models::EntityId;
+
     use super::*;
 
     #[test]
@@ -150,4 +117,17 @@ mod tests {
         assert_eq!(user.email, email);
         assert_eq!(user.password, Some(password));
     }
+}
+
+/// Create User model
+#[derive(Debug, Clone, PartialEq)]
+pub struct CreateUser {
+    /// The username of the user
+    pub username: Username,
+    /// The email of the user
+    pub email: Email,
+    /// The password of the user
+    pub password: Option<Password>,
+    /// Provider
+    pub provider: UserProvider,
 }

@@ -3,13 +3,12 @@ use std::sync::Arc;
 use chrono::{DateTime, Utc};
 use kubestro_core_domain::{
     models::{
-        create_user::CreateUser,
         fields::{
             email::{Email, EmailError},
             password::{Password, PasswordError},
             username::{Username, UsernameError},
         },
-        user::{User, UserId, UserProvider},
+        user::{CreateUser, User, UserId, UserProvider},
         Entity, EntityId,
     },
     ports::repositories::user_repository::{
@@ -19,7 +18,8 @@ use kubestro_core_domain::{
 };
 use sea_orm::{
     prelude::{async_trait, Uuid},
-    sqlx, ActiveModelTrait, ActiveValue, ColumnTrait, DbErr, EntityTrait, QueryFilter, RuntimeErr,
+    sqlx, ActiveModelTrait, ActiveValue, ColumnTrait, DbErr, EntityTrait, ModelTrait, QueryFilter,
+    RuntimeErr, TransactionTrait,
 };
 use tracing::trace;
 
@@ -203,12 +203,10 @@ impl UserRepository for UserPgRepo {
                 let users = models
                     .into_iter()
                     .map(User::try_from)
-                    .collect::<Result<Vec<User>, UserError>>();
+                    .collect::<Result<Vec<User>, UserError>>()
+                    .map_err(|e| UserFindRepoError::UnexpectedError(e.to_string()))?;
 
-                match users {
-                    Ok(users) => Ok(users),
-                    Err(e) => Err(UserFindRepoError::UnexpectedError(e.to_string())),
-                }
+                Ok(users)
             }
             Err(e) => Err(UserFindRepoError::DatabaseError(e.to_string())),
         }
@@ -242,14 +240,29 @@ impl UserRepository for UserPgRepo {
 
     #[tracing::instrument(skip(self))]
     async fn delete(&self, id: &UserId) -> Result<(), UserDeleteRepoError> {
+        let txn = self
+            .db
+            .pool()
+            .begin()
+            .await
+            .map_err(|e| UserDeleteRepoError::DatabaseError(e.to_string()))?;
+
         let query = entities::user::Entity::find_by_id(id.value())
             .one(self.db.pool())
-            .await;
+            .await
+            .map_err(|e| UserDeleteRepoError::DatabaseError(e.to_string()))?;
 
-        match query {
-            Ok(_) => Ok(()),
-            Err(e) => Err(UserDeleteRepoError::DatabaseError(e.to_string())),
+        if let Some(user) = query {
+            user.delete(&txn)
+                .await
+                .map_err(|e| UserDeleteRepoError::DatabaseError(e.to_string()))?;
         }
+
+        txn.commit()
+            .await
+            .map_err(|e| UserDeleteRepoError::DatabaseError(e.to_string()))?;
+
+        Ok(())
     }
 
     #[tracing::instrument(skip(self))]

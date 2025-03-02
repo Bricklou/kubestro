@@ -2,13 +2,12 @@ use std::sync::Arc;
 
 use crate::{
     models::{
-        create_user::CreateUser,
         fields::{
             email::Email,
             password::{Password, PasswordError},
             username::Username,
         },
-        user::{User, UserProvider},
+        user::{CreateUser, User, UserProvider},
     },
     ports::{
         hasher::Hasher,

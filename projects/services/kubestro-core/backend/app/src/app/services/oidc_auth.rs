@@ -3,9 +3,8 @@ use std::sync::Arc;
 use crate::app::context::oidc::OidcConfig;
 use kubestro_core_domain::{
     models::{
-        create_user::CreateUser,
         fields::{email::EmailError, password::PasswordError, username::UsernameError},
-        user::{User, UserProvider},
+        user::{CreateUser, User, UserProvider},
         Entity,
     },
     ports::repositories::user_repository::{
