@@ -26,12 +26,12 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>,
   readonly loading?: boolean
 }
 
-interface IconProps {
+export interface ButtonIconProps {
 
   /**
    * Icon component
    */
-  readonly icon: ElementType
+  readonly icon?: ElementType
 
   /**
    * Icon placement
@@ -39,18 +39,11 @@ interface IconProps {
   readonly iconPlacement?: 'left' | 'right'
 }
 
-interface IconRefProps {
-  readonly icon?: never
-  readonly iconPlacement?: undefined
-}
-
-export type ButtonIconProps = IconProps | IconRefProps
-
 export function Button({
   children,
   loading,
   icon: Icon,
-  iconPlacement,
+  iconPlacement = 'left',
   disabled,
   asChild = false,
   type,
@@ -78,7 +71,7 @@ export function Button({
    * Render the icon depending on the placement and the effect
    */
   const RenderIcon = useCallback(({ placement }: { readonly placement: 'left' | 'right' }) => {
-    if (!Icon || !iconPlacement || placement !== iconPlacement) return null
+    if (!Icon || placement !== iconPlacement) return null
 
     if (effect === 'expandIcon') {
       return (
