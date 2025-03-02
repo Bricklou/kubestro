@@ -9,7 +9,7 @@ import {
 } from '@kubestro/design-system'
 import { LucideLogIn } from 'lucide-react'
 import type { Route } from './+types/login'
-import { useRootLayoutData } from '~/layouts/root-layout'
+import { useRootLayoutData } from '~/layouts/app-layout'
 import { requireGuest } from '~/middlewares/requireAuth'
 import { authLoginApi } from '~/data/api/user'
 import type {

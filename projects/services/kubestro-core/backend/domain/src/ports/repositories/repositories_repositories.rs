@@ -3,7 +3,10 @@ use crate::models::package::{CreateRepository, Repository, RepositoryId};
 #[cfg_attr(test, mockall::automock)]
 #[async_trait::async_trait]
 pub trait RepositoriesRepository {
-    async fn find_all(&self) -> Result<Vec<Repository>, RepositoryRepoError>;
+    async fn find_all(
+        &self,
+        search: Option<String>,
+    ) -> Result<Vec<Repository>, RepositoryRepoError>;
     async fn find_one(&self, id: &RepositoryId) -> Result<Option<Repository>, RepositoryRepoError>;
     async fn create(&self, repository: CreateRepository)
         -> Result<Repository, RepositoryRepoError>;
@@ -16,6 +19,6 @@ pub enum RepositoryRepoError {
     DatabaseError(String),
     #[error("Unexpected error: {0}")]
     UnexpectedError(String),
-    #[error("Repository already exists")]
+    #[error("This repository already exists")]
     AlreadyExists,
 }

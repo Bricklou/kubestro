@@ -1,8 +1,17 @@
 import ky from 'ky'
 import type { Repository } from '../types/repositories'
 
-export async function repositoriesGetAllApi(): Promise<Repository[]> {
-  return ky.get<{ repositories: Repository[] }>('/api/v1.0/game-managers/repositories')
+export async function repositoriesGetAllApi({
+  search
+}: { search?: string }): Promise<Repository[]> {
+  const searchParams = new URLSearchParams()
+  if (search) {
+    searchParams.set('search', search)
+  }
+
+  return ky.get<{ repositories: Repository[] }>('/api/v1.0/game-managers/repositories', {
+    searchParams
+  })
     .json()
     .then(data => data.repositories)
 }

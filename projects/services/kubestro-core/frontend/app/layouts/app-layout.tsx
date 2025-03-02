@@ -1,5 +1,5 @@
 import { Outlet, useRouteLoaderData } from 'react-router'
-import type { Info } from './+types/root-layout'
+import type { Info } from './+types/app-layout'
 import { requireSetup } from '~/middlewares/requireSetup'
 
 export async function clientLoader() {
@@ -12,9 +12,9 @@ export async function clientLoader() {
 }
 
 export function useRootLayoutData() {
-  const data = useRouteLoaderData<Info['loaderData']>('routes/_root-layout' satisfies Info['id'])
+  const data = useRouteLoaderData<Info['loaderData']>('layouts/app-layout' satisfies Info['id'])
   if (!data) {
-    throw new Error('useRootLayoutData() was called outside of a route that uses the _root-layout')
+    throw new Error('useRootLayoutData() was called outside of a route that uses the app-layout')
   }
   return data
 }

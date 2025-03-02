@@ -2,7 +2,7 @@ import { index, layout, prefix, route } from '@react-router/dev/routes'
 import type { RouteConfig } from '@react-router/dev/routes'
 
 export default [
-  layout('layouts/root-layout.tsx', [
+  layout('layouts/app-layout.tsx', [
     // Index route used to redirect the user
     index('features/redirect/redirect.tsx'),
 
@@ -25,7 +25,8 @@ export default [
       ...prefix('game-managers', [
         index('features/dashboard/game-managers/overview/overview.tsx', { id: 'game-managers-overview' }),
         route('add', 'features/dashboard/game-managers/add/add.tsx', { id: 'game-managers-add' }),
-        route('repositories', 'features/dashboard/game-managers/repositories/repositories.tsx')
+        route('repositories', 'features/dashboard/game-managers/repositories/repositories.tsx'),
+        route('repositories/:id', 'features/dashboard/game-managers/repositories/repository-action.ts')
       ]),
 
       route('settings', 'features/dashboard/settings/_layout.tsx', { id: 'settings-layout' }, [

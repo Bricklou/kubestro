@@ -207,7 +207,7 @@ impl From<RepositoryRepoError> for ApiError {
             RepositoryRepoError::DatabaseError(e) => ApiError::database_error(e.to_string()),
             RepositoryRepoError::UnexpectedError(e) => ApiError::unexpected_error(e.to_string()),
             RepositoryRepoError::AlreadyExists => ApiError::conflict(
-                "Repository already exists",
+                "This repository already exists",
                 "REPO_ALREADY_EXISTS",
                 HashMap::new(),
             ),

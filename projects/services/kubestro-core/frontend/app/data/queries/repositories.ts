@@ -1,7 +1,7 @@
 import { repositoriesGetAllApi } from '../api/repositories'
 
-export const REPOSITORIES_GET_ALL_KEY = ['game-managers', 'repositories', 'getAll']
-export const repositoriesGetAll = () => ({
-  queryKey: REPOSITORIES_GET_ALL_KEY,
-  queryFn: async () => repositoriesGetAllApi()
+export const REPOSITORIES_GET_ALL_KEY = ['game-managers', 'repositories', 'all']
+export const repositoriesGetAll = (search?: string) => ({
+  queryKey: [...REPOSITORIES_GET_ALL_KEY, { search }],
+  queryFn: async () => repositoriesGetAllApi({ search })
 })

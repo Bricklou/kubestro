@@ -1,18 +1,22 @@
 import { Input, ScrollArea, Separator, toast } from '@kubestro/design-system/components'
-import { useFetcher } from 'react-router'
+import { Form } from 'react-router'
 import { SearchIcon } from 'lucide-react'
 import { HTTPError } from 'ky'
 import { Main } from '../../_components/main'
 import { AddRepository } from './_components/add-repository'
 import type { Route } from './+types/repositories'
+import { RepositoryCard } from './_components/repository-card'
 import { queryClient, queryGetOrFetch } from '~/utils/queryClient'
 import { REPOSITORIES_GET_ALL_KEY, repositoriesGetAll } from '~/data/queries/repositories'
 import { repositoriesCreateApi } from '~/data/api/repositories'
 import type { ConflictError, ForbiddenError, ValidationError } from '~/data/api/generic-errors'
 import { transformErrors } from '~/data/api/transform-errors'
 
-export async function clientLoader() {
-  const query = repositoriesGetAll()
+export async function clientLoader({ request }: Route.ClientActionArgs) {
+  const url = new URL(request.url)
+  const search = url.searchParams.get('search') ?? undefined
+
+  const query = repositoriesGetAll(search)
   const repositories = await queryGetOrFetch(query)
 
   return { repositories }
@@ -20,7 +24,6 @@ export async function clientLoader() {
 
 export default function Repositories({ loaderData }: Route.ComponentProps) {
   const { repositories } = loaderData
-  const fetcher = useFetcher()
 
   return (
     <Main fixed>
@@ -39,7 +42,7 @@ export default function Repositories({ loaderData }: Route.ComponentProps) {
 
       <div className="flex flex-col flex-1 px-2 min-h-0">
         {/* Search */}
-        <fetcher.Form className="flex flex-col md:flex-row gap-2 p-1 pb-4" method="get">
+        <Form className="flex flex-col md:flex-row gap-2 p-1 pb-4" method="get">
           <div className="relative inline-flex items-center w-full flex-1">
             <Input
               className="bg-background-contrast pl-8 peer"
@@ -52,13 +55,13 @@ export default function Repositories({ loaderData }: Route.ComponentProps) {
           </div>
 
           <AddRepository />
-        </fetcher.Form>
+        </Form>
 
         {/* Available Repositories List */}
         <ScrollArea className="scroll-smooth flex-1 -mx-4 px-4 min-h-0 faded-bottom">
-          <div className="-mx-1 px-1.5 grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3 pb-16">
+          <div className="-mx-1 px-1.5 flex flex-col pb-16 gap-4">
             {repositories.map(repository => (
-              <p key={repository.id}>{repository.name}</p>
+              <RepositoryCard key={repository.id} repository={repository} />
             ))}
           </div>
         </ScrollArea>

@@ -1,7 +1,12 @@
-use axum::{extract::Path, http::StatusCode, response::IntoResponse, Extension, Json};
+use axum::{
+    extract::{Path, Query},
+    http::StatusCode,
+    response::IntoResponse,
+    Extension, Json,
+};
 use deserr::Deserr;
 use serde::{Deserialize, Serialize};
-use utoipa::ToSchema;
+use utoipa::{IntoParams, ToSchema};
 use validator::Validate;
 
 use crate::app::{
@@ -22,6 +27,13 @@ use super::GAME_MANAGER_TAG;
 #[derive(Serialize, ToSchema)]
 pub(super) struct RepositoriesListResponse {
     repositories: Vec<RepositoryDto>,
+}
+
+/// Repositories list queries
+#[derive(Deserialize, IntoParams)]
+pub(super) struct RepositoriesListQueries {
+    #[serde(default)]
+    search: Option<String>,
 }
 
 /// Get managers repositories list
@@ -46,10 +58,11 @@ pub(super) struct RepositoriesListResponse {
 )]
 pub async fn handler_get_repositories(
     Extension(ctx): Extension<AppContext>,
+    Query(queries): Query<RepositoriesListQueries>,
 ) -> Result<impl IntoResponse, ApiError> {
     let repositories = ctx
         .repository_repo
-        .find_all()
+        .find_all(queries.search)
         .await?
         .iter()
         .map(RepositoryDto::from)

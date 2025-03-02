@@ -8,8 +8,8 @@ use kubestro_core_domain::{
     ports::repositories::repositories_repositories::{RepositoriesRepository, RepositoryRepoError},
 };
 use sea_orm::{
-    sqlx, ActiveModelTrait, ActiveValue, ColumnTrait, DbErr, EntityTrait, ModelTrait, QueryFilter,
-    RuntimeErr, TransactionTrait,
+    sqlx, ActiveModelTrait, ActiveValue, ColumnTrait, Condition, DbErr, EntityTrait, ModelTrait,
+    QueryFilter, QueryTrait, RuntimeErr, TransactionTrait,
 };
 use tracing::trace;
 
@@ -46,41 +46,41 @@ impl RepositoriesPgRepo {
 #[async_trait::async_trait]
 impl RepositoriesRepository for RepositoriesPgRepo {
     #[tracing::instrument(skip(self))]
-    async fn find_all(&self) -> Result<Vec<Repository>, RepositoryRepoError> {
-        let query = entities::repository::Entity::find()
+    async fn find_all(
+        &self,
+        search: Option<String>,
+    ) -> Result<Vec<Repository>, RepositoryRepoError> {
+        let repos = entities::repository::Entity::find()
+            .apply_if(search, |query, val| {
+                query.filter(
+                    Condition::any()
+                        .add(entities::repository::Column::Name.contains(&val))
+                        .add(entities::repository::Column::Url.contains(&val)),
+                )
+            })
             .all(self.db.pool())
-            .await;
+            .await
+            .map_err(|e| RepositoryRepoError::DatabaseError(e.to_string()))?
+            .into_iter()
+            .map(Repository::try_from)
+            .collect::<Result<Vec<Repository>, String>>()
+            .map_err(|e| RepositoryRepoError::UnexpectedError(e.to_string()))?;
 
-        match query {
-            Ok(repos) => {
-                let repos = repos
-                    .into_iter()
-                    .map(Repository::try_from)
-                    .collect::<Result<Vec<Repository>, String>>()
-                    .map_err(|e| RepositoryRepoError::UnexpectedError(e.to_string()))?;
-                Ok(repos)
-            }
-            Err(e) => Err(RepositoryRepoError::DatabaseError(e.to_string())),
-        }
+        Ok(repos)
     }
 
     #[tracing::instrument(skip(self))]
     async fn find_one(&self, id: &RepositoryId) -> Result<Option<Repository>, RepositoryRepoError> {
-        let query = entities::repository::Entity::find()
+        let repo = entities::repository::Entity::find()
             .filter(entities::repository::Column::Id.eq(id.value()))
             .one(self.db.pool())
-            .await;
+            .await
+            .map_err(|e| RepositoryRepoError::DatabaseError(e.to_string()))?
+            .map(Repository::try_from)
+            .transpose()
+            .map_err(|e| RepositoryRepoError::UnexpectedError(e.to_string()))?;
 
-        match query {
-            Ok(repo) => {
-                let repo = repo
-                    .map(Repository::try_from)
-                    .transpose()
-                    .map_err(|e| RepositoryRepoError::UnexpectedError(e.to_string()))?;
-                Ok(repo)
-            }
-            Err(e) => Err(RepositoryRepoError::DatabaseError(e.to_string())),
-        }
+        Ok(repo)
     }
 
     #[tracing::instrument(skip(self))]
