@@ -79,7 +79,16 @@ cd projects/<SUB_PROJECT>
 I am a bit eccentric and I used Nix Flake to manage my dependencies. Ideally, you should use the Nix Flake too. You can install Nix by following the instructions on the [Nix website](https://nixos.org/download.html).
 On the other hand, if you don't want to use Nix, you can try installing the required dependencies manually. You can find the dependencies in the `flake.nix` file.
 
-For all the sub-projects, I also use [Task](https://taskfile.dev/#/) to run tasks. Please ensure it is installed on your machine.
+To have a local kubernetes cluster running, you can use K3D. You can install it by following the instructions on the [K3D website](https://k3d.io/#installation).
+
+Please ensure you have the right version of the tools installed on your machine. The versions are the following:
+
+- [NodeJS](https://nodejs.org/fr): ^22.0.0
+- [PNPM](https://pnpm.io/): ^10.5.2
+- [Rust & Cargo](https://rustup.rs/): ^1.85.0
+- [K3D](https://k3d.io/) (optional): ^5.8.2
+- [taskfile](https://taskfile.dev/): ^3.41.0
+- [helm](https://helm.sh/): ^3.17.0
 
 For all the projects, you can install the dependencies by running the following command:
 
@@ -95,13 +104,26 @@ task dev
 
 This will start a project in development mode. You can now start coding and see the changes in real-time.
 
-6. Run the tests by executing the following command:
+6. To start k3d cluster, you can run the following command:
+
+```bash
+task k3d:up
+```
+
+7. Migrate the database by running the following command:
+
+```bash
+# in the projects/services/kubestro-core/backend directory
+task migrate:up
+```
+
+8. Run the tests by executing the following command:
 
 ```bash
 task test
 ```
 
-7. Once you are done with your changes, you can commit them and push them to your fork. I'm using the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) convention for the commit messages. Please ensure that your commit messages follow this convention.
+9. Once you are done with your changes, you can commit them and push them to your fork. I'm using the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) convention for the commit messages. Please ensure that your commit messages follow this convention.
 
 ## Getting recognized as a contributor
 

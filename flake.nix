@@ -133,6 +133,7 @@
 
             # kubernetes
             k3d
+            kubernetes-helm
 
             # rust
             rustfmt
@@ -155,9 +156,9 @@
 
           # Debug print
           echo "rustc version: $(rustc --version)"
-          echo "rustc path: ${pkgs.rustc}"
+          echo "rustc path: $( which rustc)"
           echo "cargo version: $(cargo --version)"
-          echo "cargo path: ${pkgs.cargo}"
+          echo "cargo path: $(which cargo)"
         '';
       };
     });

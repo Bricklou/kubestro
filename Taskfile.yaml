@@ -31,7 +31,7 @@ tasks:
 
   # kubernetes tasks
   k3d:up:
-    desc: Start k3d cluster
+    desc: Configure and boot k3d cluster
     env:
       HELM_EXPERIMENTAL_OCI: 1
     cmds:
@@ -84,7 +84,7 @@ tasks:
       - k3d cluster list
 
   k3d:down:
-    desc: Stop k3d cluster
+    desc: Destroy k3d cluster
     cmds:
       - k3d cluster delete kubestro
       - rm configs/k3d/kubeconfig
