@@ -12,6 +12,7 @@ serde_json = "1.0.138"
 dotenvy = { version = "0.15.7" }
 chrono = "0.4.39"
 uuid = { version = "1.12.1", features = ["v4", "serde"] }
+validator = { version = "0.20.0", features = ["derive"] }
 
 # http
 utoipa = { version = "5.3.1", features = [
@@ -28,7 +29,8 @@ sea-orm = { version = "1.1.4", features = [
   "with-uuid",
   "with-chrono",
 ] }
-validator = { version = "0.20.0", features = ["derive"] }
+redis = "0.28.2"
+redis_pool = "0.7.0"
 
 # helpers
 async-trait = "0.1.86"
@@ -46,4 +48,12 @@ thiserror = "2.0.11"
 
 # testing libraries
 mockall = "0.13.1"
-fake = { version = "3.1.0", features = ["derive"] }
+fake = { version = "4.0.0", features = ["derive"] }
+
+# http client
+reqwest = { version = "0.12.12", features = [
+  "json",
+  "charset",
+  "http2",
+  "rustls-tls",
+], default-features = false }

@@ -3,8 +3,11 @@ use std::{borrow::Cow, collections::HashMap};
 use axum::http::StatusCode;
 use kubestro_core_domain::{
     models::fields::{email::EmailError, password::PasswordError, username::UsernameError},
-    ports::repositories::{
-        repositories_repositories::RepositoryRepoError, user_repository::UserRepoError,
+    ports::{
+        repositories::{
+            repositories_repositories::RepositoryRepoError, user_repository::UserRepoError,
+        },
+        services::repositories_service::RepositoriesServiceError,
     },
     services::auth::local_auth::LocalAuthServiceError,
 };
@@ -184,9 +187,9 @@ impl From<UserRepoError> for ApiError {
             UserRepoError::AlreadyExists => {
                 ApiError::conflict("User already exists", "USER_ALREADY_EXISTS", HashMap::new())
             }
-            UserRepoError::InvalidUser(e) => ApiError::unexpected_error(e.to_string()),
-            UserRepoError::DatabaseError(e) => ApiError::database_error(e.to_string()),
-            UserRepoError::UnexpectedError(e) => ApiError::unexpected_error(e.to_string()),
+            UserRepoError::InvalidUser(e) => ApiError::unexpected_error(e),
+            UserRepoError::DatabaseError(e) => ApiError::database_error(e),
+            UserRepoError::UnexpectedError(e) => ApiError::unexpected_error(e),
         }
     }
 }
@@ -204,13 +207,26 @@ impl From<OidcAuthServiceError> for ApiError {
 impl From<RepositoryRepoError> for ApiError {
     fn from(value: RepositoryRepoError) -> Self {
         match value {
-            RepositoryRepoError::DatabaseError(e) => ApiError::database_error(e.to_string()),
-            RepositoryRepoError::UnexpectedError(e) => ApiError::unexpected_error(e.to_string()),
+            RepositoryRepoError::DatabaseError(e) => ApiError::database_error(e),
+            RepositoryRepoError::UnexpectedError(e) => ApiError::unexpected_error(e),
             RepositoryRepoError::AlreadyExists => ApiError::conflict(
                 "This repository already exists",
                 "REPO_ALREADY_EXISTS",
                 HashMap::new(),
             ),
+            RepositoryRepoError::NotFound => ApiError::not_found(value.to_string()),
+        }
+    }
+}
+
+impl From<RepositoriesServiceError> for ApiError {
+    fn from(value: RepositoriesServiceError) -> Self {
+        match value {
+            RepositoriesServiceError::RepositoryError(e) => e.into(),
+            // TODO: return the proper error code instead of internal server error
+            RepositoriesServiceError::RemoteDataError(e) => ApiError::unexpected_error(e),
+            RepositoriesServiceError::UnexpectedError(e) => ApiError::unexpected_error(e),
+            RepositoriesServiceError::CachingError(e) => ApiError::unexpected_error(e),
         }
     }
 }

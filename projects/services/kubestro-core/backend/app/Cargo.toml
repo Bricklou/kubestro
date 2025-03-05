@@ -15,8 +15,8 @@ utoipa-axum = "0.2.0"
 axum_session = { version = "0.16.0", features = ["advanced"] }
 axum_session_redispool = "0.5.0"
 axum_session_auth = "0.16.0"
-redis = "0.28.2"
-redis_pool = "0.7.0"
+redis.workspace = true
+redis_pool.workspace = true
 
 # security
 openidconnect = { version = "4.0.0", features = ["reqwest"] }

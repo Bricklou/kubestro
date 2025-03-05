@@ -2,7 +2,7 @@ use crate::models::package::{CreateRepository, Repository, RepositoryId};
 
 #[cfg_attr(test, mockall::automock)]
 #[async_trait::async_trait]
-pub trait RepositoriesRepository {
+pub trait RepositoriesRepository: Send + Sync {
     async fn find_all(
         &self,
         search: Option<String>,
@@ -21,4 +21,6 @@ pub enum RepositoryRepoError {
     UnexpectedError(String),
     #[error("This repository already exists")]
     AlreadyExists,
+    #[error("This repository does not exist")]
+    NotFound,
 }

@@ -72,8 +72,6 @@ where
     }
 
     fn call(&mut self, req: Request<B>) -> Self::Future {
-        println!("request = {:?}, required = {:?}", req, self.needs_setup);
-
         let needs_setup = self.needs_setup;
         let shared_state = req
             .extensions()

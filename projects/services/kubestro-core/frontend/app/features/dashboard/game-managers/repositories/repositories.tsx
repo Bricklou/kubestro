@@ -1,6 +1,6 @@
 import { Input, ScrollArea, Separator, toast } from '@kubestro/design-system/components'
 import { Form } from 'react-router'
-import { SearchIcon } from 'lucide-react'
+import { BookDashedIcon, SearchIcon } from 'lucide-react'
 import { HTTPError } from 'ky'
 import { Main } from '../../_components/main'
 import { AddRepository } from './_components/add-repository'
@@ -11,6 +11,7 @@ import { REPOSITORIES_GET_ALL_KEY, repositoriesGetAll } from '~/data/queries/rep
 import { repositoriesCreateApi } from '~/data/api/repositories'
 import type { ConflictError, ForbiddenError, ValidationError } from '~/data/api/generic-errors'
 import { transformErrors } from '~/data/api/transform-errors'
+import { MissingRepoAlert } from './_components/missing-repo-alert'
 
 export async function clientLoader({ request }: Route.ClientActionArgs) {
   const url = new URL(request.url)
@@ -40,7 +41,10 @@ export default function Repositories({ loaderData }: Route.ComponentProps) {
 
       <Separator className="my-4 lg:my-6" />
 
+
       <div className="flex flex-col flex-1 px-2 min-h-0">
+
+
         {/* Search */}
         <Form className="flex flex-col md:flex-row gap-2 p-1 pb-4" method="get">
           <div className="relative inline-flex items-center w-full flex-1">
@@ -58,13 +62,27 @@ export default function Repositories({ loaderData }: Route.ComponentProps) {
         </Form>
 
         {/* Available Repositories List */}
-        <ScrollArea className="scroll-smooth flex-1 -mx-4 px-4 min-h-0 faded-bottom">
-          <div className="-mx-1 px-1.5 flex flex-col pb-16 gap-4">
-            {repositories.map(repository => (
-              <RepositoryCard key={repository.id} repository={repository} />
-            ))}
-          </div>
-        </ScrollArea>
+        {repositories.length === 0 ?
+          (
+            <>
+              <div className='pb-2'>
+                <MissingRepoAlert />
+              </div>
+              <div className="flex-1 text-text-muted flex flex-col gap-4 items-center justify-center pb-16">
+                <BookDashedIcon className="size-24 mx-auto" />
+                No repositories found.
+              </div>
+            </>
+          ) :
+          (
+            <ScrollArea className="scroll-smooth flex-1 -mx-4 px-4 min-h-0 faded-bottom">
+              <div className="-mx-1 px-1.5 flex flex-col pb-16 gap-4">
+                {repositories.map(repository => (
+                  <RepositoryCard key={repository.id} repository={repository} />
+                ))}
+              </div>
+            </ScrollArea>
+          )}
       </div>
     </Main>
   )

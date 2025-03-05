@@ -135,7 +135,7 @@ pub async fn handler_add_repository(
         url: payload.url,
     };
 
-    let repository: RepositoryDto = ctx.repository_repo.create(repo_data).await?.into();
+    let repository: RepositoryDto = ctx.repository_service.create(repo_data).await?.into();
 
     Ok((
         StatusCode::CREATED,
@@ -162,7 +162,7 @@ pub async fn handler_delete_repository(
     Extension(ctx): Extension<AppContext>,
     Path(id): Path<RepositoryId>,
 ) -> Result<impl IntoResponse, ApiError> {
-    ctx.repository_repo.delete(&id).await?;
+    ctx.repository_service.delete(&id).await?;
 
     Ok(StatusCode::NO_CONTENT)
 }
