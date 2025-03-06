@@ -1,10 +1,11 @@
 use uuid::Uuid;
 
+mod macros;
+
 pub mod fields;
 
+pub mod package;
 pub mod user;
-
-pub mod create_user;
 
 pub trait EntityId: Eq + PartialEq {
     fn new() -> Self;

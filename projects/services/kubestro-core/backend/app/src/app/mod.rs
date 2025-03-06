@@ -100,6 +100,15 @@ async fn init_app(ctx: AppContext) -> anyhow::Result<()> {
         .map_err(|e| anyhow::anyhow!("Failed to acquire shared state lock: {}", e))?;
     shared_state_lock.status = ServiceStatus::Installed;
 
+    // Updating repositories cache
+    let repo_svc_clone = ctx.repository_service.clone();
+    tokio::spawn(async move {
+        match repo_svc_clone.update_cache(false).await {
+            Ok(_) => info!("Repositories cache updated successfully"),
+            Err(e) => error!("Failed to update repositories cache: {}", e),
+        }
+    });
+
     Ok(())
 }
 

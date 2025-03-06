@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router'
-import { ThemeSwitch } from './dashboard/theme-switch'
+import { ThemeSwitch } from '~/ui/theme-switch'
 
 function LayoutBackground() {
   return (

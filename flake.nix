@@ -57,10 +57,11 @@
             prettier = {
               enable = true;
               settings = {
+                binPath = "./node_modules/.bin/prettier";
                 write = true;
                 configPath = ".prettierrc.yaml"; # relative to the flake root
               };
-              files = ".+\.(mdx?|ya?ml|json|toml|css)";
+              files = ".+\\.(mdx?|ya?ml|json|toml|css)";
             };
 
             # Rust code formatter
@@ -74,7 +75,7 @@
                 allFeatures = true;
                 # extraArgs = "--all-targets";
               };
-              files = ".+\.rs";
+              files = ".+\\.rs";
             };
 
             # Nix code formatter
@@ -95,7 +96,7 @@
               enable = true;
               description = "Format and lint frontend code";
               entry = "eslint --flag unstable_config_lookup_from_file";
-              files = ".+\.(m?jsx?|tsx?)";
+              files = ".+\\.(m?jsx?|tsx?)";
             };
             renovate-validator = {
               enable = true;
@@ -107,7 +108,7 @@
               enable = true;
               description = "Format and lint css code";
               entry = "stylelint --fix --config ./configs/stylelint-config.mjs";
-              files = ".+\.css";
+              files = ".+\\.css";
             };
           };
         };

@@ -1,29 +1,42 @@
-import { index, layout, route } from '@react-router/dev/routes'
+import { index, layout, prefix, route } from '@react-router/dev/routes'
 import type { RouteConfig } from '@react-router/dev/routes'
 
 export default [
-  layout('routes/_root-layout.tsx', [
-    index('routes/index.tsx'),
+  layout('layouts/app-layout.tsx', [
+    // Index route used to redirect the user
+    index('features/redirect/redirect.tsx'),
 
-    layout('layouts/double-side-layout.tsx', { id: 'auth-layout' }, [
-      route('login', 'routes/_auth/login.tsx'),
-      route('login/callback', 'routes/_auth/oidc-callback.tsx')
+    // Setup
+    layout('layouts/double-side-layout.tsx', { id: 'setup-layout' }, [
+      route('setup', 'features/setup/setup.tsx')
     ]),
 
-    route('logout', 'routes/_auth/logout.tsx'),
+    // Authentication
+    layout('layouts/double-side-layout.tsx', { id: 'auth-layout' }, [
+      route('login', 'features/authentication/login.tsx'),
+      route('login/callback', 'features/authentication/oidc-callback.tsx')
+    ]),
+    route('logout', 'features/authentication/logout.tsx'),
 
-    route('dashboard', 'routes/dashboard/_layout.tsx', { id: 'dashboard-layout' }, [
-      index('routes/dashboard/index.tsx'),
+    // Dashboard
+    route('dashboard', 'features/dashboard/_layout.tsx', { id: 'dashboard-layout' }, [
+      index('features/dashboard/home/home.tsx'),
 
-      route('settings', 'routes/dashboard/settings/_layout.tsx', { id: 'settings-layout' }, [
-        index('routes/dashboard/settings/profile.tsx', { id: 'settings-profile' }),
-        route('security', 'routes/dashboard/settings/security.tsx', { id: 'settings-security' }),
-        route('appearance', 'routes/dashboard/settings/appearance.tsx', { id: 'settings-appearance' }),
-        route('notifications', 'routes/dashboard/settings/notifications.tsx', { id: 'settings-notifications' })
-      ])
+      ...prefix('game-managers', [
+        index('features/dashboard/game-managers/overview/overview.tsx', { id: 'game-managers-overview' }),
+        route('add', 'features/dashboard/game-managers/add/add.tsx', { id: 'game-managers-add' }),
+        route('repositories', 'features/dashboard/game-managers/repositories/repositories.tsx'),
+        route('repositories/:id', 'features/dashboard/game-managers/repositories/repository-action.ts')
+      ]),
+
+      route('settings', 'features/dashboard/settings/_layout.tsx', { id: 'settings-layout' }, [
+        index('features/dashboard/settings/profile.tsx', { id: 'settings-profile' }),
+        route('security', 'features/dashboard/settings/security.tsx', { id: 'settings-security' }),
+        route('appearance', 'features/dashboard/settings/appearance.tsx', { id: 'settings-appearance' }),
+        route('notifications', 'features/dashboard/settings/notifications.tsx', { id: 'settings-notifications' })
+      ]),
+
+      route('*', 'features/dashboard/not-found/not-found.tsx')
     ])
-  ]),
-  layout('layouts/double-side-layout.tsx', { id: 'setup-layout' }, [
-    route('setup', 'routes/setup.tsx')
   ])
 ] satisfies RouteConfig

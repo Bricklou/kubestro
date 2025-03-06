@@ -1,6 +1,6 @@
 import { createContext, use, useEffect, useMemo, useState } from 'react'
 import type { Dispatch, ReactNode, SetStateAction } from 'react'
-import { CommandMenu } from '~/layouts/dashboard/command-menu'
+import { CommandMenu } from '~/features/dashboard/_components/command-menu'
 
 interface SearchContextValue {
   open: boolean

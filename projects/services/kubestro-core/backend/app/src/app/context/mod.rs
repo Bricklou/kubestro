@@ -1,12 +1,18 @@
 use std::sync::Arc;
 
 use kubestro_core_domain::{
-    ports::repositories::user_repository::UserRepository,
+    ports::{
+        repositories::user_repository::UserRepository,
+        services::repositories_service::RepositoriesService,
+    },
     services::auth::local_auth::LocalAuthService,
 };
 use kubestro_core_infra::{
-    repositories::user_repo::UserPgRepo,
-    services::{argon_hasher::Argon2Hasher, password_validator::InfraPasswordValidator},
+    repositories::{repositories_repo::RepositoriesPgRepo, user_repo::UserPgRepo},
+    services::{
+        argon_hasher::Argon2Hasher, password_validator::InfraPasswordValidator,
+        repositories_service::InfraRepositoriesService,
+    },
 };
 use redis_pool::SingleRedisPool;
 use serde::Serialize;
@@ -39,13 +45,15 @@ pub struct AppContext {
 
     // Repositories
     pub(crate) user_repo: Arc<dyn UserRepository>,
+    pub(crate) repository_repo: Arc<RepositoriesPgRepo>,
 
     // Services
     pub(crate) local_auth: Arc<LocalAuthService>,
     pub(crate) oidc_auth: Option<Arc<OidcAuthService>>,
+    pub(crate) repository_service: Arc<dyn RepositoriesService>,
 
     // Redis pool
-    pub(crate) pool: SingleRedisPool,
+    pub(crate) cache_pool: SingleRedisPool,
 }
 
 pub async fn create_app_context() -> anyhow::Result<AppContext> {
@@ -71,7 +79,12 @@ pub async fn create_app_context() -> anyhow::Result<AppContext> {
     ));
     let oidc_auth =
         oidc_config.map(|config| Arc::new(OidcAuthService::new(user_repo.clone(), config)));
+    let repository_repo = Arc::new(RepositoriesPgRepo::new(db.clone()));
 
+    let repository_service = Arc::new(InfraRepositoriesService::new(
+        repository_repo.clone(),
+        pool.clone(),
+    ));
     // Shared states
     let shared_state = Arc::new(RwLock::new(SharedState {
         status: ServiceStatus::NotReady,
@@ -79,10 +92,12 @@ pub async fn create_app_context() -> anyhow::Result<AppContext> {
 
     let api_context = AppContext {
         shared_state,
-        pool,
+        cache_pool: pool,
         local_auth,
         oidc_auth,
         user_repo,
+        repository_repo,
+        repository_service,
     };
 
     Ok(api_context)

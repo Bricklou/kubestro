@@ -83,12 +83,10 @@ pub(super) struct LoginResponse {
 pub async fn handler_oidc_callback(
     ctx: Extension<AppContext>,
     session: Session<SessionRedisPool>,
-    params: Query<OidcCallbackParams>,
+    Query(queries): Query<OidcCallbackParams>,
 ) -> Result<impl IntoResponse, ApiError> {
-    let params = params.0;
-
-    let code = params.code.clone();
-    let state = params.state.clone();
+    let code = queries.code.clone();
+    let state = queries.state.clone();
 
     let Some(csrf_state) = session.get::<String>("oidc_csrf_state") else {
         return Err(ApiError::unexpected_error(

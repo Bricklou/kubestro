@@ -26,7 +26,7 @@ package "App" {
 
     }
     
-    package "Gateway" {
+    package "Game Managers" {
         ' Servers
         usecase "Manage servers" as c_u3
         a -> c_u3
@@ -40,12 +40,12 @@ package "App" {
         usecase "Edit servers" as c_u13
         c_u3 --|> c_u13
 
-        ' Gateways
-        usecase "Manage gateways" as c_u10
+        ' Game managers
+        usecase "Manage games managers" as c_u10
         a -> c_u10
-        usecase "Configure gateway" as c_u11
+        usecase "Configure games managers" as c_u11
         c_u10 --|> c_u11
-        usecase "List gateways" as c_u12
+        usecase "List games managers" as c_u12
         c_u10 --|> c_u12
 
     }

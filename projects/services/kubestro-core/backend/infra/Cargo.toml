@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 # data transformation & manipulation
 serde.workspace = true
+serde_json.workspace = true
 argon2 = "0.5.3"
 chrono.workspace = true
 passwords = "3.1.16"
@@ -23,6 +24,8 @@ thiserror.workspace = true
 
 # database
 sea-orm.workspace = true
+redis.workspace = true
+redis_pool.workspace = true
 
 # logging
 tracing.workspace = true
@@ -33,6 +36,12 @@ kubestro-core-domain = { path = "../domain" }
 # kubernetes
 kube = { version = "0.98.0", features = ["runtime", "derive"] }
 k8s-openapi = { version = "0.24.0", features = ["latest"] }
+
+# async environment
+tokio.workspace = true
+
+# http client
+reqwest.workspace = true
 
 [lib]
 name = "kubestro_core_infra"

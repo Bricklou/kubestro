@@ -106,7 +106,11 @@ pub async fn handler_update_password(
     if input.new_password == input.current_password {
         let mut fields = HashMap::new();
         fields.insert("password".into(), "New password must be different".into());
-        return Err(ApiError::conflict("New password must be different", fields));
+        return Err(ApiError::conflict(
+            "New password must be different",
+            "IDENTICAL_PASSWORDS",
+            fields,
+        ));
     }
 
     // Update the password

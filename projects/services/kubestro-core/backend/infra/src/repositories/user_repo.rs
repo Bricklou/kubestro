@@ -3,23 +3,20 @@ use std::sync::Arc;
 use chrono::{DateTime, Utc};
 use kubestro_core_domain::{
     models::{
-        create_user::CreateUser,
         fields::{
             email::{Email, EmailError},
             password::{Password, PasswordError},
             username::{Username, UsernameError},
         },
-        user::{User, UserId, UserProvider},
+        user::{CreateUser, User, UserId, UserProvider},
         Entity, EntityId,
     },
-    ports::repositories::user_repository::{
-        UserCreateRepoError, UserDeleteRepoError, UserFindRepoError, UserRepository,
-        UserUpdateRepoError,
-    },
+    ports::repositories::user_repository::{UserRepoError, UserRepository},
 };
 use sea_orm::{
     prelude::{async_trait, Uuid},
-    sqlx, ActiveModelTrait, ActiveValue, ColumnTrait, DbErr, EntityTrait, QueryFilter, RuntimeErr,
+    sqlx, ActiveModelTrait, ActiveValue, ColumnTrait, DbErr, EntityTrait, ModelTrait, QueryFilter,
+    RuntimeErr, TransactionTrait,
 };
 use tracing::trace;
 
@@ -109,7 +106,7 @@ impl UserPgRepo {
 #[async_trait::async_trait]
 impl UserRepository for UserPgRepo {
     #[tracing::instrument(skip(self, user_data))]
-    async fn create(&self, user_data: CreateUser) -> Result<User, UserCreateRepoError> {
+    async fn create(&self, user_data: CreateUser) -> Result<User, UserRepoError> {
         let user = entities::user::ActiveModel {
             id: ActiveValue::Set(UserId::new().value()),
             username: ActiveValue::Set(user_data.username.to_string()),
@@ -125,21 +122,20 @@ impl UserRepository for UserPgRepo {
                 DbErr::Query(RuntimeErr::SqlxError(sqlx::Error::Database(db_err))) => {
                     trace!("Database error: {}", db_err.to_string());
                     if db_err.is_unique_violation() {
-                        UserCreateRepoError::AlreadyExists
+                        UserRepoError::AlreadyExists
                     } else {
-                        UserCreateRepoError::DatabaseError(db_err.to_string())
+                        UserRepoError::DatabaseError(db_err.to_string())
                     }
                 }
-                e => UserCreateRepoError::UnexpectedError(e.to_string()),
+                e => UserRepoError::UnexpectedError(e.to_string()),
             })
             .and_then(|user| {
-                User::try_from(user)
-                    .map_err(|e| UserCreateRepoError::UnexpectedError(e.to_string()))
+                User::try_from(user).map_err(|e| UserRepoError::UnexpectedError(e.to_string()))
             })
     }
 
     #[tracing::instrument(skip(self))]
-    async fn find_by_email(&self, email: &Email) -> Result<Option<User>, UserFindRepoError> {
+    async fn find_by_email(&self, email: &Email) -> Result<Option<User>, UserRepoError> {
         let query = entities::user::Entity::find()
             .filter(entities::user::Column::Email.contains(email.to_string()))
             .one(self.db.pool())
@@ -149,16 +145,16 @@ impl UserRepository for UserPgRepo {
             Ok(model) => match model {
                 Some(model) => match User::try_from(model) {
                     Ok(user) => Ok(Some(user)),
-                    Err(e) => Err(UserFindRepoError::UnexpectedError(e.to_string())),
+                    Err(e) => Err(UserRepoError::UnexpectedError(e.to_string())),
                 },
                 None => Ok(None),
             },
-            Err(e) => Err(UserFindRepoError::DatabaseError(e.to_string())),
+            Err(e) => Err(UserRepoError::DatabaseError(e.to_string())),
         }
     }
 
     #[tracing::instrument(skip(self))]
-    async fn find_by_username(&self, username: &str) -> Result<Option<User>, UserFindRepoError> {
+    async fn find_by_username(&self, username: &str) -> Result<Option<User>, UserRepoError> {
         let query = entities::user::Entity::find()
             .filter(entities::user::Column::Username.contains(username.to_string()))
             .one(self.db.pool())
@@ -168,16 +164,16 @@ impl UserRepository for UserPgRepo {
             Ok(model) => match model {
                 Some(model) => match User::try_from(model) {
                     Ok(user) => Ok(Some(user)),
-                    Err(e) => Err(UserFindRepoError::UnexpectedError(e.to_string())),
+                    Err(e) => Err(UserRepoError::UnexpectedError(e.to_string())),
                 },
                 None => Ok(None),
             },
-            Err(e) => Err(UserFindRepoError::DatabaseError(e.to_string())),
+            Err(e) => Err(UserRepoError::DatabaseError(e.to_string())),
         }
     }
 
     #[tracing::instrument(skip(self))]
-    async fn find_one(&self, id: &UserId) -> Result<Option<User>, UserFindRepoError> {
+    async fn find_one(&self, id: &UserId) -> Result<Option<User>, UserRepoError> {
         let query = entities::user::Entity::find_by_id(id.value())
             .one(self.db.pool())
             .await;
@@ -186,16 +182,16 @@ impl UserRepository for UserPgRepo {
             Ok(model) => match model {
                 Some(model) => match User::try_from(model) {
                     Ok(user) => Ok(Some(user)),
-                    Err(e) => Err(UserFindRepoError::UnexpectedError(e.to_string())),
+                    Err(e) => Err(UserRepoError::UnexpectedError(e.to_string())),
                 },
                 None => Ok(None),
             },
-            Err(e) => Err(UserFindRepoError::DatabaseError(e.to_string())),
+            Err(e) => Err(UserRepoError::DatabaseError(e.to_string())),
         }
     }
 
     #[tracing::instrument(skip(self))]
-    async fn find_all(self) -> Result<Vec<User>, UserFindRepoError> {
+    async fn find_all(self) -> Result<Vec<User>, UserRepoError> {
         let query = entities::user::Entity::find().all(self.db.pool()).await;
 
         match query {
@@ -203,69 +199,82 @@ impl UserRepository for UserPgRepo {
                 let users = models
                     .into_iter()
                     .map(User::try_from)
-                    .collect::<Result<Vec<User>, UserError>>();
+                    .collect::<Result<Vec<User>, UserError>>()
+                    .map_err(|e| UserRepoError::UnexpectedError(e.to_string()))?;
 
-                match users {
-                    Ok(users) => Ok(users),
-                    Err(e) => Err(UserFindRepoError::UnexpectedError(e.to_string())),
-                }
+                Ok(users)
             }
-            Err(e) => Err(UserFindRepoError::DatabaseError(e.to_string())),
+            Err(e) => Err(UserRepoError::DatabaseError(e.to_string())),
         }
     }
 
     #[tracing::instrument(skip(self, user_data))]
-    async fn update(&self, user_data: User) -> Result<User, UserUpdateRepoError> {
+    async fn update(&self, user_data: User) -> Result<User, UserRepoError> {
         let user = entities::user::ActiveModel::try_from(user_data)
-            .map_err(|err| UserUpdateRepoError::UnexpectedError(err.to_string()))?;
+            .map_err(|err| UserRepoError::UnexpectedError(err.to_string()))?;
 
         let query = user.update(self.db.pool()).await.map_err(|err| match err {
             DbErr::Query(RuntimeErr::SqlxError(sqlx::Error::Database(db_err))) => {
                 trace!("Database error: {}", db_err.to_string());
                 if db_err.is_unique_violation() {
-                    UserCreateRepoError::AlreadyExists
+                    UserRepoError::AlreadyExists
                 } else {
-                    UserCreateRepoError::DatabaseError(db_err.to_string())
+                    UserRepoError::DatabaseError(db_err.to_string())
                 }
             }
-            e => UserCreateRepoError::UnexpectedError(e.to_string()),
+            e => UserRepoError::UnexpectedError(e.to_string()),
         });
 
         match query {
             Ok(model) => match User::try_from(model) {
                 Ok(user) => Ok(user),
-                Err(e) => Err(UserUpdateRepoError::UnexpectedError(e.to_string())),
+                Err(e) => Err(UserRepoError::UnexpectedError(e.to_string())),
             },
-            Err(e) => Err(UserUpdateRepoError::DatabaseError(e.to_string())),
+            Err(e) => Err(UserRepoError::DatabaseError(e.to_string())),
         }
     }
 
     #[tracing::instrument(skip(self))]
-    async fn delete(&self, id: &UserId) -> Result<(), UserDeleteRepoError> {
+    async fn delete(&self, id: &UserId) -> Result<(), UserRepoError> {
+        let txn = self
+            .db
+            .pool()
+            .begin()
+            .await
+            .map_err(|e| UserRepoError::DatabaseError(e.to_string()))?;
+
         let query = entities::user::Entity::find_by_id(id.value())
             .one(self.db.pool())
-            .await;
+            .await
+            .map_err(|e| UserRepoError::DatabaseError(e.to_string()))?;
 
-        match query {
-            Ok(_) => Ok(()),
-            Err(e) => Err(UserDeleteRepoError::DatabaseError(e.to_string())),
+        if let Some(user) = query {
+            user.delete(&txn)
+                .await
+                .map_err(|e| UserRepoError::DatabaseError(e.to_string()))?;
         }
+
+        txn.commit()
+            .await
+            .map_err(|e| UserRepoError::DatabaseError(e.to_string()))?;
+
+        Ok(())
     }
 
     #[tracing::instrument(skip(self))]
-    async fn find_by_oidc_subject(&self, subject: &str) -> Result<Option<User>, UserFindRepoError> {
+    async fn find_by_oidc_subject(&self, subject: &str) -> Result<Option<User>, UserRepoError> {
         let user_model = entities::user_oidc::Entity::find()
             .filter(user_oidc::Column::OidcSubject.eq(subject))
             .find_also_related(entities::user::Entity)
             .one(self.db.pool())
             .await
-            .map_err(|e| UserFindRepoError::DatabaseError(e.to_string()))?
+            .map_err(|e| UserRepoError::DatabaseError(e.to_string()))?
             .and_then(|(_, user_model)| user_model);
 
         match user_model {
             Some(user_model) => match User::try_from(user_model) {
                 Ok(user) => Ok(Some(user)),
-                Err(e) => Err(UserFindRepoError::UnexpectedError(e.to_string())),
+                Err(e) => Err(UserRepoError::UnexpectedError(e.to_string())),
             },
             None => Ok(None),
         }
@@ -276,7 +285,7 @@ impl UserRepository for UserPgRepo {
         &self,
         user_id: &UserId,
         subject: &str,
-    ) -> Result<(), UserCreateRepoError> {
+    ) -> Result<(), UserRepoError> {
         let oidc_user = entities::user_oidc::ActiveModel {
             id: ActiveValue::Set(Uuid::new_v4()),
             user_id: ActiveValue::Set(user_id.value()),
@@ -290,12 +299,12 @@ impl UserRepository for UserPgRepo {
                 DbErr::Query(RuntimeErr::SqlxError(sqlx::Error::Database(db_err))) => {
                     trace!("Database error: {}", db_err.to_string());
                     if db_err.is_unique_violation() {
-                        UserCreateRepoError::AlreadyExists
+                        UserRepoError::AlreadyExists
                     } else {
-                        UserCreateRepoError::DatabaseError(db_err.to_string())
+                        UserRepoError::DatabaseError(db_err.to_string())
                     }
                 }
-                e => UserCreateRepoError::UnexpectedError(e.to_string()),
+                e => UserRepoError::UnexpectedError(e.to_string()),
             })?;
 
         Ok(())
