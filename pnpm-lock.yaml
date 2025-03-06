@@ -230,7 +230,7 @@ catalogs:
       version: 37.0.0
     tailwind-merge:
       specifier: ^3.0.0
-      version: 3.0.1
+      version: 3.0.2
     tailwind-variants:
       specifier: ^0.3.1
       version: 0.3.1
@@ -261,14 +261,6 @@ catalogs:
     zod:
       specifier: ^3.24.2
       version: 3.24.2
-
-patchedDependencies:
-  '@storybook/react':
-    hash: 7e5ef2380d568e3c661b688e87913b21a1a02ebc112990fa0fe9b9f47e929f0c
-    path: patches/@storybook__react.patch
-  tailwind-variants:
-    hash: fbe6eb7f3bddaa60d29251b6575c09e87a63b0daf08b559c2cdb1c80deb99297
-    path: patches/tailwind-variants.patch
 
 importers:
 
@@ -427,7 +419,7 @@ importers:
         version: 8.6.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(storybook@8.6.4(prettier@3.5.3))
       '@storybook/react':
         specifier: 'catalog:'
-        version: 8.6.4(patch_hash=7e5ef2380d568e3c661b688e87913b21a1a02ebc112990fa0fe9b9f47e929f0c)(@storybook/test@8.6.4(storybook@8.6.4(prettier@3.5.3)))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(storybook@8.6.4(prettier@3.5.3))(typescript@5.7.3)
+        version: 8.6.4(@storybook/test@8.6.4(storybook@8.6.4(prettier@3.5.3)))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(storybook@8.6.4(prettier@3.5.3))(typescript@5.7.3)
       '@storybook/react-vite':
         specifier: 'catalog:'
         version: 8.6.4(@storybook/test@8.6.4(storybook@8.6.4(prettier@3.5.3)))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(rollup@4.34.9)(storybook@8.6.4(prettier@3.5.3))(typescript@5.7.3)(vite@6.2.0(@types/node@22.13.9)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.39.0)(yaml@2.7.0))
@@ -472,10 +464,10 @@ importers:
         version: 37.0.0(stylelint@16.15.0(typescript@5.7.3))
       tailwind-merge:
         specifier: 'catalog:'
-        version: 3.0.1
+        version: 3.0.2
       tailwind-variants:
         specifier: 'catalog:'
-        version: 0.3.1(patch_hash=fbe6eb7f3bddaa60d29251b6575c09e87a63b0daf08b559c2cdb1c80deb99297)(tailwindcss@4.0.11)
+        version: 0.3.1(tailwindcss@4.0.11)
       tailwindcss:
         specifier: 'catalog:'
         version: 4.0.11
@@ -581,7 +573,7 @@ importers:
         version: 7.3.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       tailwind-merge:
         specifier: 'catalog:'
-        version: 3.0.1
+        version: 3.0.2
     devDependencies:
       '@kubestro/eslint-config':
         specifier: workspace:../../../libraries/eslint-config
@@ -7181,8 +7173,8 @@ packages:
   tailwind-merge@2.5.4:
     resolution: {integrity: sha512-0q8cfZHMu9nuYP/b5Shb7Y7Sh1B7Nnl5GqNr1U+n2p6+mybvRtayrQ+0042Z5byvTA8ihjlP8Odo8/VnHbZu4Q==}
 
-  tailwind-merge@3.0.1:
-    resolution: {integrity: sha512-AvzE8FmSoXC7nC+oU5GlQJbip2UO7tmOhOfQyOmPhrStOGXHU08j8mZEHZ4BmCqY5dWTCo4ClWkNyRNx1wpT0g==}
+  tailwind-merge@3.0.2:
+    resolution: {integrity: sha512-l7z+OYZ7mu3DTqrL88RiKrKIqO3NcpEO8V/Od04bNpvk0kiIFndGEoqfuzvj4yuhRkHKjRkII2z+KS2HfPcSxw==}
 
   tailwind-variants@0.3.1:
     resolution: {integrity: sha512-krn67M3FpPwElg4FsZrOQd0U26o7UDH/QOkK8RNaiCCrr052f6YJPBUfNKnPo/s/xRzNPtv1Mldlxsg8Tb46BQ==}
@@ -10984,7 +10976,7 @@ snapshots:
       '@joshwooding/vite-plugin-react-docgen-typescript': 0.5.0(typescript@5.7.3)(vite@6.2.0(@types/node@22.13.9)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.39.0)(yaml@2.7.0))
       '@rollup/pluginutils': 5.1.4(rollup@4.34.9)
       '@storybook/builder-vite': 8.6.4(storybook@8.6.4(prettier@3.5.3))(vite@6.2.0(@types/node@22.13.9)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.39.0)(yaml@2.7.0))
-      '@storybook/react': 8.6.4(patch_hash=7e5ef2380d568e3c661b688e87913b21a1a02ebc112990fa0fe9b9f47e929f0c)(@storybook/test@8.6.4(storybook@8.6.4(prettier@3.5.3)))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(storybook@8.6.4(prettier@3.5.3))(typescript@5.7.3)
+      '@storybook/react': 8.6.4(@storybook/test@8.6.4(storybook@8.6.4(prettier@3.5.3)))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(storybook@8.6.4(prettier@3.5.3))(typescript@5.7.3)
       find-up: 5.0.0
       magic-string: 0.30.17
       react: 19.0.0
@@ -11001,7 +10993,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@storybook/react@8.6.4(patch_hash=7e5ef2380d568e3c661b688e87913b21a1a02ebc112990fa0fe9b9f47e929f0c)(@storybook/test@8.6.4(storybook@8.6.4(prettier@3.5.3)))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(storybook@8.6.4(prettier@3.5.3))(typescript@5.7.3)':
+  '@storybook/react@8.6.4(@storybook/test@8.6.4(storybook@8.6.4(prettier@3.5.3)))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(storybook@8.6.4(prettier@3.5.3))(typescript@5.7.3)':
     dependencies:
       '@storybook/components': 8.6.4(storybook@8.6.4(prettier@3.5.3))
       '@storybook/global': 5.0.0
@@ -15112,9 +15104,9 @@ snapshots:
 
   tailwind-merge@2.5.4: {}
 
-  tailwind-merge@3.0.1: {}
+  tailwind-merge@3.0.2: {}
 
-  tailwind-variants@0.3.1(patch_hash=fbe6eb7f3bddaa60d29251b6575c09e87a63b0daf08b559c2cdb1c80deb99297)(tailwindcss@4.0.11):
+  tailwind-variants@0.3.1(tailwindcss@4.0.11):
     dependencies:
       tailwind-merge: 2.5.4
       tailwindcss: 4.0.11
