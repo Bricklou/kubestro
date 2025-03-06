@@ -35,10 +35,6 @@
     "vitest": "catalog:"
   },
   "pnpm": {
-    "patchedDependencies": {
-      "@storybook/react": "patches/@storybook__react.patch",
-      "tailwind-variants": "patches/tailwind-variants.patch"
-    },
     "onlyBuiltDependencies": [
       "@swc/core",
       "esbuild",
