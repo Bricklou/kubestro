@@ -1,5 +1,5 @@
 import ky from 'ky'
-import type { Repository } from '../types/repositories'
+import type { Repository, RepositoryWithPackages } from '../types/repositories'
 
 export async function repositoriesGetAllApi({
   search
@@ -29,4 +29,19 @@ export async function repositoriesCreateApi(
 
 export async function repositoriesDeleteApi(id: string): Promise<void> {
   await ky.delete(`/api/v1.0/game-managers/repositories/${id}`)
+}
+
+export async function gameManagersGetAllApi({
+  search
+}: { search?: string }): Promise<RepositoryWithPackages[]> {
+  const searchParams = new URLSearchParams()
+  if (search) {
+    searchParams.set('search', search)
+  }
+
+  return ky.get<{ packages: RepositoryWithPackages[] }>('/api/v1.0/game-managers/catalog', {
+    searchParams
+  })
+    .json()
+    .then(data => data.packages)
 }

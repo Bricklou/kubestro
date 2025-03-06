@@ -1,19 +1,31 @@
 import { Input, ScrollArea, Separator } from '@kubestro/design-system/components'
-import { SearchIcon } from 'lucide-react'
-import { useCallback } from 'react'
-import { useFetcher } from 'react-router'
+import { BookDashedIcon, SearchIcon } from 'lucide-react'
+import { Suspense, useCallback } from 'react'
+import { Await, useFetcher } from 'react-router'
 import { Main } from '../../_components/main'
+import { MissingRepoAlert } from '../repositories/_components/missing-repo-alert'
 import { ManagerCard } from './_components/manager-card'
+import type { Route } from './+types/add'
+import { ManagersListSkeleton } from './_components/manager-list-skeleton'
+import { gameManagersGetAll } from '~/data/queries/repositories'
+import { queryGetOrFetch } from '~/utils/queryClient'
 
-export function clientLoader() {
-  return {}
+export function clientLoader({ request }: Route.ClientActionArgs) {
+  const url = new URL(request.url)
+  const search = url.searchParams.get('search') ?? undefined
+
+  const query = gameManagersGetAll(search)
+  return {
+    gameManagers: queryGetOrFetch(query)
+  }
 }
-export default function GameManagersAdd() {
+
+export default function GameManagersAdd({ loaderData }: Route.ComponentProps) {
   const fetcher = useFetcher()
 
-  const onInstall = useCallback((num: number) => {
+  const onInstall = useCallback((id: string) => {
     return () => {
-      console.log(`Install Game Manager ${num.toString()}`)
+      console.log(`Install Game Manager ${id}`)
     }
   }, [])
 
@@ -49,20 +61,49 @@ export default function GameManagersAdd() {
 
         {/* Available Game Managers List */}
         <ScrollArea className="scroll-smooth flex-1 -mx-4 px-4 min-h-0 faded-bottom">
-          <div className="-mx-1 px-1.5 grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3 pb-16">
-            {Array.from({ length: 16 }).map((_, index) => (
-              <ManagerCard
-                description="Description of the game manager."
-                key={index}
-                name={`Game Manager ${index.toString()}`}
-                onInstall={onInstall(index)}
-                state="available"
-                version="1.0.0"
-              />
-            ))}
+          <div className="-mx-1 px-1.5 flex flex-col gap-4">
+            <Suspense fallback={<ManagersListSkeleton />} name="managers-list">
+              <Await resolve={loaderData.gameManagers}>
+                {(gameManagers) => {
+                  if (gameManagers.length === 0) {
+                    return (
+                      <>
+                        <div className="pb-2">
+                          <MissingRepoAlert withRedirect />
+                        </div>
+
+                        <div className="h-[50svh] text-text-muted flex flex-col gap-4 items-center justify-center pb-16">
+                          <BookDashedIcon className="size-24 mx-auto" />
+                          No repositories found.
+                        </div>
+                      </>
+                    )
+                  }
+
+                  return gameManagers.map(repository => (
+                    <section className="flex flex-col gap-4" key={repository.id}>
+                      <h2 className="text-lg font-bold">{repository.name}</h2>
+
+                      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3 pb-16">
+                        {repository.packages.map(pkg => (
+                          <ManagerCard
+                            description={pkg.description}
+                            key={pkg.id}
+                            name={pkg.name}
+                            onInstall={onInstall(pkg.id)}
+                            state="installed"
+                            version={pkg.version}
+                          />
+                        ))}
+                      </div>
+                    </section>
+                  ))
+                }}
+              </Await>
+            </Suspense>
           </div>
         </ScrollArea>
       </div>
-    </Main>
+    </Main >
   )
 }

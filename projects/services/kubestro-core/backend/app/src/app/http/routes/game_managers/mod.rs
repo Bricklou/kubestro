@@ -21,7 +21,10 @@ pub fn get_routes() -> OpenApiRouter {
         repositories::handler_delete_repository,
     ));
 
+    let catalog_routes =
+        OpenApiRouter::new().routes(routes!(catalog::handler_get_game_managers_catalog));
+
     OpenApiRouter::with_openapi(ApiDoc::openapi())
         .merge(repositories_routes)
-        .routes(routes!(catalog::handler_get_game_managers_catalog))
+        .merge(catalog_routes)
 }

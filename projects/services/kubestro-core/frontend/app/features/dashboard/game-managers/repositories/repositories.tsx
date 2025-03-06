@@ -6,12 +6,12 @@ import { Main } from '../../_components/main'
 import { AddRepository } from './_components/add-repository'
 import type { Route } from './+types/repositories'
 import { RepositoryCard } from './_components/repository-card'
+import { MissingRepoAlert } from './_components/missing-repo-alert'
 import { queryClient, queryGetOrFetch } from '~/utils/queryClient'
 import { REPOSITORIES_GET_ALL_KEY, repositoriesGetAll } from '~/data/queries/repositories'
 import { repositoriesCreateApi } from '~/data/api/repositories'
 import type { ConflictError, ForbiddenError, ValidationError } from '~/data/api/generic-errors'
 import { transformErrors } from '~/data/api/transform-errors'
-import { MissingRepoAlert } from './_components/missing-repo-alert'
 
 export async function clientLoader({ request }: Route.ClientActionArgs) {
   const url = new URL(request.url)
@@ -41,9 +41,7 @@ export default function Repositories({ loaderData }: Route.ComponentProps) {
 
       <Separator className="my-4 lg:my-6" />
 
-
       <div className="flex flex-col flex-1 px-2 min-h-0">
-
 
         {/* Search */}
         <Form className="flex flex-col md:flex-row gap-2 p-1 pb-4" method="get">
@@ -65,9 +63,10 @@ export default function Repositories({ loaderData }: Route.ComponentProps) {
         {repositories.length === 0 ?
           (
             <>
-              <div className='pb-2'>
+              <div className="pb-2">
                 <MissingRepoAlert />
               </div>
+
               <div className="flex-1 text-text-muted flex flex-col gap-4 items-center justify-center pb-16">
                 <BookDashedIcon className="size-24 mx-auto" />
                 No repositories found.
