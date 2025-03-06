@@ -1,12 +1,9 @@
 use std::sync::Arc;
 
 use kubestro_core_domain::{
-    models::{
-        package::{CreateRepository, Repository, RepositoryId},
-        EntityId,
-    },
+    models::package::{CreateRepository, Repository, RepositoryId},
     ports::{
-        repositories::repositories_repositories::{RepositoriesRepository, RepositoryRepoError},
+        repositories::repositories_repositories::RepositoriesRepository,
         services::repositories_service::{RepositoriesService, RepositoriesServiceError},
     },
 };
