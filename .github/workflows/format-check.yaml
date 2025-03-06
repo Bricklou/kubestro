@@ -46,7 +46,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: "10.x"
+          version: "10.5"
           run_install: false
         if: steps.cache.outputs.cache-hit != 'true'
 
@@ -81,7 +81,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: "10.x"
+          version: "10.5"
 
       - name: Setup Node.JS
         uses: actions/setup-node@v4
