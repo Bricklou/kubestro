@@ -1,6 +1,5 @@
 use std::sync::Arc;
 
-use k8s_openapi::serde_json;
 use kubestro_core_domain::{
     models::{
         package::{CreateRepository, Repository, RepositoryId},
@@ -11,6 +10,7 @@ use kubestro_core_domain::{
         services::repositories_service::{RepositoriesService, RepositoriesServiceError},
     },
 };
+use serde_json;
 
 use redis::AsyncCommands;
 use redis_pool::SingleRedisPool;
