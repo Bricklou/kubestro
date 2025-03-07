@@ -84,7 +84,7 @@ catalog:
   tailwind-variants: ^0.3.1
   tailwindcss: ^4.0.0
   tailwindcss-animate: ^1.0.7
-  typescript: ~5.7.3
+  typescript: ~5.8.0
   typescript-eslint: ^8.19.1
   vite: ^6.2.0
   vite-plugin-dts: ^4.5.0
