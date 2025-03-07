@@ -1,7 +1,10 @@
 @import "@kubestro/design-system/preset.css";
 @import "@fontsource-variable/inter";
 
-@theme {
+/* Reference the design system preset, otherwise tailwindcss will not be able to detect classes */
+@source "../node_modules/@kubestro/design-system/dist/";
+
+@theme static {
   --grid-lines-opacity: 80%;
   --grid-pattern-line: color-mix(
     in lch,

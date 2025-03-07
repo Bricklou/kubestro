@@ -21,6 +21,7 @@ export default {
           'screen',
           'theme',
           'plugin',
+          'source',
           'custom-variant'
         ]
       }
