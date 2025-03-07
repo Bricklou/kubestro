@@ -4,7 +4,7 @@
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
-@theme {
+@theme static {
   /**
    * Application colors palette
    */
