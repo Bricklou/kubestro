@@ -1,32 +1,22 @@
 import { Button, SidebarProvider } from '@kubestro/design-system'
-import { Outlet, useRouteLoaderData } from 'react-router'
+import { Outlet } from 'react-router'
 import { twJoin } from 'tailwind-merge'
 import { BellIcon } from 'lucide-react'
-import type { Info, Route } from './+types/_layout'
+import type { Route } from './+types/_layout'
 import { Header } from './_components/header'
 import { Search } from './_components/search'
 import { ProfileDropdown } from './_components/profile-dropdown'
 import { AppSidebar } from '~/features/dashboard/_components/app-sidebar'
-import { requireAuth } from '~/middlewares/requireAuth'
+import { requireAuthMiddleware } from '~/middlewares/requireAuth'
 import { SearchProvider } from '~/hooks/search'
 import { ThemeSwitch } from '~/ui/theme-switch'
+import { userContext } from '~/utils/contexts'
 
-export async function clientLoader() {
-  const result = await requireAuth()
-  if (result.type === 'redirect') return result.response
+export const unstable_clientMiddleware = [requireAuthMiddleware]
 
-  return {
-    user: result.user,
-    oidc: result.oidc
-  }
-}
-
-export function useDashboardLayoutData() {
-  const data = useRouteLoaderData<Info['loaderData']>('dashboard-layout' satisfies Info['id'])
-  if (!data) {
-    throw new Error('useDashboardLayoutData() was called outside of a route that uses the dashboard/_layout')
-  }
-  return data
+export function clientLoader({ context }: Route.ClientLoaderArgs) {
+  const user = context.get(userContext)
+  return { user }
 }
 
 export default function DashboardLayout({ loaderData }: Route.ComponentProps) {

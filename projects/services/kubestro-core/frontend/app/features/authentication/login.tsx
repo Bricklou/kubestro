@@ -9,8 +9,7 @@ import {
 } from '@kubestro/design-system'
 import { LucideLogIn } from 'lucide-react'
 import type { Route } from './+types/login'
-import { useRootLayoutData } from '~/layouts/app-layout'
-import { requireGuest } from '~/middlewares/requireAuth'
+import { requireGuestMiddleware } from '~/middlewares/requireAuth'
 import { authLoginApi } from '~/data/api/user'
 import type {
   UnauthorizedError,
@@ -19,28 +18,27 @@ import type {
 import { queryClient } from '~/utils/queryClient'
 import { transformErrors } from '~/data/api/transform-errors'
 import { AUTH_GET_USER_KEY } from '~/data/queries/user'
+import { statusContext } from '~/utils/contexts'
 
 export const meta: Route.MetaFunction = () => [
   { title: 'Login' }
 ]
 
-export async function clientLoader() {
-  const result = await requireGuest()
-  if (result.type === 'redirect') return result.response
-
-  return {}
-}
+export const unstable_clientMiddleware = [requireGuestMiddleware]
 
 interface FormFields {
   email: string
   password: string
 }
 
-export default function LoginPage() {
+export function clientLoader({ context }: Route.ClientLoaderArgs) {
+  const { oidc } = context.get(statusContext)
+  return { oidc }
+}
+
+export default function LoginPage({ loaderData}: Route.ComponentProps) {
   const fetcher = useFetcher<typeof clientAction>()
   const error = fetcher.data?.error
-
-  const data = useRootLayoutData()
 
   return (
     <fetcher.Form className="flex flex-col gap-6" method="post">
@@ -94,7 +92,7 @@ export default function LoginPage() {
           Login
         </Button>
 
-        {data.oidc ?
+        {loaderData.oidc ?
           (
             <>
               <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
@@ -110,8 +108,8 @@ export default function LoginPage() {
                 iconPlacement="right"
                 variant="secondary"
               >
-                <a href={data.oidc.redirect_url}>
-                  {data.oidc.display_name ?? 'External auth provider'}
+                <a href={loaderData.oidc.redirect_url}>
+                  {loaderData.oidc.display_name ?? 'External auth provider'}
                 </a>
               </Button>
             </>

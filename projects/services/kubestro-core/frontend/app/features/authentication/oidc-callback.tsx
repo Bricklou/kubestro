@@ -1,7 +1,7 @@
 import { redirect, href } from 'react-router'
 import { toast } from '@kubestro/design-system'
 import type { Route } from './+types/oidc-callback'
-import { requireGuest } from '~/middlewares/requireAuth'
+import { requireGuestMiddleware } from '~/middlewares/requireAuth'
 import { authLoginOidcApi } from '~/data/api/user'
 import { queryClient } from '~/utils/queryClient'
 import { AUTH_GET_USER_KEY } from '~/data/queries/user'
@@ -10,12 +10,10 @@ export const meta: Route.MetaFunction = () => [
   { title: 'Logging you in...' }
 ]
 
+export const unstable_clientMiddleware = [requireGuestMiddleware]
+
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   // In this loader, our goal will be to login the user and then redirect him to the dashboard page
-
-  // First, we need to check if the user isn't already logged in
-  const result = await requireGuest()
-  if (result.type === 'redirect') return result.response
 
   // Extract the url from the request
   const url = new URL(request.url)

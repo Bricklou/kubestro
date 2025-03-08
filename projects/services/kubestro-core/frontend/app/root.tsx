@@ -12,6 +12,8 @@ import { ThemeProvider, Toaster } from '@kubestro/design-system'
 import type { Route } from './+types/root'
 import stylesheet from './app.css?url'
 import { queryClient } from './utils/queryClient'
+import { requireSetupMiddleware } from './middlewares/requireSetup'
+import { indexRedirectMiddleware } from './middlewares/index-redirect'
 
 export const links: Route.LinksFunction = () => [
   {
@@ -23,6 +25,8 @@ export const links: Route.LinksFunction = () => [
 export const meta: Route.MetaFunction = () => [
   { title: 'Kubestro' }
 ]
+
+export const unstable_clientMiddleware = [indexRedirectMiddleware, requireSetupMiddleware]
 
 export function Layout({ children }: { readonly children: React.ReactNode }) {
   return (

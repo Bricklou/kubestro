@@ -1,7 +1,6 @@
 import { useFetcher } from 'react-router'
 import { Button, FormMessage, Input, Label, toast } from '@kubestro/design-system'
 import { HTTPError } from 'ky'
-import { useDashboardLayoutData } from '../_layout'
 import type { Route } from './+types/profile'
 import { ContentSection } from './_components/content-section'
 import { queryClient } from '~/utils/queryClient'
@@ -9,6 +8,7 @@ import { AUTH_GET_USER_KEY } from '~/data/queries/user'
 import { settingsUpdateProfileApi } from '~/data/api/user'
 import type { ConflictError, ForbiddenError, ValidationError } from '~/data/api/generic-errors'
 import { transformErrors } from '~/data/api/transform-errors'
+import { userContext } from '~/utils/contexts'
 
 export const meta: Route.MetaFunction = () => [
   { title: 'Profile' }
@@ -19,8 +19,11 @@ interface FormFields {
   email: string
 }
 
-export default function SettingsProfile() {
-  const { user } = useDashboardLayoutData()
+export function clientLoader({ context }: Route.ClientLoaderArgs) {
+  return { user: context.get(userContext) }
+}
+
+export default function SettingsProfile({ loaderData: { user } }: Route.ComponentProps) {
   const fetcher = useFetcher<typeof clientAction>()
   const error = fetcher.data?.error
 
