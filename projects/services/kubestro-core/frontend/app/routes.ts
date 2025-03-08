@@ -2,6 +2,9 @@ import { index, layout, prefix, route } from '@react-router/dev/routes'
 import type { RouteConfig } from '@react-router/dev/routes'
 
 export default [
+  // Redirect
+  index('features/redirect/redirect.tsx'),
+
   // Setup
   layout('layouts/double-side-layout.tsx', { id: 'setup-layout' }, [
     route('setup', 'features/setup/setup.tsx')

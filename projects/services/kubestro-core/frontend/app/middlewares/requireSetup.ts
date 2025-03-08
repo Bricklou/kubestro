@@ -18,16 +18,15 @@ export const requireSetupMiddleware: Route.unstable_ClientMiddlewareFunction = a
 
     // If the setup is needed but the app isn't installed
     if (status.status === 'not_installed' && url.pathname !== '/setup') {
-      redirect('/setup')
+      throw redirect('/setup')
     }
     else if (status.status === 'installed' && url.pathname === '/setup') {
-      redirect('/dashboard')
+      throw redirect('/dashboard')
     }
+  }
+  catch (_) {
+    throw redirect('/dashboard')
+  }
 
-    await next()
-  }
-  // eslint-disable-next-line unused-imports/no-unused-vars -- I don't care about the error
-  catch (error) {
-    redirect('/dashboard')
-  }
+  await next()
 }

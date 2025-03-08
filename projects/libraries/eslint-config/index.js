@@ -47,7 +47,7 @@ export function configApp(rootDir, ...configBlockToMerge) {
     tseslint.configs.strictTypeChecked,
     importPlugin.flatConfigs.recommended,
     importPlugin.flatConfigs.typescript,
-    stylistic.configs['recommended-flat'],
+    stylistic.configs.recommended,
     // ...tailwindcss.configs['flat/recommended'],
 
     {
@@ -123,8 +123,7 @@ export function configApp(rootDir, ...configBlockToMerge) {
         '@typescript-eslint/no-use-before-define': 'error',
         '@typescript-eslint/require-array-sort-compare': 'error',
         '@typescript-eslint/switch-exhaustiveness-check': 'error',
-        '@typescript-eslint/prefer-enum-initializers': 'error'
-
+        '@typescript-eslint/prefer-enum-initializers': 'error',
       }
     },
 
@@ -234,6 +233,7 @@ export function configApp(rootDir, ...configBlockToMerge) {
     // Disabled project service for JS files
     {
       files: ['**/*.{js,cjs,mjs}'],
+      ignores: ['**/{src,app}/**'],
       extends: [tseslint.configs.disableTypeChecked],
       languageOptions: {
         globals: {
