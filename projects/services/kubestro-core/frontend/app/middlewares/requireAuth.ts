@@ -1,10 +1,12 @@
 import { href, redirect } from 'react-router'
+import type { unstable_MiddlewareFunction } from 'react-router'
 import { authLogoutApi } from '~/data/api/user'
 import { AUTH_GET_USER_KEY, authGetUser } from '~/data/queries/user'
-import type { User } from '~/data/types/user'
+import { userContext } from '~/utils/contexts'
 import { queryClient, queryGetOrFetch } from '~/utils/queryClient'
 
 export async function logout(): Promise<Response> {
+  console.debug('Logout')
   try {
     await authLogoutApi()
     queryClient.removeQueries({ queryKey: AUTH_GET_USER_KEY })
@@ -16,54 +18,33 @@ export async function logout(): Promise<Response> {
   return redirect(href('/login'))
 }
 
-type AuthResponse = {
-  type: 'redirect'
-  response: Response
-} | {
-  type: 'result'
-  user: User
-  oidc?: boolean
-}
-
-export async function requireAuth(): Promise<AuthResponse> {
+export const requireAuthMiddleware: unstable_MiddlewareFunction = async ({ context }, next) => {
+  console.debug('Auth middleware')
   // Check the query client for existing user key, otherwise fetch the user
   const query = authGetUser()
 
   try {
     const userData = await queryGetOrFetch(query)
 
-    return {
-      type: 'result',
-      ...userData
-    }
+    context.set(userContext, userData.user)
+    await next()
   }
   catch (_) {
-    return {
-      type: 'redirect',
-      response: await logout()
-    }
+    await logout()
   }
 }
 
-type GuestResponse = {
-  type: 'redirect'
-  response: Response
-} | {
-  type: 'result'
-}
-
-export async function requireGuest(): Promise<GuestResponse> {
+export const requireGuestMiddleware: unstable_MiddlewareFunction = async ({ context }, next) => {
+  console.log('Guest middleware')
   const query = authGetUser()
 
   try {
-    await queryGetOrFetch(query)
+    const userData = await queryGetOrFetch(query)
 
-    return {
-      type: 'redirect',
-      response: redirect('/dashboard')
-    }
+    context.set(userContext, userData.user)
+    redirect('/dashboard')
   }
   catch (_) {
-    return { type: 'result' }
+    await next()
   }
 }

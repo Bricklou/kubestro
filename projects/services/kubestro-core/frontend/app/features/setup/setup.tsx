@@ -8,7 +8,7 @@ import { transformErrors } from '~/data/api/transform-errors'
 import { globalSetupApi } from '~/data/api/global'
 import { queryClient } from '~/utils/queryClient'
 import { GLOBAL_GET_STATUS_KEY } from '~/data/queries/global'
-import { requireSetup } from '~/middlewares/requireSetup'
+import { requireSetupMiddleware } from '~/middlewares/requireSetup'
 
 export const meta: Route.MetaFunction = () => [
   { title: 'Setup' }
@@ -19,11 +19,7 @@ interface FormFields {
   password: string
 }
 
-export async function clientLoader() {
-  const result = await requireSetup(false)
-  if (result.type === 'redirect') return result.response
-  return {}
-}
+export const unstable_ClientMiddleware = [requireSetupMiddleware]
 
 export default function Setup() {
   const fetcher = useFetcher<typeof clientAction>()

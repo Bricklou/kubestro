@@ -2,17 +2,22 @@ import { useFetcher } from 'react-router'
 import { Button, FormMessage, Input, Label, toast } from '@kubestro/design-system/components'
 import { HTTPError } from 'ky'
 import { useEffect, useRef } from 'react'
-import { useDashboardLayoutData } from '../_layout'
 import type { Route } from './+types/security'
 import { ContentSection } from './_components/content-section'
 import { settingsUpdatePasswordApi } from '~/data/api/user'
 import type { ConflictError, ForbiddenError, ValidationError } from '~/data/api/generic-errors'
 import { transformErrors } from '~/data/api/transform-errors'
+import { userContext } from '~/utils/contexts'
+import type { User } from '~/data/types/user'
 
 interface FormFields {
   current_password: string
   new_password: string
   confirm_password: string
+}
+
+export function clientLoader({ context }: Route.ClientLoaderArgs) {
+  return { user: context.get(userContext) }
 }
 
 function UpdatePasswordForm({ formDisabled }: { readonly formDisabled: boolean }) {
@@ -100,9 +105,8 @@ function UpdatePasswordForm({ formDisabled }: { readonly formDisabled: boolean }
   )
 }
 
-function SecurityForm() {
-  const { user } = useDashboardLayoutData()
-  const oidc = user.provider === 'oidc'
+function SecurityForm({ userData }: { readonly userData: User }) {
+  const oidc = userData.provider === 'oidc'
 
   return (
     <div className="space-y-8">
@@ -115,13 +119,13 @@ function SecurityForm() {
   )
 }
 
-export default function SettingsSecurity() {
+export default function SettingsSecurity({ loaderData: { user } }: Route.ComponentProps) {
   return (
     <ContentSection
       desc="Manage your account security settings and set up two-factor authentication."
       title="Security"
     >
-      <SecurityForm />
+      <SecurityForm userData={user} />
     </ContentSection>
   )
 }
