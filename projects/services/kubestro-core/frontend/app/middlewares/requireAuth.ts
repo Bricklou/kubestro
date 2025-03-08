@@ -15,7 +15,7 @@ export async function logout(): Promise<Response> {
     console.error('Failed to logout', error)
   }
 
-  return redirect(href('/login'))
+  throw redirect(href('/login'))
 }
 
 export const requireAuthMiddleware: unstable_MiddlewareFunction = async ({ context }, next) => {
@@ -42,7 +42,7 @@ export const requireGuestMiddleware: unstable_MiddlewareFunction = async ({ cont
     const userData = await queryGetOrFetch(query)
 
     context.set(userContext, userData.user)
-    redirect('/dashboard')
+    throw redirect(href('/dashboard'))
   }
   catch (_) {
     await next()
