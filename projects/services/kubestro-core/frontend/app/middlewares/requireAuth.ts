@@ -18,7 +18,11 @@ export async function logout(): Promise<Response> {
   throw redirect(href('/login'))
 }
 
-export const requireAuthMiddleware: unstable_MiddlewareFunction = async ({ context }, next) => {
+export const requireAuthMiddleware: unstable_MiddlewareFunction = async ({
+  request,
+  context
+}, next) => {
+  console.log('Request', request.url)
   console.debug('Auth middleware')
   // Check the query client for existing user key, otherwise fetch the user
   const query = authGetUser()

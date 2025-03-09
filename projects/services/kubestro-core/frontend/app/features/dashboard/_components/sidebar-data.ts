@@ -36,6 +36,25 @@ export interface SidebarData {
   navGroups: NavGroup[]
 }
 
+function test(): NavGroup[] {
+  if (process.env.NODE_ENV === 'development') {
+    return [
+      {
+        title: 'Test',
+        items: [
+          {
+            title: 'Module Federation Test',
+            to: '/dashboard/mf-test',
+            icon: LayoutDashboardIcon
+          }
+        ]
+      }
+    ]
+  }
+
+  return []
+}
+
 export const sidebarData: SidebarData = {
   navGroups: [
     {
@@ -124,6 +143,7 @@ export const sidebarData: SidebarData = {
           ]
         }
       ]
-    }
+    },
+    ...test()
   ]
 }

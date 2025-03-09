@@ -13,6 +13,7 @@
   "dependencies": {
     "@fontsource-variable/inter": "catalog:",
     "@kubestro/design-system": "workspace:../../../libraries/design-system",
+    "@module-federation/enhanced": "^0.10.0",
     "@module-federation/runtime": "catalog:",
     "@react-router/node": "catalog:",
     "@react-router/serve": "catalog:",
@@ -26,10 +27,13 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-router": "catalog:",
+    "remix-utils": "^8.2.0",
     "tailwind-merge": "catalog:"
   },
   "devDependencies": {
     "@kubestro/eslint-config": "workspace:../../../libraries/eslint-config",
+    "@module-federation/dts-plugin": "^0.10.0",
+    "@module-federation/vite": "catalog:",
     "@react-router/dev": "catalog:",
     "@tailwindcss/vite": "catalog:",
     "@types/node": "catalog:",

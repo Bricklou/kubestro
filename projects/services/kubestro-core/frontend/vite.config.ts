@@ -10,13 +10,10 @@ export default defineConfig({
     reactRouterDevTools(),
     reactRouter(),
     tsconfigPaths(),
-    tailwindcss()
+    tailwindcss(),
   ],
   build: {
     target: 'es2023'
-  },
-  optimizeDeps: {
-    include: ['lucide-react', 'tailwind-variants', 'tailwind-merge']
   },
   server: {
     proxy: {

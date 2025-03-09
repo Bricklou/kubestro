@@ -1,5 +1,13 @@
 import { index, layout, prefix, route } from '@react-router/dev/routes'
-import type { RouteConfig } from '@react-router/dev/routes'
+import type { RouteConfig, RouteConfigEntry } from '@react-router/dev/routes'
+
+function testRoutes(): RouteConfigEntry[] {
+  if (process.env.NODE_ENV === 'development') {
+    return [route('mf-test/*', 'features/dashboard/test/mf-test.tsx')]
+  }
+
+  return []
+}
 
 export default [
   // Redirect
@@ -34,6 +42,8 @@ export default [
       route('appearance', 'features/dashboard/settings/appearance.tsx', { id: 'settings-appearance' }),
       route('notifications', 'features/dashboard/settings/notifications.tsx', { id: 'settings-notifications' })
     ]),
+
+    ...testRoutes(),
 
     route('*', 'features/dashboard/not-found/not-found.tsx')
   ])
