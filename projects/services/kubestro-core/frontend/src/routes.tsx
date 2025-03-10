@@ -7,6 +7,7 @@ import loginPage from './features/authentication/login'
 import oidcCallbackPage from './features/authentication/oidc-callback'
 import logoutPage from './features/authentication/logout'
 import { dashboardRoutes } from './features/dashboard/_routes'
+import { federation } from './utils/module-federation'
 
 declare module 'react-router' {
   interface Future {
@@ -24,12 +25,25 @@ declare module 'react-router' {
   type LazyRouteObject = Awaited<ReturnType<LazyRouteFunction<RouteObject>>>
 }
 
-const patchRoutesOnNavigation: PatchRoutesOnNavigationFunction = () => {
-
+const patchRoutesOnNavigation: PatchRoutesOnNavigationFunction = async ({ path, patch }) => {
   /*
    * This is where you would put your code to patch the routes
    * when the user navigates to a new location
    */
+
+  if (path.startsWith('/dashboard/mf-test')) {
+    try {
+      const modulePromise = federation.loadRemote<{ routeObject: RouteObject }>('mf-test/routes')
+      const module = await modulePromise
+      console.log('Module: %o', module)
+      if (module) {
+        patch('modules', [module.routeObject])
+      }
+    }
+    catch (error) {
+      console.error('Failed to load remote module:', error)
+    }
+  }
 }
 
 export function ErrorBoundary() {

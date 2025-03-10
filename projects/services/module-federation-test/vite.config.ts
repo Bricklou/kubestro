@@ -19,7 +19,8 @@ export default defineConfig({
       name: 'module-federation-test',
       manifest: true,
       exposes: {
-        './export-app': './src/app.tsx'
+        './export-app': './src/app.tsx',
+        './routes': './src/routes.tsx'
       },
       shared: {
         'react': {
