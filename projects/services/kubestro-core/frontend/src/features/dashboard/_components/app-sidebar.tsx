@@ -59,7 +59,7 @@ export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
           <NavGroup key={groupProps.title} {...groupProps} />
         ))}
 
-        <FederatedModuleContent />
+        {import.meta.env.VITE_ENABLE_MF_TEST ? <FederatedModuleContent /> : null}
       </SidebarContent>
 
       <SidebarFooter>

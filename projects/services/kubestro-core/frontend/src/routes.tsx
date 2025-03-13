@@ -32,7 +32,7 @@ const patchRoutesOnNavigation: PatchRoutesOnNavigationFunction = async ({ path, 
    * when the user navigates to a new location
    */
 
-  if (path.startsWith('/dashboard/mf-test')) {
+  if (import.meta.env.VITE_ENABLE_MF_TEST && path.startsWith('/dashboard/mf-test')) {
     try {
       const module = await federation.loadRemote<{ routeObject: RouteObject }>('mf-test/routes')
       if (module) {

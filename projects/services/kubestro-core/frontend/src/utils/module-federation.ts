@@ -2,13 +2,17 @@ import { init } from '@module-federation/enhanced/runtime'
 
 export const federation = init({
   name: 'kubestro-core',
-  remotes: [
-    {
-      name: 'module-federation-test',
-      entry: 'http://localhost:5174/mf-manifest.json',
-      alias: 'mf-test'
-    }
-  ],
+  remotes:
+    [
+      // If enabled, load the module federation test module
+      ...import.meta.env.VITE_ENABLE_MF_TEST ?
+        [{
+          name: 'module-federation-test',
+          entry: 'http://localhost:5174/mf-manifest.json',
+          alias: 'mf-test'
+        }] :
+        []
+    ],
   shared: {
     'react': {
       version: '19.0.0',
