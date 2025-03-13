@@ -45,6 +45,13 @@ export const federation = init({
         eager: true,
         requiredVersion: '^1.0.0'
       }
+    },
+    'lucide-react': {
+      version: '0.479.0',
+      lib: async () => import('lucide-react'),
+      shareConfig: {
+        requiredVersion: '^0.479.0'
+      }
     }
   }
 })

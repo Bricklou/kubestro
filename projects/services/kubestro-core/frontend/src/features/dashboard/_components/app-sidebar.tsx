@@ -1,9 +1,12 @@
 import { SidebarHeader, Sidebar, SidebarContent, SidebarFooter, SidebarMenuButton, SidebarMenu, SidebarMenuItem } from '@kubestro/design-system'
 import { LayoutDashboardIcon } from 'lucide-react'
+import { Suspense, useMemo } from 'react'
 import type { ComponentProps } from 'react'
-import { href, Link } from 'react-router'
+import { Await, href, Link } from 'react-router'
 import { sidebarData } from './sidebar-data'
+import type { NavGroup as NavGroupData } from './sidebar-data'
 import { NavGroup } from './nav-group'
+import { federation } from '~/utils/module-federation'
 
 function AppSidebarLogo() {
   return (
@@ -27,6 +30,22 @@ function AppSidebarLogo() {
   )
 }
 
+function FederatedModuleContent() {
+  const modulePromise = useMemo(async () => federation.loadRemote<{ sidebarItems: NavGroupData[] }>('mf-test/routes'), [])
+
+  return (
+    <Suspense>
+      <Await resolve={modulePromise}>
+        {module => (module ?
+          module.sidebarItems.map(groupProps => (
+            <NavGroup key={groupProps.title} {...groupProps} />
+          )) :
+          null)}
+      </Await>
+    </Suspense>
+  )
+}
+
 export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" variant="floating" {...props}>
@@ -39,6 +58,8 @@ export function AppSidebar(props: ComponentProps<typeof Sidebar>) {
         {sidebarData.navGroups.map(groupProps => (
           <NavGroup key={groupProps.title} {...groupProps} />
         ))}
+
+        <FederatedModuleContent />
       </SidebarContent>
 
       <SidebarFooter>

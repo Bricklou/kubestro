@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@kubestro/design-system": "link:../../libraries/design-system",
+    "lucide-react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-router": "catalog:"

@@ -34,9 +34,7 @@ const patchRoutesOnNavigation: PatchRoutesOnNavigationFunction = async ({ path, 
 
   if (path.startsWith('/dashboard/mf-test')) {
     try {
-      const modulePromise = federation.loadRemote<{ routeObject: RouteObject }>('mf-test/routes')
-      const module = await modulePromise
-      console.log('Module: %o', module)
+      const module = await federation.loadRemote<{ routeObject: RouteObject }>('mf-test/routes')
       if (module) {
         patch('modules', [module.routeObject])
       }
@@ -58,7 +56,8 @@ export const router = createBrowserRouter([
       {
         id: 'redirect',
         index: true,
-        unstable_middleware: [indexRedirectMiddleware]
+        unstable_middleware: [indexRedirectMiddleware],
+        loader: () => undefined
       },
 
       // Setup

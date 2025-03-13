@@ -1,4 +1,5 @@
 import type { RouteObject } from 'react-router'
+import { LayoutDashboardIcon } from 'lucide-react'
 import Home from './routes/home'
 import './app.css'
 import Test from './routes/test'
@@ -23,3 +24,16 @@ export const routeObject: RouteObject = {
     }
   ]
 }
+
+export const sidebarItems = [
+  {
+    title: 'Test',
+    items: [
+      {
+        title: 'Module Federation Test',
+        to: '/dashboard/mf-test',
+        icon: LayoutDashboardIcon
+      }
+    ]
+  }
+]

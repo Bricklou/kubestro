@@ -653,6 +653,9 @@ importers:
       '@kubestro/design-system':
         specifier: link:../../libraries/design-system
         version: link:../../libraries/design-system
+      lucide-react:
+        specifier: 'catalog:'
+        version: 0.479.0(react@19.0.0)
       react:
         specifier: 'catalog:'
         version: 19.0.0

@@ -38,6 +38,10 @@ export default defineConfig({
         '@kubestro/design-system/': {
           version: '1.0.0',
           singleton: true
+        },
+        'lucide-react': {
+          version: '0.479.0',
+          singleton: false
         }
       }
     }),
