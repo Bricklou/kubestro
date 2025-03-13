@@ -1,7 +1,7 @@
 {
   "name": "@kubestro/design-system",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "files": [
     "dist"
@@ -29,6 +29,7 @@
       "import": "./dist/design-system.es.js",
       "types": "./dist/hooks/*.d.ts"
     },
+    "./package.json": "./package.json",
     "./preset.css": "./dist/tw-preset.css"
   },
   "scripts": {
