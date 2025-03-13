@@ -8,7 +8,7 @@
     "preview": "vite preview",
     "typecheck": "tsc",
     "lint:js": "eslint --flag unstable_config_lookup_from_file .",
-    "lint:css": "stylelint 'app/**/*.css'"
+    "lint:css": "stylelint 'src/**/*.css'"
   },
   "dependencies": {
     "@fontsource-variable/inter": "catalog:",
