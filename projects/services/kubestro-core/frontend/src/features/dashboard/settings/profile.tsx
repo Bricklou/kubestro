@@ -1,5 +1,5 @@
 import { useFetcher, useLoaderData } from 'react-router'
-import type { ActionFunctionArgs, LoaderFunctionArgs, RouteObject } from 'react-router'
+import type { ActionFunctionArgs, LazyRouteObject, LoaderFunctionArgs } from 'react-router'
 import { Button, FormMessage, Input, Label, toast } from '@kubestro/design-system'
 import { HTTPError } from 'ky'
 import { ContentSection } from './_components/content-section'
@@ -142,7 +142,7 @@ async function clientAction({ request }: ActionFunctionArgs) {
   return {}
 }
 
-const routeObject: RouteObject = {
+const routeObject: LazyRouteObject = {
   element: <SettingsProfile />,
   loader: clientLoader,
   action: clientAction

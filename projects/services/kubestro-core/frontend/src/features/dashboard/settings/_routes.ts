@@ -1,8 +1,10 @@
 import type { RouteObject } from 'react-router'
-import profilePage from './profile'
 
 export const settingsRoutes: RouteObject[] = [
-  profilePage,
+  {
+    index: true,
+    lazy: async () => import('./profile').then(m => m.default)
+  },
   {
     path: 'security',
     lazy: async () => import('./security').then(m => m.default)
