@@ -76,6 +76,7 @@
     "@storybook/react-vite": "catalog:",
     "@storybook/test": "catalog:",
     "@tailwindcss/vite": "catalog:",
+    "@tanstack/react-table": "^8.21.2",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react-swc": "catalog:",
@@ -103,6 +104,7 @@
   },
   "peerDependencies": {
     "@fontsource-variable/inter": "catalog:",
+    "@tanstack/react-table": "^8.21.2",
     "lucide-react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
