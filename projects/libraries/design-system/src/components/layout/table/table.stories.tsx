@@ -320,7 +320,7 @@ function DataTableDemo() {
         </DropdownMenu>
       </div>
 
-      <div className="rounded-md border border-border">
+      <div className="rounded-md border border-border overflow-hidden">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map(headerGroup => (

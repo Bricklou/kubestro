@@ -400,8 +400,6 @@ export function configApp(rootDir, ...configBlockToMerge) {
         // Since `@stylistic/object-curly-newline` seems broken, enable our own rule
         'custom-rules/custom-object-curly-newline': 'warn',
         '@stylistic/object-curly-spacing': ['warn', 'always'],
-        '@stylistic/object-property-newline': ['warn',
-          { allowAllPropertiesOnSameLine: false }],
         '@stylistic/one-var-declaration-per-line': 'warn',
         '@stylistic/operator-linebreak': ['warn', 'after'],
         '@stylistic/padded-blocks': ['warn', 'never'],
