@@ -44,7 +44,7 @@ export function RepositoryCard({ repository }: RepositoryCardProps) {
           <Tooltip>
             <DialogTrigger asChild>
               <TooltipTrigger asChild>
-                <Button size="icon" variant="ghost">
+                <Button className="text-danger hover:text-danger-hover hover:bg-danger/30" size="icon" variant="ghost">
                   <TrashIcon />
                 </Button>
               </TooltipTrigger>

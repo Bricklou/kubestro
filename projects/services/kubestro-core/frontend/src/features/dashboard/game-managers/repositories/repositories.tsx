@@ -29,24 +29,26 @@ function Repositories() {
 
   return (
     <Main fixed>
-      <div className="space-y-0.5 ">
-        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
-          Repositories
-        </h1>
+      <div className="space-x-0.5 space-y-4 @container @2xl:space-y-2">
+        <div className="flex flex-col @2xl:flex-row @2xl:items-center justify-between space-y-2 @2xl:space-y-0">
+          <div className="space-y-0.5">
+            <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+              Repositories
+            </h1>
 
-        <p className="text-text-muted">
-          Repositories are used to retrieve a list of game managers available for installation.
-        </p>
+            <p className="text-text-muted">
+              Repositories are used to retrieve a list of game managers available for installation.
+            </p>
+          </div>
 
-      </div>
-
-      <Separator className="my-4 lg:my-6" />
-
-      <div className="flex flex-col flex-1 px-2 min-h-0">
+          <div className="flex flex-row gap-2 flex-1 @2xl:flex-initial">
+            <AddRepository />
+          </div>
+        </div>
 
         {/* Search */}
-        <Form className="flex flex-col md:flex-row gap-2 p-1 pb-4" method="get">
-          <div className="relative inline-flex items-center w-full flex-1">
+        <Form className="flex flex-col md:flex-row gap-2 pb-1 items-center" method="get">
+          <div className="relative inline-flex items-center w-full md:max-w-96 flex-1">
             <Input
               className="bg-background-contrast pl-8 peer"
               name="search"
@@ -56,9 +58,13 @@ function Repositories() {
 
             <SearchIcon className="size-4 left-2 absolute text-text-muted peer-focus-within:text-text" />
           </div>
-
-          <AddRepository />
         </Form>
+
+      </div>
+
+      <Separator className="mt-1 mb-4 lg:mb-6" />
+
+      <div className="flex flex-col flex-1 px-2 min-h-0">
 
         {/* Available Repositories List */}
         {repositories.length === 0 ?

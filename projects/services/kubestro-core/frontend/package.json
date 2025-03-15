@@ -19,6 +19,7 @@
     "@react-router/serve": "catalog:",
     "@tanstack/react-query": "catalog:",
     "@tanstack/react-query-devtools": "catalog:",
+    "@tanstack/react-table": "^8.21.2",
     "cross-env": "catalog:",
     "isbot": "catalog:",
     "ky": "catalog:",

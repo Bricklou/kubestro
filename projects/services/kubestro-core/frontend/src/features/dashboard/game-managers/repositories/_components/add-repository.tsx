@@ -22,7 +22,7 @@ export function AddRepository() {
   return (
     <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger asChild>
-        <Button icon={BookPlusIcon} variant="primary-soft">
+        <Button icon={BookPlusIcon} size="sm">
           Add Repository
         </Button>
       </DialogTrigger>
