@@ -32,33 +32,37 @@ function GameManagersAdd() {
 
   return (
     <Main fixed>
-      <div className="space-y-0.5">
-        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
-          Add a Game Managers
-        </h1>
+      <div className="space-x-0.5 space-y-4 @container @2xl:space-y-2">
+        <div className="flex flex-col @2xl:flex-row @2xl:items-center justify-between space-y-2 @2xl:space-y-0">
+          <div className="space-y-0.5">
+            <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+              Add a Game Managers
+            </h1>
 
-        <p className="text-text-muted">
-          Deploy a new game manager to your cluster.
-        </p>
+            <p className="text-text-muted">
+              Deploy a new game manager to your cluster.
+            </p>
+          </div>
+        </div>
 
-      </div>
-
-      <Separator className="my-4 lg:my-6" />
-
-      <div className="flex flex-col flex-1 px-2 min-h-0">
         {/* Search */}
-        <fetcher.Form className="flex flex-row gap-2 p-1 pb-4" method="get">
-          <div className="relative inline-flex items-center w-full">
+        <fetcher.Form className="flex flex-row gap-2 pb-1 items-center" method="get">
+          <div className="relative inline-flex items-center w-full md:max-w-96 flex-1">
             <Input
               className="bg-background-contrast pl-8 peer"
               name="search"
-              placeholder="Search..."
+              placeholder="Search game managers..."
               type="search"
             />
 
             <SearchIcon className="size-4 left-2 absolute text-text-muted peer-focus-within:text-text" />
           </div>
         </fetcher.Form>
+      </div>
+
+      <Separator className="my-4 lg:my-6 mt-2 lg:mt-2" />
+
+      <div className="flex flex-col flex-1 px-2 min-h-0">
 
         {/* Available Game Managers List */}
         <ScrollArea className="scroll-smooth flex-1 -mx-4 px-4 min-h-0 faded-bottom">

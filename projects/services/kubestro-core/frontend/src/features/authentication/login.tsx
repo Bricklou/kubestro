@@ -52,6 +52,7 @@ function LoginPage() {
           <Label htmlFor="email">Email</Label>
 
           <Input
+            autoComplete="email"
             id="email"
             name="email"
             placeholder="m@example.com"
@@ -74,6 +75,7 @@ function LoginPage() {
           </div>
 
           <Input
+            autoComplete="current-password"
             id="password"
             name="password"
             required

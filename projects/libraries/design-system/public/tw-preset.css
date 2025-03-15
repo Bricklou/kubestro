@@ -265,7 +265,8 @@
 
 @layer components {
   input[type="password"]::-ms-reveal,
-  input[type="password"]::-ms-clear {
+  input[type="password"]::-ms-clear,
+  input[type="search"]::-webkit-search-cancel-button {
     display: none;
   }
 }

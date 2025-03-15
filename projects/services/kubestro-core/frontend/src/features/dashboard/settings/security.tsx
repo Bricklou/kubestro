@@ -21,6 +21,7 @@ function clientLoader({ context }: LoaderFunctionArgs) {
 }
 
 function UpdatePasswordForm({ formDisabled }: { readonly formDisabled: boolean }) {
+  const { user } = useLoaderData<typeof clientLoader>()
   const fetcher = useFetcher<typeof clientAction>()
   const error = fetcher.data && 'error' in fetcher.data ? fetcher.data.error : undefined
 
@@ -40,6 +41,7 @@ function UpdatePasswordForm({ formDisabled }: { readonly formDisabled: boolean }
 
         <Input
           aria-describedby="current-password-description"
+          autoComplete="current-password"
           disabled={formDisabled}
           id="current-password"
           name="current_password"
@@ -59,6 +61,7 @@ function UpdatePasswordForm({ formDisabled }: { readonly formDisabled: boolean }
 
         <Input
           aria-describedby="new-password-description"
+          autoComplete="new-password"
           disabled={formDisabled}
           id="new-password"
           name="new_password"
@@ -78,6 +81,7 @@ function UpdatePasswordForm({ formDisabled }: { readonly formDisabled: boolean }
 
         <Input
           aria-describedby="confirm-password-description"
+          autoComplete="new-password"
           disabled={formDisabled}
           id="confirm-password"
           name="confirm_password"

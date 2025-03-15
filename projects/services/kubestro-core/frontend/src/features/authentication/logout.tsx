@@ -6,7 +6,7 @@ async function clientAction() {
 }
 
 const routeObject: RouteObject = {
-  loader: clientAction,
+  action: clientAction,
   unstable_middleware: [requireAuthMiddleware]
 }
 export default routeObject
