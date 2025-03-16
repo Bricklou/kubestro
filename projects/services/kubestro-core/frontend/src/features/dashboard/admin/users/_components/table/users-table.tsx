@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import queryString from 'query-string'
 import { columns } from './users-columns'
+import { DataTablePagination } from './data-table-pagination'
 import type { User, UserFields, UserProvider, UserStatus } from '~/data/types/user'
 import type { Paginated } from '~/data/types/pagination'
 
@@ -159,6 +160,8 @@ export function UsersTable({ table }: DataTableProps) {
           </TableBody>
         </Table>
       </div>
+
+      <DataTablePagination table={table} />
     </div>
   )
 }
