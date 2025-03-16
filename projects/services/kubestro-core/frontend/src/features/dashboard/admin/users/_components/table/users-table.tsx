@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@kubestro/design-system'
 import { useReactTable, getCoreRowModel, getFacetedRowModel, getFacetedUniqueValues, flexRender } from '@tanstack/react-table'
-import type { VisibilityState, ColumnFiltersState, SortingState, RowSelectionState, Table as TableData } from '@tanstack/react-table'
+import type { VisibilityState, ColumnFiltersState, SortingState, RowSelectionState, Table as TableData, PaginationState } from '@tanstack/react-table'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import queryString from 'query-string'
@@ -11,6 +11,7 @@ import type { Paginated } from '~/data/types/pagination'
 
 export function useUsersTable(
   data: Paginated<User>,
+  page: number,
   filters: {
     search?: string
     provider?: UserProvider[]
@@ -38,14 +39,18 @@ export function useUsersTable(
     return []
   })
   const [globalFilter, setGlobalFilter] = useState<string>(filters.search ?? '')
+  const [paginationState, setPaginationState] = useState<PaginationState>(
+    { pageIndex: page - 1, pageSize: 10 }
+  )
 
   const navigate = useNavigate()
 
   useEffect(() => {
-    console.log('useEffect')
     const searchParams = queryString.stringify({
       search: globalFilter.length > 0 ? globalFilter : undefined,
       order: sorting.map(({ id, desc }) => (desc ? `-${id}` : id)),
+      page: paginationState.pageIndex + 1,
+      limit: paginationState.pageSize,
       ...columnFilters.reduce<Record<string, unknown>>(
         (acc, { id, value }) => {
           acc[id] = value
@@ -64,7 +69,8 @@ export function useUsersTable(
     globalFilter,
     sorting,
     columnFilters,
-    navigate
+    navigate,
+    paginationState
   ])
 
   return useReactTable({
@@ -77,7 +83,8 @@ export function useUsersTable(
       columnVisibility,
       rowSelection,
       columnFilters,
-      globalFilter
+      globalFilter,
+      pagination: paginationState
     },
     manualFiltering: true,
     manualPagination: true,
@@ -89,7 +96,7 @@ export function useUsersTable(
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
-
+    onPaginationChange: setPaginationState,
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     onGlobalFilterChange: setGlobalFilter

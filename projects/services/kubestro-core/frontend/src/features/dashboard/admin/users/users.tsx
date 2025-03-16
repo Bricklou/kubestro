@@ -87,14 +87,15 @@ async function clientLoader({ request }: LoaderFunctionArgs) {
 
   return {
     users: await queryGetOrFetch(query),
+    page,
     filters,
     order
   }
 }
 
 function Users() {
-  const { users, filters, order } = useLoaderData<typeof clientLoader>()
-  const table = useUsersTable(users, filters, order)
+  const { users, page, filters, order } = useLoaderData<typeof clientLoader>()
+  const table = useUsersTable(users, page, filters, order)
 
   return (
     <Main fixed>

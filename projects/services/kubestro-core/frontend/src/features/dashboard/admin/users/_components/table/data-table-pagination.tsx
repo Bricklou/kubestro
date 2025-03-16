@@ -8,7 +8,7 @@ interface DataTablePaginationProps<TData> {
 }
 
 export function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>) {
-  const setCurrentPage = useCallback((value: string) => {
+  const setPageSize = useCallback((value: string) => {
     table.setPageSize(Number(value))
   }, [table])
 
@@ -54,7 +54,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
           <p className="hidden text-sm font-medium sm:block">Rows per page</p>
 
           <Select
-            onValueChange={setCurrentPage}
+            onValueChange={setPageSize}
             value={table.getState().pagination.pageSize.toString()}
           >
             <SelectTrigger className="h-8 w-[70px]">

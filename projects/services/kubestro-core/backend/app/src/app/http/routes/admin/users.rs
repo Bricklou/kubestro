@@ -94,7 +94,7 @@ pub async fn handler_get_users(
 
     let pagination_options: PaginationOptions<UsersFilters, UsersSortField> = PaginationOptions {
         limit: params.limit.unwrap_or(10),
-        page: params.page.unwrap_or(1),
+        page: params.page.unwrap_or(1).max(1),
         filters: params.filters.into(),
         order: order.map(|(field, order)| (field.into(), order)),
         ..Default::default()
