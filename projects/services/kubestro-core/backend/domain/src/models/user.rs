@@ -6,6 +6,7 @@ use crate::impl_entity_id;
 
 use super::{
     fields::{email::Email, password::Password, username::Username},
+    pagination::{SortingFieldError, SortingFieldTrait},
     Entity,
 };
 
@@ -33,6 +34,31 @@ impl Display for UserProvider {
     }
 }
 
+/// This model represents the user status
+#[derive(Debug, Clone, PartialEq, Default)]
+pub enum UserStatus {
+    /// The user is active
+    Active,
+    /// The user is inactive
+    #[default]
+    Inactive,
+    /// The user is invited, but not yet active
+    Invited,
+    /// The user is suspended
+    Suspended,
+}
+
+impl Display for UserStatus {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            UserStatus::Active => write!(f, "active"),
+            UserStatus::Inactive => write!(f, "inactive"),
+            UserStatus::Invited => write!(f, "invited"),
+            UserStatus::Suspended => write!(f, "suspended"),
+        }
+    }
+}
+
 /// This model represents a user entity inside the system
 #[derive(Debug, Clone, PartialEq)]
 pub struct User {
@@ -51,6 +77,9 @@ pub struct User {
 
     /// Provider of the user
     pub provider: UserProvider,
+
+    /// The user status
+    pub status: UserStatus,
 }
 
 impl User {
@@ -70,11 +99,17 @@ impl User {
             created_at,
             updated_at: created_at,
             provider: UserProvider::default(),
+            status: UserStatus::default(),
         }
     }
 
     pub fn set_provider(&mut self, provider: UserProvider) -> &Self {
         self.provider = provider;
+        self
+    }
+
+    pub fn set_status(&mut self, status: UserStatus) -> &Self {
+        self.status = status;
         self
     }
 }
@@ -130,4 +165,45 @@ pub struct CreateUser {
     pub password: Option<Password>,
     /// Provider
     pub provider: UserProvider,
+}
+
+/// Users pagination filters
+#[derive(Debug, Clone, PartialEq, Default)]
+pub struct UsersFilters {
+    /// The search field for the username and email
+    pub search: Option<String>,
+
+    /// The user provider
+    pub provider: Vec<UserProvider>,
+
+    /// The user status
+    pub status: Vec<UserStatus>,
+}
+
+/// Users pagination sort fields
+#[derive(Debug, Clone, PartialEq)]
+pub enum UsersSortField {
+    /// Sort by username
+    Username,
+    /// Sort by email
+    Email,
+    /// Sort by created_at
+    CreatedAt,
+    /// Sort by updated_at
+    UpdatedAt,
+}
+
+impl SortingFieldTrait for UsersSortField {
+    fn from_str(field: &str) -> Result<Self, SortingFieldError>
+    where
+        Self: Sized,
+    {
+        match field {
+            "username" => Ok(Self::Username),
+            "email" => Ok(Self::Email),
+            "created_at" => Ok(Self::CreatedAt),
+            "updated_at" => Ok(Self::UpdatedAt),
+            _ => Err(SortingFieldError::InvalidSortingField(field.to_string())),
+        }
+    }
 }

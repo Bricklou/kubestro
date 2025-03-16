@@ -1,6 +1,13 @@
 export type UserProvider = 'local' | 'oidc'
+export function isUserProvider(value: string): value is UserProvider {
+  return ['local', 'oidc'].includes(value)
+}
 
 export type UserStatus = 'active' | 'inactive' | 'invited' | 'suspended'
+export function isUserStatus(value: string): value is UserStatus {
+  return ['active', 'inactive', 'invited', 'suspended'].includes(value)
+}
+
 export interface User {
   id: string
   username: string
@@ -14,3 +21,5 @@ export interface User {
 export interface UserData {
   user: User
 }
+
+export type UserFields = keyof User

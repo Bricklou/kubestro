@@ -1,6 +1,7 @@
 use crate::models::{
     fields::email::Email,
-    user::{CreateUser, User, UserId},
+    pagination::{PaginatedModel, PaginationOptions},
+    user::{CreateUser, User, UserId, UsersFilters, UsersSortField},
 };
 
 #[cfg_attr(test, mockall::automock)]
@@ -15,6 +16,11 @@ pub trait UserRepository: Send + Sync {
     async fn find_all(self) -> Result<Vec<User>, UserRepoError>;
     async fn update(&self, user: User) -> Result<User, UserRepoError>;
     async fn delete(&self, id: &UserId) -> Result<(), UserRepoError>;
+
+    async fn paginate_users(
+        &self,
+        pagination: PaginationOptions<UsersFilters, UsersSortField>,
+    ) -> Result<PaginatedModel<User>, UserRepoError>;
 
     async fn create_oidc_association(
         &self,

@@ -5,7 +5,7 @@ import { useCallback } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { DataTableColumnHeader } from './table-column-header'
 import { TableRowActions } from './table-row-actions'
-import type { User, UserStatus } from '~/data/types/user'
+import type { User, UserProvider, UserStatus } from '~/data/types/user'
 
 function UserIdCheckboxHeader({ table }: { readonly table: Table<User> }) {
   const checkboxSelectedChange = useCallback((value: boolean | 'indeterminate') => {
@@ -48,6 +48,17 @@ function UserStatusBadge({ status }: { readonly status: UserStatus }) {
     case 'suspended':
       return <Badge variant="danger">Suspended</Badge>
     default:
+      return <Badge className="border-dashed" variant="outline">Unknown</Badge>
+  }
+}
+
+function UserProviderBadge({ provider }: { readonly provider: UserProvider }) {
+  switch (provider) {
+    case 'local':
+      return <Badge variant="primary-soft">Local</Badge>
+    case 'oidc':
+      return <Badge variant="secondary">OIDC</Badge>
+    default:
       return null
   }
 }
@@ -77,15 +88,21 @@ export const columns = [
         'sticky left-6 md:table-cell'
       )
     },
-    enableHiding: false
+    enableHiding: false,
+    enableGlobalFilter: true
   }),
   columnHelper.accessor('email', {
     header: ({ column }) => <DataTableColumnHeader column={column} title="Email" />,
-    cell: ({ row }) => <div className="w-fit text-nowrap">{row.getValue('email')}</div>
+    cell: ({ row }) => <div className="w-fit text-nowrap">{row.getValue('email')}</div>,
+    enableGlobalFilter: true
   }),
   columnHelper.accessor('status', {
     header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
     cell: ({ row }) => <UserStatusBadge status={row.getValue<UserStatus>('status')} />
+  }),
+  columnHelper.accessor('provider', {
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Provider" />,
+    cell: ({ row }) => <UserProviderBadge provider={row.getValue<UserProvider>('provider')} />
   }),
   columnHelper.display({
     id: 'actions',

@@ -1,82 +1,82 @@
 import { useLoaderData } from 'react-router'
 import type { LazyRouteObject, LoaderFunctionArgs } from 'react-router'
 import { Separator } from '@kubestro/design-system'
+import type { ParsedQuery } from 'query-string'
 import { Main } from '../../_components/main'
 import { UsersPrimaryButton } from './_components/users-primary-button'
 import { UsersTable, useUsersTable } from './_components/users-table'
 import { UsersSearchForm } from './_components/users-search-form'
-import type { User } from '~/data/types/user'
+import { adminPaginateUsers } from '~/data/queries/admin'
+import { queryGetOrFetch } from '~/utils/queryClient'
+import { isUserProvider, isUserStatus } from '~/data/types/user'
+import type { UserProvider, UserStatus } from '~/data/types/user'
+import { parseParams } from '~/utils/httpClient'
 
-function extractSortingParams(params: URLSearchParams) {
-  // Get the sort query parameter
-  const sort = params.get('sort')
+function extractProviders(query: ParsedQuery): UserProvider[] {
+  const val = query.provider
 
-  // If the sort query parameter is not set, return an empty array
-  if (!sort) {
-    return []
+  if (!Array.isArray(val)) return []
+
+  const providers: UserProvider[] = []
+  for (const provider of val) {
+    if (provider && isUserProvider(provider)) {
+      providers.push(provider)
+    }
   }
 
-  // If the sort query parameter is set, check if the value match `id` or `-id`
-  if (!(/^-?[\w-]+$/).test(sort)) {
-    return []
-  }
-
-  // If the sort query parameter is set, return the sorting state
-  return sort.startsWith('-') ?
-    [{ id: sort.slice(1), desc: true }] :
-    [{ id: sort, desc: false }]
+  return providers
 }
 
-function clientLoader({ request }: LoaderFunctionArgs) {
-  const url = new URL(request.url)
+function extractStatuses(query: ParsedQuery): UserStatus[] {
+  const val = query.status
+
+  if (!Array.isArray(val)) return []
+
+  const statuses: UserStatus[] = []
+  for (const status of val) {
+    if (status && isUserStatus(status)) {
+      statuses.push(status)
+    }
+  }
+
+  return statuses
+}
+
+function extractFilters(url: URL): {
+  search?: string
+  provider?: UserProvider[]
+  status?: UserStatus[]
+} {
+  const params = parseParams(url)
 
   return {
-    users: [
-      {
-        id: '1',
-        email: 'john.doe@acme.me',
-        username: 'john.doe',
-        status: 'active',
-        provider: 'local',
-        created_at: '2021-10-01T12:00:00Z',
-        updated_at: '2021-10-01T12:00:00Z'
-      },
-      {
-        id: '2',
-        email: 'jane.doe@acme.me',
-        username: 'jane.doe',
-        status: 'inactive',
-        provider: 'local',
-        created_at: '2021-10-01T12:00:00Z',
-        updated_at: '2021-10-01T12:00:00Z'
-      },
-      {
-        id: '3',
-        email: 'paul.smith@example.com',
-        username: 'paul.smith',
-        status: 'invited',
-        provider: 'oidc',
-        created_at: '2021-10-01T12:00:00Z',
-        updated_at: '2021-10-01T12:00:00Z'
-      },
-      {
-        id: '4',
-        email: 'oscar.black@example.com',
-        username: 'oscar.black',
-        status: 'suspended',
-        provider: 'oidc',
-        created_at: '2021-10-01T12:00:00Z',
-        updated_at: '2021-10-01T12:00:00Z'
-      }
-    ] as User[],
-    sort: extractSortingParams(url.searchParams),
-    search: url.searchParams.get('search') ?? undefined
+    search: typeof params.search === 'string' ? params.search : undefined,
+    provider: extractProviders(params),
+    status: extractStatuses(params)
+  }
+}
+
+async function clientLoader({ request }: LoaderFunctionArgs) {
+  const url = new URL(request.url)
+  const filters = extractFilters(url)
+
+  const page = Number(url.searchParams.get('page') ?? 1)
+
+  const query = adminPaginateUsers({
+    filters,
+    page,
+    limit: 10
+  })
+
+  return {
+    users: await queryGetOrFetch(query),
+    filters
   }
 }
 
 function Users() {
-  const { users } = useLoaderData<typeof clientLoader>()
-  const table = useUsersTable(users)
+  const { users, filters } = useLoaderData<typeof clientLoader>()
+  const table = useUsersTable(users, filters)
 
   return (
     <Main fixed>
@@ -96,7 +96,7 @@ function Users() {
         </div>
 
         {/* Search */}
-        <UsersSearchForm table={table} />
+        <UsersSearchForm search={filters.search} table={table} />
       </div>
 
       <Separator className="mt-1 mb-4 lg:mb-6" />

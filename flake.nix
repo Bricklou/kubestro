@@ -138,10 +138,11 @@
 
             # rust
             rustfmt
-            rust-bin.stable.latest.default
+            (rust-bin.stable.latest.default.override {extensions = ["rust-src"];})
             cargo-workspaces
             cargo-watch
             sea-orm-cli
+            cargo-expand
 
             # github action local runner
             act

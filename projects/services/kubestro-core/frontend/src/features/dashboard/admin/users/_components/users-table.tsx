@@ -1,39 +1,90 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@kubestro/design-system'
-import { useReactTable, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, getFacetedRowModel, getFacetedUniqueValues, flexRender } from '@tanstack/react-table'
+import { useReactTable, getCoreRowModel, getFacetedRowModel, getFacetedUniqueValues, flexRender } from '@tanstack/react-table'
 import type { VisibilityState, ColumnFiltersState, SortingState, RowSelectionState, Table as TableData } from '@tanstack/react-table'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router'
+import queryString from 'query-string'
 import { columns } from './users-columns'
-import type { User } from '~/data/types/user'
+import type { User, UserProvider, UserStatus } from '~/data/types/user'
+import type { Paginated } from '~/data/types/pagination'
 
-export function useUsersTable(data: User[]) {
+export function useUsersTable(
+  data: Paginated<User>,
+  filters: {
+    search?: string
+    provider?: UserProvider[]
+    status?: UserStatus[]
+  }
+
+) {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(() => {
+    const out = []
+    if (filters.provider?.length) {
+      out.push({ id: 'provider', value: filters.provider })
+    }
+    if (filters.status?.length) {
+      out.push({ id: 'status', value: filters.status })
+    }
+    return out
+  })
   const [sorting, setSorting] = useState<SortingState>([])
+  const [globalFilter, setGlobalFilter] = useState<string>(filters.search ?? '')
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const searchParams = queryString.stringify({
+      search: globalFilter.length > 0 ? globalFilter : undefined,
+      sort: sorting.map(({ id, desc }) => (desc ? `-${id}` : id)),
+      ...columnFilters.reduce<Record<string, unknown>>(
+        (acc, { id, value }) => {
+          acc[id] = value
+          return acc
+        },
+        {}
+      )
+    }, {
+      arrayFormat: 'bracket'
+    })
+
+    void navigate({
+      search: searchParams
+    })
+  }, [
+    globalFilter,
+    sorting,
+    columnFilters,
+    navigate
+  ])
 
   return useReactTable({
-    data,
+    data: data.items,
     columns,
+    pageCount: data.total_pages,
+    rowCount: data.total_items,
     state: {
       sorting,
       columnVisibility,
       rowSelection,
-      columnFilters
+      columnFilters,
+      globalFilter
     },
     manualFiltering: true,
     manualPagination: true,
     manualSorting: true,
+    enableGlobalFilter: false,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+
     getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues()
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    onGlobalFilterChange: setGlobalFilter
   })
 }
 

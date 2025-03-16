@@ -5,17 +5,19 @@ import type { Table } from '@tanstack/react-table'
 import { useCallback } from 'react'
 import { TableFacetedFilter } from './table-faceted-filter'
 import { DataTableViewOptions } from './data-view-options'
+import { useDebouncedCallback } from '~/hooks/debounced-callback'
 
 interface UsersSearchFormProps<TData> {
   readonly table: Table<TData>
+  readonly search?: string
 }
 
-export function UsersSearchForm<TData>({ table }: UsersSearchFormProps<TData>) {
+export function UsersSearchForm<TData>({ table, search }: UsersSearchFormProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
 
-  const onInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    table.getColumn('username')?.setFilterValue(event.target.value)
-  }, [table])
+  const onInputChange = useDebouncedCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    table.setGlobalFilter(String(event.target.value))
+  }, [table], 500)
 
   const onReset = useCallback(() => {
     table.resetColumnFilters()
@@ -26,12 +28,11 @@ export function UsersSearchForm<TData>({ table }: UsersSearchFormProps<TData>) {
       <div className="relative inline-flex items-center w-full md:max-w-96 flex-1">
         <Input
           className="bg-background-contrast pl-8 peer"
+          defaultValue={search}
           name="search"
           onChange={onInputChange}
           placeholder="Search users..."
           type="search"
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-          value={(table.getColumn('username')?.getFilterValue() as string | undefined) ?? ''}
         />
 
         <SearchIcon className="size-4 left-2 absolute text-text-muted peer-focus-within:text-text" />
@@ -47,6 +48,15 @@ export function UsersSearchForm<TData>({ table }: UsersSearchFormProps<TData>) {
             { label: 'Suspended', value: 'suspended' }
           ]}
           title="Status"
+        />
+
+        <TableFacetedFilter
+          column={table.getColumn('provider')}
+          options={[
+            { label: 'Local', value: 'local' },
+            { label: 'OIDC', value: 'oidc' }
+          ]}
+          title="Provider"
         />
       </div>
 

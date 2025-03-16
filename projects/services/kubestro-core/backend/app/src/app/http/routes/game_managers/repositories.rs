@@ -1,11 +1,7 @@
-use axum::{
-    extract::{Path, Query},
-    http::StatusCode,
-    response::IntoResponse,
-    Extension, Json,
-};
+use axum::{extract::Path, http::StatusCode, response::IntoResponse, Extension, Json};
 use deserr::Deserr;
 use serde::{Deserialize, Serialize};
+use serde_qs::axum::QsQuery;
 use utoipa::{IntoParams, ToSchema};
 use validator::Validate;
 
@@ -58,7 +54,7 @@ pub(super) struct RepositoriesListQueries {
 )]
 pub async fn handler_get_repositories(
     Extension(ctx): Extension<AppContext>,
-    Query(queries): Query<RepositoriesListQueries>,
+    QsQuery(queries): QsQuery<RepositoriesListQueries>,
 ) -> Result<impl IntoResponse, ApiError> {
     let repositories = ctx
         .repository_repo

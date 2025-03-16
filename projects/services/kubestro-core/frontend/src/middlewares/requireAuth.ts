@@ -34,7 +34,6 @@ export const requireAuthMiddleware: unstable_MiddlewareFunction = async ({ conte
 }
 
 export const requireGuestMiddleware: unstable_MiddlewareFunction = async ({ context }, next) => {
-  console.log('Guest middleware')
   const query = authGetUser()
 
   try {

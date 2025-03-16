@@ -1,4 +1,5 @@
 import { QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { ThemeProvider, Toaster } from '@kubestro/design-system'
 import { RouterProvider } from 'react-router'
 import { queryClient } from './utils/queryClient'
@@ -11,6 +12,8 @@ export default function App() {
         <RouterProvider router={router} />
         <Toaster />
       </ThemeProvider>
+
+      <ReactQueryDevtools />
     </QueryClientProvider>
   )
 }

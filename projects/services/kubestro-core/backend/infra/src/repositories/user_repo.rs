@@ -8,15 +8,16 @@ use kubestro_core_domain::{
             password::{Password, PasswordError},
             username::{Username, UsernameError},
         },
-        user::{CreateUser, User, UserId, UserProvider},
+        pagination::{self, PaginatedModel, PaginationOptions, SortOrder},
+        user::{CreateUser, User, UserId, UserProvider, UserStatus, UsersFilters, UsersSortField},
         Entity, EntityId,
     },
     ports::repositories::user_repository::{UserRepoError, UserRepository},
 };
 use sea_orm::{
     prelude::{async_trait, Uuid},
-    sqlx, ActiveModelTrait, ActiveValue, ColumnTrait, DbErr, EntityTrait, ModelTrait, QueryFilter,
-    RuntimeErr, TransactionTrait,
+    sqlx, ActiveModelTrait, ActiveValue, ColumnTrait, Condition, DbErr, EntityTrait, ModelTrait,
+    Order, PaginatorTrait, QueryFilter, QueryOrder, QueryTrait, RuntimeErr, TransactionTrait,
 };
 use tracing::trace;
 
@@ -54,6 +55,39 @@ impl From<entities::sea_orm_active_enums::UserProvider> for UserProvider {
     }
 }
 
+impl From<UserStatus> for entities::sea_orm_active_enums::UserStatus {
+    fn from(status: UserStatus) -> Self {
+        match status {
+            UserStatus::Active => entities::sea_orm_active_enums::UserStatus::Active,
+            UserStatus::Inactive => entities::sea_orm_active_enums::UserStatus::Inactive,
+            UserStatus::Invited => entities::sea_orm_active_enums::UserStatus::Invited,
+            UserStatus::Suspended => entities::sea_orm_active_enums::UserStatus::Suspended,
+        }
+    }
+}
+
+impl From<entities::sea_orm_active_enums::UserStatus> for UserStatus {
+    fn from(status: entities::sea_orm_active_enums::UserStatus) -> UserStatus {
+        match status {
+            entities::sea_orm_active_enums::UserStatus::Active => UserStatus::Active,
+            entities::sea_orm_active_enums::UserStatus::Inactive => UserStatus::Inactive,
+            entities::sea_orm_active_enums::UserStatus::Invited => UserStatus::Invited,
+            entities::sea_orm_active_enums::UserStatus::Suspended => UserStatus::Suspended,
+        }
+    }
+}
+
+impl From<UsersSortField> for entities::user::Column {
+    fn from(sort_field: UsersSortField) -> Self {
+        match sort_field {
+            UsersSortField::Username => entities::user::Column::Username,
+            UsersSortField::Email => entities::user::Column::Email,
+            UsersSortField::CreatedAt => entities::user::Column::CreatedAt,
+            UsersSortField::UpdatedAt => entities::user::Column::UpdatedAt,
+        }
+    }
+}
+
 impl TryFrom<User> for entities::user::ActiveModel {
     type Error = UserError;
 
@@ -66,6 +100,7 @@ impl TryFrom<User> for entities::user::ActiveModel {
             created_at: ActiveValue::Set(value.created_at.into()),
             updated_at: ActiveValue::Set(value.updated_at.into()),
             provider: ActiveValue::Set(value.provider.into()),
+            status: ActiveValue::Set(value.status.into()),
         })
     }
 }
@@ -80,9 +115,11 @@ impl TryFrom<entities::user::Model> for User {
         let password = value.password.map(Password::from_hash);
         let created_at: DateTime<Utc> = value.created_at.into();
         let provider = UserProvider::from(value.provider);
+        let status = UserStatus::from(value.status);
 
         let mut user = User::new(id, username, email, password, created_at);
         user.set_provider(provider);
+        user.set_status(status);
 
         Ok(user)
     }
@@ -278,6 +315,76 @@ impl UserRepository for UserPgRepo {
             },
             None => Ok(None),
         }
+    }
+
+    #[tracing::instrument(skip(self))]
+    async fn paginate_users(
+        &self,
+        pagination: PaginationOptions<UsersFilters, UsersSortField>,
+    ) -> Result<PaginatedModel<User>, UserRepoError> {
+        let mut query = entities::user::Entity::find()
+            .apply_if(pagination.filters.search, |query, val| {
+                query.filter(
+                    Condition::any()
+                        .add(entities::user::Column::Username.contains(&val))
+                        .add(entities::user::Column::Email.contains(&val)),
+                )
+            })
+            .apply_if(pagination.order, |query, (field, order)| {
+                let column = entities::user::Column::from(field);
+                query.order_by(
+                    column,
+                    match order {
+                        SortOrder::Asc => Order::Asc,
+                        SortOrder::Desc => Order::Desc,
+                    },
+                )
+            });
+
+        if !pagination.filters.provider.is_empty() {
+            let providers = pagination
+                .filters
+                .provider
+                .iter()
+                .map(|v| entities::sea_orm_active_enums::UserProvider::from(v.clone()))
+                .collect::<Vec<_>>();
+
+            query = query.filter(entities::user::Column::Provider.is_in(providers));
+        }
+
+        if !pagination.filters.status.is_empty() {
+            let status = pagination
+                .filters
+                .status
+                .iter()
+                .map(|v| entities::sea_orm_active_enums::UserStatus::from(v.clone()))
+                .collect::<Vec<_>>();
+
+            query = query.filter(entities::user::Column::Status.is_in(status));
+        }
+
+        let paginator = query.paginate(self.db.pool(), pagination.limit);
+
+        let models = paginator
+            .fetch_page(pagination.page - 1)
+            .await
+            .map_err(|e| UserRepoError::DatabaseError(e.to_string()))?;
+        let meta = paginator
+            .num_items_and_pages()
+            .await
+            .map_err(|e| UserRepoError::DatabaseError(e.to_string()))?;
+
+        let users = models
+            .into_iter()
+            .map(User::try_from)
+            .collect::<Result<Vec<User>, UserError>>()
+            .map_err(|e| UserRepoError::UnexpectedError(e.to_string()))?;
+
+        Ok(PaginatedModel {
+            items: users,
+            total_items: meta.number_of_items,
+            total_pages: meta.number_of_pages,
+        })
     }
 
     #[tracing::instrument(skip(self))]

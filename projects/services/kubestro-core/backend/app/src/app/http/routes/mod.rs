@@ -16,6 +16,7 @@ use crate::app::context::AppContext;
 
 use super::middlewares::{self, status::SetupLayer};
 
+mod admin;
 mod authentication;
 mod base;
 mod game_managers;
@@ -33,10 +34,11 @@ const API_DESCRIPTION: &str = "Kubestro Core API";
 struct ApiDoc;
 
 pub async fn get_routes(context: AppContext) -> anyhow::Result<axum::Router> {
-    // This router is only accessible is the user is authenticated
+    // This router is only accessible if the user is authenticated
     let router_with_auth = OpenApiRouter::new()
         .merge(settings::get_routes())
         .merge(game_managers::get_routes())
+        .merge(admin::get_routes())
         .layer(middleware::from_fn(middlewares::auth::auth_middleware));
 
     // This router is only accessible if the setup is done

@@ -7,6 +7,7 @@ publish = false
 [dependencies]
 # http
 axum = { version = "0.8.1", features = ["tower-log", "macros"] }
+axum-core = "0.5.0"
 tower = "0.5.2"
 tower-http = { version = "0.6.2", features = ["trace", "timeout"] }
 utoipa.workspace = true
@@ -17,6 +18,7 @@ axum_session_redispool = "0.5.0"
 axum_session_auth = "0.16.0"
 redis.workspace = true
 redis_pool.workspace = true
+serde_qs = { version = "0.14.0", features = ["axum"] }
 
 # security
 openidconnect = { version = "4.0.0", features = ["reqwest"] }

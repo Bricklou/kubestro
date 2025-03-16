@@ -3,6 +3,7 @@ use uuid::Uuid;
 mod macros;
 
 pub mod fields;
+pub mod pagination;
 
 pub mod package;
 pub mod user;

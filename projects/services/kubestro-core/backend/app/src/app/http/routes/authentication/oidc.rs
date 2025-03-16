@@ -1,11 +1,11 @@
 use axum::{
-    extract::Query,
     response::{IntoResponse, Redirect},
     Extension, Json,
 };
 use axum_session::Session;
 use axum_session_redispool::SessionRedisPool;
 use serde::{Deserialize, Serialize};
+use serde_qs::axum::QsQuery;
 use utoipa::{IntoParams, ToSchema};
 
 use crate::app::{
@@ -83,7 +83,7 @@ pub(super) struct LoginResponse {
 pub async fn handler_oidc_callback(
     ctx: Extension<AppContext>,
     session: Session<SessionRedisPool>,
-    Query(queries): Query<OidcCallbackParams>,
+    QsQuery(queries): QsQuery<OidcCallbackParams>,
 ) -> Result<impl IntoResponse, ApiError> {
     let code = queries.code.clone();
     let state = queries.state.clone();
