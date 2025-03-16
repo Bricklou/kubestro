@@ -36,7 +36,7 @@ export function TableRowActions({ row }: TableRowActionsProps) {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem className="!text-danger" onClick={onDeleteClick}>
+        <DropdownMenuItem className="!text-danger hover:bg-danger hover:!text-danger-text" onClick={onDeleteClick}>
           Delete
           <DropdownMenuShortcut>
             <TrashIcon className="size-4" />

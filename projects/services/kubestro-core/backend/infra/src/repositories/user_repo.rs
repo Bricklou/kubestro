@@ -15,9 +15,11 @@ use kubestro_core_domain::{
     ports::repositories::user_repository::{UserRepoError, UserRepository},
 };
 use sea_orm::{
-    prelude::{async_trait, Uuid},
+    prelude::{async_trait, Expr, Uuid},
+    sea_query::{extension::postgres::PgExpr, Func},
     sqlx, ActiveModelTrait, ActiveValue, ColumnTrait, Condition, DbErr, EntityTrait, ModelTrait,
-    Order, PaginatorTrait, QueryFilter, QueryOrder, QueryTrait, RuntimeErr, TransactionTrait,
+    Order, PaginatorTrait, QueryFilter, QueryOrder, QuerySelect, QueryTrait, RuntimeErr,
+    TransactionTrait,
 };
 use tracing::trace;
 
@@ -326,8 +328,14 @@ impl UserRepository for UserPgRepo {
             .apply_if(pagination.filters.search, |query, val| {
                 query.filter(
                     Condition::any()
-                        .add(entities::user::Column::Username.contains(&val))
-                        .add(entities::user::Column::Email.contains(&val)),
+                        .add(
+                            Expr::expr(Func::lower(Expr::col(entities::user::Column::Username)))
+                                .ilike(format!("%{}%", &val.to_lowercase())),
+                        )
+                        .add(
+                            Expr::expr(Func::lower(Expr::col(entities::user::Column::Email)))
+                                .ilike(format!("%{}%", &val.to_lowercase())),
+                        ),
                 )
             })
             .apply_if(pagination.order, |query, (field, order)| {
