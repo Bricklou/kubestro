@@ -8,7 +8,7 @@ use kubestro_core_domain::{
             password::{Password, PasswordError},
             username::{Username, UsernameError},
         },
-        pagination::{self, PaginatedModel, PaginationOptions, SortOrder},
+        pagination::{PaginatedModel, PaginationOptions, SortOrder},
         user::{CreateUser, User, UserId, UserProvider, UserStatus, UsersFilters, UsersSortField},
         Entity, EntityId,
     },
@@ -18,8 +18,7 @@ use sea_orm::{
     prelude::{async_trait, Expr, Uuid},
     sea_query::{extension::postgres::PgExpr, Func},
     sqlx, ActiveModelTrait, ActiveValue, ColumnTrait, Condition, DbErr, EntityTrait, ModelTrait,
-    Order, PaginatorTrait, QueryFilter, QueryOrder, QuerySelect, QueryTrait, RuntimeErr,
-    TransactionTrait,
+    Order, PaginatorTrait, QueryFilter, QueryOrder, QueryTrait, RuntimeErr, TransactionTrait,
 };
 use tracing::trace;
 
@@ -86,6 +85,8 @@ impl From<UsersSortField> for entities::user::Column {
             UsersSortField::Email => entities::user::Column::Email,
             UsersSortField::CreatedAt => entities::user::Column::CreatedAt,
             UsersSortField::UpdatedAt => entities::user::Column::UpdatedAt,
+            UsersSortField::Provider => entities::user::Column::Provider,
+            UsersSortField::Status => entities::user::Column::Status,
         }
     }
 }
@@ -341,7 +342,7 @@ impl UserRepository for UserPgRepo {
             .apply_if(pagination.order, |query, (field, order)| {
                 let column = entities::user::Column::from(field);
                 query.order_by(
-                    column,
+                    Expr::expr(Func::lower(Expr::col(column))),
                     match order {
                         SortOrder::Asc => Order::Asc,
                         SortOrder::Desc => Order::Desc,

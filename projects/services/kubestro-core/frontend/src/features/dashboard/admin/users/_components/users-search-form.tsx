@@ -3,8 +3,8 @@ import { SearchIcon, XIcon } from 'lucide-react'
 import { Form } from 'react-router'
 import type { Table } from '@tanstack/react-table'
 import { useCallback } from 'react'
-import { TableFacetedFilter } from './table-faceted-filter'
-import { DataTableViewOptions } from './data-view-options'
+import { TableFacetedFilter } from './table/table-faceted-filter'
+import { DataTableViewOptions } from './table/data-view-options'
 import { useDebouncedCallback } from '~/hooks/debounced-callback'
 
 interface UsersSearchFormProps<TData> {

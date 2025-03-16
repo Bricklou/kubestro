@@ -1,6 +1,6 @@
 use chrono::{DateTime, Utc};
 use kubestro_core_domain::models::{
-    pagination::{SortOrder, SortingFieldError, SortingFieldTrait},
+    pagination::{SortingFieldError, SortingFieldTrait},
     user::{User, UserProvider, UserStatus, UsersSortField},
     Entity, EntityId,
 };
@@ -133,6 +133,10 @@ pub enum UsersSortFieldDto {
     CreatedAt,
     /// Sort by updated_at
     UpdatedAt,
+    /// Sort by status
+    Status,
+    /// Sort by provider
+    Provider,
 }
 
 impl From<UsersSortFieldDto> for UsersSortField {
@@ -142,6 +146,8 @@ impl From<UsersSortFieldDto> for UsersSortField {
             UsersSortFieldDto::Email => UsersSortField::Email,
             UsersSortFieldDto::CreatedAt => UsersSortField::CreatedAt,
             UsersSortFieldDto::UpdatedAt => UsersSortField::UpdatedAt,
+            UsersSortFieldDto::Status => UsersSortField::Status,
+            UsersSortFieldDto::Provider => UsersSortField::Provider,
         }
     }
 }
@@ -156,6 +162,8 @@ impl SortingFieldTrait for UsersSortFieldDto {
             "email" => Ok(UsersSortFieldDto::Email),
             "created_at" => Ok(UsersSortFieldDto::CreatedAt),
             "updated_at" => Ok(UsersSortFieldDto::UpdatedAt),
+            "status" => Ok(UsersSortFieldDto::Status),
+            "provider" => Ok(UsersSortFieldDto::Provider),
             e => Err(SortingFieldError::InvalidSortingField(e.to_string())),
         }
     }

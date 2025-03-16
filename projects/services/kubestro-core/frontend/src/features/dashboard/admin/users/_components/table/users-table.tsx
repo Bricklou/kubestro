@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import queryString from 'query-string'
 import { columns } from './users-columns'
-import type { User, UserProvider, UserStatus } from '~/data/types/user'
+import type { User, UserFields, UserProvider, UserStatus } from '~/data/types/user'
 import type { Paginated } from '~/data/types/pagination'
 
 export function useUsersTable(
@@ -14,7 +14,8 @@ export function useUsersTable(
     search?: string
     provider?: UserProvider[]
     status?: UserStatus[]
-  }
+  },
+  order?: UserFields | `-${UserFields}`
 
 ) {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
@@ -29,15 +30,21 @@ export function useUsersTable(
     }
     return out
   })
-  const [sorting, setSorting] = useState<SortingState>([])
+  const [sorting, setSorting] = useState<SortingState>(() => {
+    if (order) {
+      return [{ id: order.startsWith('-') ? order.slice(1) : order, desc: order.startsWith('-') }]
+    }
+    return []
+  })
   const [globalFilter, setGlobalFilter] = useState<string>(filters.search ?? '')
 
   const navigate = useNavigate()
 
   useEffect(() => {
+    console.log('useEffect')
     const searchParams = queryString.stringify({
       search: globalFilter.length > 0 ? globalFilter : undefined,
-      sort: sorting.map(({ id, desc }) => (desc ? `-${id}` : id)),
+      order: sorting.map(({ id, desc }) => (desc ? `-${id}` : id)),
       ...columnFilters.reduce<Record<string, unknown>>(
         (acc, { id, value }) => {
           acc[id] = value

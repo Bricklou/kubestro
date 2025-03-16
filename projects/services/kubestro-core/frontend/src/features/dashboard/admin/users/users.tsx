@@ -4,12 +4,12 @@ import { Separator } from '@kubestro/design-system'
 import type { ParsedQuery } from 'query-string'
 import { Main } from '../../_components/main'
 import { UsersPrimaryButton } from './_components/users-primary-button'
-import { UsersTable, useUsersTable } from './_components/users-table'
+import { UsersTable, useUsersTable } from './_components/table/users-table'
 import { UsersSearchForm } from './_components/users-search-form'
 import { adminPaginateUsers } from '~/data/queries/admin'
 import { queryGetOrFetch } from '~/utils/queryClient'
-import { isUserProvider, isUserStatus } from '~/data/types/user'
-import type { UserProvider, UserStatus } from '~/data/types/user'
+import { isUserField, isUserProvider, isUserStatus } from '~/data/types/user'
+import type { UserFields, UserProvider, UserStatus } from '~/data/types/user'
 import { parseParams } from '~/utils/httpClient'
 
 function extractProviders(query: ParsedQuery): UserProvider[] {
@@ -56,27 +56,45 @@ function extractFilters(url: URL): {
   }
 }
 
+function extractOrder(url: URL): UserFields | `-${UserFields}` | undefined {
+  const params = parseParams(url)
+
+  if (typeof params.order !== 'string') return undefined
+  // Extract the minus sign from the order
+  const desc = params.order.startsWith('-')
+  const field = desc ? params.order.slice(1) : params.order
+
+  if (!isUserField(field)) {
+    return undefined
+  }
+
+  return desc ? `-${field}` : field
+}
+
 async function clientLoader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
   const filters = extractFilters(url)
+  const order = extractOrder(url)
 
   const page = Number(url.searchParams.get('page') ?? 1)
 
   const query = adminPaginateUsers({
     filters,
+    order,
     page,
     limit: 10
   })
 
   return {
     users: await queryGetOrFetch(query),
-    filters
+    filters,
+    order
   }
 }
 
 function Users() {
-  const { users, filters } = useLoaderData<typeof clientLoader>()
-  const table = useUsersTable(users, filters)
+  const { users, filters, order } = useLoaderData<typeof clientLoader>()
+  const table = useUsersTable(users, filters, order)
 
   return (
     <Main fixed>

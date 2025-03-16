@@ -48,10 +48,10 @@ pub(crate) struct GetUsersParams {
     page: Option<u64>,
     limit: Option<u64>,
 
-    #[serde(default, flatten)]
+    #[serde(flatten)]
     filters: RequestUsersFilters,
 
-    #[serde(default, flatten, skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     order: Option<PaginationOrder<UsersSortFieldDto>>,
 }
 
@@ -89,6 +89,8 @@ pub async fn handler_get_users(
     QsQuery(params): QsQuery<GetUsersParams>,
 ) -> Result<Json<GetUsersResponse>, ApiError> {
     let order: Option<(UsersSortFieldDto, SortOrder)> = params.order.map(Into::into);
+
+    debug!("Order by: {:?}", order);
 
     let pagination_options: PaginationOptions<UsersFilters, UsersSortField> = PaginationOptions {
         limit: params.limit.unwrap_or(10),

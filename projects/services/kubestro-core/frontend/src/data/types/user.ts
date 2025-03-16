@@ -23,3 +23,11 @@ export interface UserData {
 }
 
 export type UserFields = keyof User
+export function isUserField(value: string): value is UserFields {
+  return [
+    'username',
+    'email',
+    'provider',
+    'status'
+  ].includes(value)
+}

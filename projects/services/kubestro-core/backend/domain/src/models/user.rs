@@ -191,6 +191,10 @@ pub enum UsersSortField {
     CreatedAt,
     /// Sort by updated_at
     UpdatedAt,
+    /// Sort by status
+    Status,
+    /// Sort by provider
+    Provider,
 }
 
 impl SortingFieldTrait for UsersSortField {
