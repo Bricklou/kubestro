@@ -6,6 +6,8 @@ import { Main } from '../../_components/main'
 import { UsersPrimaryButton } from './_components/users-primary-button'
 import { UsersTable, useUsersTable } from './_components/table/users-table'
 import { UsersSearchForm } from './_components/users-search-form'
+import { UsersProvider } from './_context/users-context'
+import { UsersDialogs } from './_components/dialogs/users-dialogs'
 import { adminPaginateUsers } from '~/data/queries/admin'
 import { queryGetOrFetch } from '~/utils/queryClient'
 import { isUserField, isUserProvider, isUserStatus } from '~/data/types/user'
@@ -98,32 +100,36 @@ function Users() {
   const table = useUsersTable(users, page, filters, order)
 
   return (
-    <Main fixed>
-      <div className="space-x-0.5 space-y-4 @container @2xl:space-y-2">
-        <div className="flex flex-col @2xl:flex-row @2xl:items-center justify-between space-y-2 @2xl:space-y-0">
-          <div className="space-y-0.5">
-            <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
-              Users
-            </h1>
+    <UsersProvider>
+      <Main fixed>
+        <div className="space-x-0.5 space-y-4 @container @2xl:space-y-2">
+          <div className="flex flex-col @2xl:flex-row @2xl:items-center justify-between space-y-2 @2xl:space-y-0">
+            <div className="space-y-0.5">
+              <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+                Users
+              </h1>
 
-            <p className="text-text-muted">
-              Manage users that have access to the system.
-            </p>
+              <p className="text-text-muted">
+                Manage users that have access to the system.
+              </p>
+            </div>
+
+            <UsersPrimaryButton />
           </div>
 
-          <UsersPrimaryButton />
+          {/* Search */}
+          <UsersSearchForm search={filters.search} table={table} />
         </div>
 
-        {/* Search */}
-        <UsersSearchForm search={filters.search} table={table} />
-      </div>
+        <Separator className="mt-1 mb-4 lg:mb-6" />
 
-      <Separator className="mt-1 mb-4 lg:mb-6" />
+        <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
+          <UsersTable table={table} />
+        </div>
+      </Main>
 
-      <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-        <UsersTable table={table} />
-      </div>
-    </Main>
+      <UsersDialogs />
+    </UsersProvider>
   )
 }
 

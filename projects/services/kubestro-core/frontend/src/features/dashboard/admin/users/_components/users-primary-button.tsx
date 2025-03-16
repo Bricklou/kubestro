@@ -1,15 +1,13 @@
 import { Button } from '@kubestro/design-system/components'
 import { MailPlusIcon, UserPlusIcon } from 'lucide-react'
 import { useCallback } from 'react'
+import { useUsers } from '../_context/users-context'
 
 export function UsersPrimaryButton() {
-  const onInviteClick = useCallback(() => {
-    console.log('Invite clicked')
-  }, [])
+  const { setOpen } = useUsers()
 
-  const onAddUserClick = useCallback(() => {
-    console.log('Add user clicked')
-  }, [])
+  const onInviteClick = useCallback(() => { setOpen('invite') }, [setOpen])
+  const onAddUserClick = useCallback(() => { setOpen('add') }, [setOpen])
 
   return (
     <div className="flex flex-row gap-2 flex-1 @lg:flex-initial">

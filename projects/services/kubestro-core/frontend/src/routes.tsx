@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router'
 import type { LazyRouteFunction, PatchRoutesOnNavigationFunction, RouteObject, unstable_RouterContextProvider } from 'react-router'
+import notFoundPage from './features/errors/not-found-error'
 import { requireSetupMiddleware } from './middlewares/requireSetup'
 import { indexRedirectMiddleware } from './features/redirect/redirect'
 import DoubleSideLayout from './layouts/double-side-layout'
@@ -26,12 +27,11 @@ declare module 'react-router' {
   type LazyRouteObject = Awaited<ReturnType<LazyRouteFunction<RouteObject>>>
 }
 
+/*
+ * This is where you would put your code to patch the routes
+ * when the user navigates to a new location
+ */
 const patchRoutesOnNavigation: PatchRoutesOnNavigationFunction = async ({ path, patch }) => {
-  /*
-   * This is where you would put your code to patch the routes
-   * when the user navigates to a new location
-   */
-
   if (import.meta.env.VITE_ENABLE_MF_TEST && path.startsWith('/dashboard/mf-test')) {
     try {
       const module = await federation.loadRemote<{ routeObject: RouteObject }>('mf-test/routes')
@@ -99,6 +99,16 @@ export const router = createBrowserRouter([
         id: 'dashboard-layout',
         lazy: async () => await import('./features/dashboard/_layout').then(m => m.default),
         children: dashboardRoutes
+      },
+
+      {
+        path: '*',
+        ...notFoundPage,
+        element: (
+          <div className="min-h-svh flex">
+            {notFoundPage.element}
+          </div>
+        )
       }
     ]
   }

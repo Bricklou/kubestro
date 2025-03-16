@@ -1,6 +1,6 @@
 import type { RouteObject } from 'react-router'
+import notFoundPage from '../errors/not-found-error'
 import homePage from './home/home'
-import notFoundPage from './not-found/not-found'
 import { settingsRoutes } from './settings/_routes'
 import { gameManagersRoute } from './game-managers/_routes'
 import { ErrorBoundary } from './_error-boundaries'

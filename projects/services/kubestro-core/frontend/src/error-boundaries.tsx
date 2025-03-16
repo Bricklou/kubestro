@@ -1,4 +1,6 @@
 import { useRouteError, isRouteErrorResponse } from 'react-router'
+import { UnauthorizedError } from './features/errors/unauthorized-error'
+import { ForbiddenError } from './features/errors/forbidden'
 
 export function ErrorBoundary() {
   const error = useRouteError()
@@ -8,6 +10,14 @@ export function ErrorBoundary() {
   let stack: string | undefined
 
   if (isRouteErrorResponse(error)) {
+    if (error.status === 401) {
+      return <UnauthorizedError />
+    }
+
+    if (error.status === 403) {
+      return <ForbiddenError />
+    }
+
     message = error.status === 404 ? '404' : 'Error'
     details =
       error.status === 404 ?

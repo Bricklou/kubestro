@@ -2,6 +2,7 @@ import { Button, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMe
 import type { Row } from '@tanstack/react-table'
 import { MoreVerticalIcon, PenIcon, TrashIcon } from 'lucide-react'
 import { useCallback } from 'react'
+import { useUsers } from '../../_context/users-context'
 import type { User } from '~/data/types/user'
 
 interface TableRowActionsProps {
@@ -9,8 +10,17 @@ interface TableRowActionsProps {
 }
 
 export function TableRowActions({ row }: TableRowActionsProps) {
-  const onEditClick = useCallback(() => {}, [])
-  const onDeleteClick = useCallback(() => {}, [])
+  const { setOpen, setCurrentRow } = useUsers()
+
+  const onEditClick = useCallback(() => {
+    setCurrentRow(row.original)
+    setOpen('edit')
+  }, [row.original, setCurrentRow, setOpen])
+
+  const onDeleteClick = useCallback(() => {
+    setCurrentRow(row.original)
+    setOpen('delete')
+  }, [row.original, setCurrentRow, setOpen])
 
   return (
     <DropdownMenu modal={false}>
@@ -36,7 +46,7 @@ export function TableRowActions({ row }: TableRowActionsProps) {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem className="!text-danger hover:bg-danger hover:!text-danger-text" onClick={onDeleteClick}>
+        <DropdownMenuItem className="text-danger hover:bg-danger hover:text-danger-text" onClick={onDeleteClick}>
           Delete
           <DropdownMenuShortcut>
             <TrashIcon className="size-4" />
