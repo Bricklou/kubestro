@@ -1,7 +1,8 @@
 import { Button, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, FormMessage, Input, Label, Textarea } from '@kubestro/design-system'
 import { SendHorizontalIcon } from 'lucide-react'
-import { useCallback, useRef } from 'react'
+import { useEffect } from 'react'
 import { useFetcher } from 'react-router'
+import type { InviteUserAction } from '../../_actions/users-invite'
 
 interface UsersInviteDialogProps {
   readonly open: boolean
@@ -9,19 +10,18 @@ interface UsersInviteDialogProps {
 }
 
 export function UsersInviteDialog({ open, onOpenChange }: UsersInviteDialogProps) {
-  const fetcher = useFetcher<{ error: Record<string, { detail: string }> }>()
+  const fetcher = useFetcher<InviteUserAction>()
   const error = fetcher.data?.error
 
-  const formRef = useRef<HTMLFormElement>(null)
-
-  const onDialogOpenChange = useCallback((state: boolean) => {
-    formRef.current?.reset()
-    onOpenChange(state)
-  }, [onOpenChange])
+  useEffect(() => {
+    if (fetcher.state === 'idle' && fetcher.data?.ok) {
+      onOpenChange(false)
+    }
+  }, [fetcher.data, fetcher.state, onOpenChange])
 
   return (
     <Dialog
-      onOpenChange={onDialogOpenChange}
+      onOpenChange={onOpenChange}
       open={open}
     >
       <DialogContent className="sm:max-w-lg">
@@ -41,7 +41,6 @@ export function UsersInviteDialog({ open, onOpenChange }: UsersInviteDialogProps
           className="grid gap-4"
           id="user-invite-form"
           method="post"
-          ref={formRef}
         >
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>

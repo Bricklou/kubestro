@@ -1,7 +1,9 @@
 import { Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, FormMessage, Input, Label, ScrollArea, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@kubestro/design-system'
 import { SaveIcon } from 'lucide-react'
-import { useCallback, useRef } from 'react'
+import { useEffect } from 'react'
 import { useFetcher } from 'react-router'
+import type { CreateUserAction } from '../../_actions/users-create'
+import type { UpdateUserAction } from '../../_actions/users-update'
 import type { User } from '~/data/types/user'
 
 interface UsersActionDialogProps {
@@ -13,19 +15,18 @@ interface UsersActionDialogProps {
 export function UsersActionDialog({ currentRow, open, onOpenChange }: UsersActionDialogProps) {
   const isEdit = Boolean(currentRow)
 
-  const fetcher = useFetcher<{ error: Record<string, { detail: string }> }>()
+  const fetcher = useFetcher<CreateUserAction | UpdateUserAction>()
   const error = fetcher.data?.error
 
-  const formRef = useRef<HTMLFormElement>(null)
-
-  const onDialogOpenChange = useCallback((state: boolean) => {
-    formRef.current?.reset()
-    onOpenChange(state)
-  }, [onOpenChange])
+  useEffect(() => {
+    if (fetcher.state === 'idle' && fetcher.data?.ok) {
+      onOpenChange(false)
+    }
+  }, [fetcher.data, fetcher.state, onOpenChange])
 
   return (
     <Dialog
-      onOpenChange={onDialogOpenChange}
+      onOpenChange={onOpenChange}
       open={open}
     >
       <DialogContent className="sm:max-w-lg">
@@ -40,11 +41,10 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: UsersActio
 
         <ScrollArea className="-mr-4 w-full max-h-[50vh] py-1 pr-4">
           <fetcher.Form
-            action={isEdit && currentRow ? `/dashboard/admin/users/${currentRow.id}` : '/dashboard/admin/users'}
+            action={isEdit && currentRow ? `/dashboard/admin/users/${currentRow.id}/update` : '/dashboard/admin/users/create'}
             className="space-y-4 p-0.5"
             id="user-form"
             method={isEdit ? 'put' : 'post'}
-            ref={formRef}
           >
             <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0">
               <Label htmlFor="username">Username</Label>
@@ -52,6 +52,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: UsersActio
               <Input
                 autoComplete="off"
                 className="col-span-4 col-start-3"
+                defaultValue={currentRow?.username}
                 id="username"
                 name="username"
                 placeholder="johndoe"
@@ -69,6 +70,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: UsersActio
               <Input
                 autoComplete="off"
                 className="col-span-4 col-start-3"
+                defaultValue={currentRow?.email}
                 id="email"
                 name="email"
                 placeholder="john.doe@acme.com"
@@ -99,6 +101,7 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: UsersActio
               <Label htmlFor="status">Status</Label>
 
               <Select
+                defaultValue={currentRow?.status}
                 name="status"
                 required
               >

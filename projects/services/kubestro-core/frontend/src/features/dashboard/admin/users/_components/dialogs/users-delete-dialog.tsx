@@ -14,17 +14,17 @@ interface UsersDeleteDialogProps {
 export function UsersDeleteDialog({ open, onOpenChange, currentRow }: UsersDeleteDialogProps) {
   const [value, setValue] = useState('')
 
-  const fetcher = useFetcher<DeleteUserAction>()
+  const fetcher = useFetcher<DeleteUserAction>({ key: `delete-user-${currentRow.id}` })
 
   const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)
   }, [])
 
   useEffect(() => {
-    if (fetcher.data) {
+    if (fetcher.state === 'idle' && fetcher.data?.ok) {
       onOpenChange(false)
     }
-  }, [fetcher.data, onOpenChange])
+  }, [fetcher.data, fetcher.state, onOpenChange])
 
   return (
     <Dialog onOpenChange={onOpenChange} open={open}>

@@ -8,6 +8,7 @@ export function UsersDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useUsers()
 
   const close = useCallback(() => {
+    console.trace('close')
     setOpen(null)
     setTimeout(() => {
       setCurrentRow(null)
@@ -17,17 +18,19 @@ export function UsersDialogs() {
   const onAddOpenChange = useCallback((value: boolean) => {
     if (value) setOpen('add')
     else close()
-  }, [close, setOpen])
+  }, [setOpen, close])
   const onInviteOpenChange = useCallback((value: boolean) => {
-    if (value)setOpen('invite')
+    if (value) setOpen('invite')
     else close()
-  }, [close, setOpen])
+  }, [setOpen, close])
   const onEditOpenChange = useCallback((value: boolean) => {
+    console.log('onEditOpenChange', value)
     if (value) setOpen('edit')
     else close()
   }, [close, setOpen])
 
   const onDeleteOpenChange = useCallback((value: boolean) => {
+    console.log('onDeleteOpenChange', value)
     if (value) setOpen('delete')
     else close()
   }, [close, setOpen])

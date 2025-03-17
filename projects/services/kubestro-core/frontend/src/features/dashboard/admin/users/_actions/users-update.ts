@@ -1,28 +1,38 @@
 import { toast } from '@kubestro/design-system'
 import { HTTPError } from 'ky'
 import type { ActionFunctionArgs, LazyRouteObject } from 'react-router'
-import { adminInviteUser } from '~/data/api/admin'
-import type { AllHttpErrors, ForbiddenError, UnauthorizedError, ValidationError } from '~/data/api/generic-errors'
+import { adminUpdateUserApi } from '~/data/api/admin'
+import type { ValidationError, UnauthorizedError, ForbiddenError, AllHttpErrors } from '~/data/api/generic-errors'
 import { transformErrors } from '~/data/api/transform-errors'
 import { ADMIN_PAGINATE_USERS_KEY } from '~/data/queries/admin'
+import type { UserStatus } from '~/data/types/user'
 import { queryClient } from '~/utils/queryClient'
 
 interface FormFields {
+  username: string
   email: string
-  description: string
+  password: string
+  status: UserStatus
 }
 
-async function clientAction({ request }: ActionFunctionArgs) {
-  if (request.method !== 'POST') {
-    throw new Error('Method not allowed (invite)')
+async function clientAction({ request, params }: ActionFunctionArgs) {
+  if (request.method !== 'PUT' || !params.id) {
+    throw new Error('Method not allowed (update)')
   }
 
   const formData = await request.formData()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- I trust the form data
   const body = Object.fromEntries(formData) as unknown as FormFields
 
+  const userId = params.id
+  if (typeof userId !== 'string') {
+    throw new Error('Invalid user ID')
+  }
+
   try {
-    await adminInviteUser(body.email, body.description)
+    // Update user
+    await adminUpdateUserApi(userId, body)
+
     await queryClient.refetchQueries({ queryKey: ADMIN_PAGINATE_USERS_KEY })
   }
   catch (error) {
@@ -56,7 +66,7 @@ async function clientAction({ request }: ActionFunctionArgs) {
   return { ok: true }
 }
 
-export type InviteUserAction = typeof clientAction
+export type UpdateUserAction = typeof clientAction
 
 const routeObject: LazyRouteObject = {
   action: clientAction

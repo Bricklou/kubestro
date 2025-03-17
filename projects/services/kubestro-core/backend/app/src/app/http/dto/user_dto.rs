@@ -55,6 +55,7 @@ impl From<&UserProvider> for UserProviderDto {
 
 #[derive(Clone, Debug, Serialize, Deserialize, Deserr, ToSchema)]
 #[serde(rename_all = "snake_case")]
+#[deserr(rename_all = lowercase)]
 pub enum UserStatusDto {
     Active,
     Inactive,

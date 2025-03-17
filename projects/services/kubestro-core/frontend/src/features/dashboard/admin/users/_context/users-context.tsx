@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import type { Dispatch, PropsWithChildren, SetStateAction } from 'react'
 import type { User } from '~/data/types/user'
 import useDialogState from '~/hooks/use-dialog-state'
@@ -19,6 +19,10 @@ type UsersProviderProps = PropsWithChildren
 export function UsersProvider({ children }: UsersProviderProps) {
   const [open, setOpen] = useDialogState<UsersDialogType>(null)
   const [currentRow, setCurrentRow] = useState<User | null>(null)
+
+  useEffect(() => {
+    console.log('open %o currentRow %o', open, currentRow)
+  }, [open, currentRow])
 
   return (
     <UsersContext value={{ open, setOpen, currentRow, setCurrentRow }}>

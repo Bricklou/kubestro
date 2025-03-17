@@ -8,7 +8,7 @@ import { queryClient } from '~/utils/queryClient'
 
 async function clientAction({ request, params }: ActionFunctionArgs) {
   if (request.method !== 'DELETE') {
-    throw new Error('Method not allowed')
+    throw new Error('Method not allowed (delete)')
   }
 
   const userId = params.id
