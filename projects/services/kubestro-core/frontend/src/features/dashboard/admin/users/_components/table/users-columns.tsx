@@ -1,6 +1,6 @@
 import { Badge, Checkbox } from '@kubestro/design-system'
 import { createColumnHelper } from '@tanstack/react-table'
-import type { Table, Row } from '@tanstack/react-table'
+import type { Table } from '@tanstack/react-table'
 import { useCallback } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { DataTableColumnHeader } from './table-column-header'
@@ -18,20 +18,6 @@ function UserIdCheckboxHeader({ table }: { readonly table: Table<User> }) {
       checked={table.getIsAllPageRowsSelected() ||
         (table.getIsSomePageRowsSelected() && 'indeterminate')}
       className="translate-y-[2px]"
-      onCheckedChange={checkboxSelectedChange}
-    />
-  )
-}
-
-function UserIdCheckboxCell({ row }: { readonly row: Row<User> }) {
-  const checkboxSelectedChange = useCallback((value: boolean) => {
-    row.toggleSelected(value)
-  }, [row])
-
-  return (
-    <Checkbox
-      aria-label="Select"
-      checked={row.getIsSelected()}
       onCheckedChange={checkboxSelectedChange}
     />
   )
@@ -66,19 +52,6 @@ function UserProviderBadge({ provider }: { readonly provider: UserProvider }) {
 const columnHelper = createColumnHelper<User>()
 
 export const columns = [
-  columnHelper.display({
-    id: 'select',
-    header: props => <UserIdCheckboxHeader {...props} />,
-    cell: ({ row }) => <UserIdCheckboxCell row={row} />,
-    enableSorting: false,
-    enableHiding: false,
-    meta: {
-      className: twMerge(
-        'sticky md:table-cell left-0 z-10 rounded-tl',
-        'transition-colors duration-200 group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted'
-      )
-    }
-  }),
   columnHelper.accessor('username', {
     header: ({ column }) => <DataTableColumnHeader column={column} title="Username" />,
     cell: ({ row }) => <span className="truncate max-w-3/6">{row.getValue('username')}</span>,
