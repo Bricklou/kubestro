@@ -1,4 +1,3 @@
-use anyhow::Result;
 use axum::{Extension, Json};
 use kubestro_core_domain::models::{
     pagination::{PaginationOptions, SortOrder},
@@ -16,6 +15,7 @@ use crate::app::{
             user_dto::{UserDto, UserProviderDto, UserStatusDto, UsersSortFieldDto},
         },
         helpers::errors::ApiError,
+        routes::admin::ADMIN_TAG,
     },
 };
 
@@ -57,7 +57,7 @@ pub(crate) struct GetUsersParams {
 
 /// Get users response
 #[derive(Serialize, ToSchema)]
-pub(super) struct GetUsersResponse {
+pub(crate) struct GetUsersResponse {
     items: Vec<UserDto>,
     pub total_items: u64,
     pub total_pages: u64,
@@ -68,6 +68,7 @@ pub(super) struct GetUsersResponse {
     path = "/api/v1.0/admin/users",
     summary = "Get users",
     description = "Get users list",
+    tag = ADMIN_TAG,
 
     responses(
         (status = OK, description = "Users list", body = GetUsersResponse, example = json!({
@@ -89,8 +90,6 @@ pub async fn handler_get_users(
     QsQuery(params): QsQuery<GetUsersParams>,
 ) -> Result<Json<GetUsersResponse>, ApiError> {
     let order: Option<(UsersSortFieldDto, SortOrder)> = params.order.map(Into::into);
-
-    debug!("Order by: {:?}", order);
 
     let pagination_options: PaginationOptions<UsersFilters, UsersSortField> = PaginationOptions {
         limit: params.limit.unwrap_or(10),

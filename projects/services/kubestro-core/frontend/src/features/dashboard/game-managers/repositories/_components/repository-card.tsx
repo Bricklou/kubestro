@@ -2,7 +2,7 @@ import { Button, Card, CardDescription, CardFooter, CardHeader, CardTitle, Dialo
 import { TrashIcon } from 'lucide-react'
 import { href, useFetcher, useRevalidator } from 'react-router'
 import { useEffect, useState } from 'react'
-import type { deleteRepositoryAction } from '../repository-action'
+import type { DeleteRepositoryAction } from '../repository-action'
 import type { Repository } from '~/data/types/repositories'
 
 export interface RepositoryCardProps {
@@ -10,7 +10,7 @@ export interface RepositoryCardProps {
 }
 
 export function RepositoryCard({ repository }: RepositoryCardProps) {
-  const fetcher = useFetcher<typeof deleteRepositoryAction>()
+  const fetcher = useFetcher<DeleteRepositoryAction>()
   const revalidator = useRevalidator()
 
   const [open, setOpen] = useState(false)

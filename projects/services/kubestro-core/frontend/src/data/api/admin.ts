@@ -30,3 +30,35 @@ export async function adminPaginateUsersApi(
 
   return ky.get<Paginated<User>>('/api/v1.0/admin/users', { searchParams }).json()
 }
+
+export async function adminDeleteUserApi(userId: string): Promise<void> {
+  return ky.delete(`/api/v1.0/admin/users/${userId}`).json()
+}
+
+interface AdminCreateUserPayload {
+  email: string
+  username: string
+  password: string
+  status: UserStatus
+}
+
+export async function adminCreateUserApi(payload: AdminCreateUserPayload): Promise<void> {
+  return ky.post('/api/v1.0/admin/users', { json: payload }).json()
+}
+
+interface AdminUpdateUserPayload {
+  email: string
+  username: string
+  status: UserStatus
+}
+
+export async function adminUpdateUserApi(
+  userId: string,
+  payload: AdminUpdateUserPayload
+): Promise<void> {
+  return ky.put(`/api/v1.0/admin/users/${userId}`, { json: payload }).json()
+}
+
+export async function adminInviteUser(email: string, description?: string): Promise<void> {
+  return ky.post('/api/v1.0/admin/users/invite', { json: { email, description } }).json()
+}

@@ -299,7 +299,6 @@ impl<T, S> FromRequest<S> for ValidatedJson<T>
 where
     T: deserr::Deserr<ApiDeserrError> + Validate,
     S: Send + Sync,
-    // ApiDeserrJson<T>: FromRequest<S, Rejection = JsonRejection>,
     Json<T>: FromRequest<S, Rejection = JsonRejection>,
 {
     type Rejection = ApiError;

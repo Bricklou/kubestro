@@ -1,4 +1,5 @@
 use chrono::{DateTime, Utc};
+use deserr::Deserr;
 use kubestro_core_domain::models::{
     pagination::{SortingFieldError, SortingFieldTrait},
     user::{User, UserProvider, UserStatus, UsersSortField},
@@ -52,7 +53,7 @@ impl From<&UserProvider> for UserProviderDto {
     }
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, ToSchema)]
+#[derive(Clone, Debug, Serialize, Deserialize, Deserr, ToSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum UserStatusDto {
     Active,

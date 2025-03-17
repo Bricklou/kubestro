@@ -1,6 +1,8 @@
-import { Alert, AlertDescription, AlertTitle, Button, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, Input, Label, toast } from '@kubestro/design-system'
-import { useCallback, useState } from 'react'
+import { Alert, AlertDescription, AlertTitle, Button, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, Input, Label } from '@kubestro/design-system'
+import { useCallback, useEffect, useState } from 'react'
 import type { ChangeEvent } from 'react'
+import { useFetcher } from 'react-router'
+import type { DeleteUserAction } from '../../_actions/users-delete'
 import type { User } from '~/data/types/user'
 
 interface UsersDeleteDialogProps {
@@ -12,20 +14,17 @@ interface UsersDeleteDialogProps {
 export function UsersDeleteDialog({ open, onOpenChange, currentRow }: UsersDeleteDialogProps) {
   const [value, setValue] = useState('')
 
+  const fetcher = useFetcher<DeleteUserAction>()
+
   const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)
   }, [])
 
-  const handleDelete = useCallback(() => {
-    if (value.trim() !== currentRow.username) return
-
-    onOpenChange(false)
-
-    toast({
-      title: `The user "${currentRow.username}" has been deleted:`,
-      variant: 'success'
-    })
-  }, [currentRow.username, onOpenChange, value])
+  useEffect(() => {
+    if (fetcher.data) {
+      onOpenChange(false)
+    }
+  }, [fetcher.data, onOpenChange])
 
   return (
     <Dialog onOpenChange={onOpenChange} open={open}>
@@ -63,10 +62,12 @@ export function UsersDeleteDialog({ open, onOpenChange, currentRow }: UsersDelet
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="ghost">Cancel</Button>
+            <Button type="button" variant="ghost">Cancel</Button>
           </DialogClose>
 
-          <Button disabled={value.trim() !== currentRow.username} onClick={handleDelete} variant="danger">Delete</Button>
+          <fetcher.Form action={`/dashboard/admin/users/${currentRow.id}/delete`} method="delete">
+            <Button disabled={value.trim() !== currentRow.username} type="submit" variant="danger">Delete</Button>
+          </fetcher.Form>
         </DialogFooter>
       </DialogContent>
     </Dialog>

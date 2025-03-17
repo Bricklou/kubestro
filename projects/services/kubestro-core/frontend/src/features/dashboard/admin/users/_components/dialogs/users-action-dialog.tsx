@@ -38,11 +38,12 @@ export function UsersActionDialog({ currentRow, open, onOpenChange }: UsersActio
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="-mr-4 h-[26.25rem] w-full py-1 pr-4">
+        <ScrollArea className="-mr-4 w-full max-h-[50vh] py-1 pr-4">
           <fetcher.Form
+            action={isEdit && currentRow ? `/dashboard/admin/users/${currentRow.id}` : '/dashboard/admin/users'}
             className="space-y-4 p-0.5"
             id="user-form"
-            method="post"
+            method={isEdit ? 'put' : 'post'}
             ref={formRef}
           >
             <div className="grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0">

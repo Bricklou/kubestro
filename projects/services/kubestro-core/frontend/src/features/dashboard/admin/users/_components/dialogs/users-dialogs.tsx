@@ -7,20 +7,30 @@ import { UsersDeleteDialog } from './users-delete-dialog'
 export function UsersDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useUsers()
 
-  const onAddOpenChange = useCallback(() => { setOpen('add') }, [setOpen])
-  const onInviteOpenChange = useCallback(() => { setOpen('invite') }, [setOpen])
-  const onEditOpenChange = useCallback(() => {
-    setOpen('edit')
+  const close = useCallback(() => {
+    setOpen(null)
     setTimeout(() => {
       setCurrentRow(null)
     }, 500)
   }, [setCurrentRow, setOpen])
-  const onDeleteOpenChange = useCallback(() => {
-    setOpen('delete')
-    setTimeout(() => {
-      setCurrentRow(null)
-    }, 500)
-  }, [setCurrentRow, setOpen])
+
+  const onAddOpenChange = useCallback((value: boolean) => {
+    if (value) setOpen('add')
+    else close()
+  }, [close, setOpen])
+  const onInviteOpenChange = useCallback((value: boolean) => {
+    if (value)setOpen('invite')
+    else close()
+  }, [close, setOpen])
+  const onEditOpenChange = useCallback((value: boolean) => {
+    if (value) setOpen('edit')
+    else close()
+  }, [close, setOpen])
+
+  const onDeleteOpenChange = useCallback((value: boolean) => {
+    if (value) setOpen('delete')
+    else close()
+  }, [close, setOpen])
 
   return (
     <>

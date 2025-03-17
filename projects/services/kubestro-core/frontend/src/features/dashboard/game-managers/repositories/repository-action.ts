@@ -43,3 +43,5 @@ export async function deleteRepositoryAction({ params, request }: ActionFunction
 
   return { ok: true }
 }
+
+export type DeleteRepositoryAction = typeof deleteRepositoryAction

@@ -39,6 +39,9 @@ pub(super) struct SetupPayload {
     method(head,post),
     path = "/api/v1.0/setup",
     tag = SETUP_TAG,
+
+    request_body(content = SetupPayload, content_type = "application/json"),
+
     responses(
         (status = NO_CONTENT, description = "Success", content_type = "application/json"),
         (status = BAD_REQUEST, description = "Invalid input data", body = ApiError, example = json!({

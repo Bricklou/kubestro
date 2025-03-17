@@ -14,5 +14,10 @@ pub(super) const ADMIN_TAG: &str = "admin";
 struct ApiDoc;
 
 pub fn get_routes() -> OpenApiRouter {
-    OpenApiRouter::with_openapi(ApiDoc::openapi()).routes(routes!(users::handler_get_users))
+    OpenApiRouter::with_openapi(ApiDoc::openapi())
+        .routes(routes!(users::handler_get_users))
+        .routes(routes!(users::handler_delete_user))
+        .routes(routes!(users::handler_create_user))
+        .routes(routes!(users::handler_edit_user))
+        .routes(routes!(users::handler_invite_user))
 }
