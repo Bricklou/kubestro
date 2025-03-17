@@ -24,13 +24,11 @@ export function UsersDialogs() {
     else close()
   }, [setOpen, close])
   const onEditOpenChange = useCallback((value: boolean) => {
-    console.log('onEditOpenChange', value)
     if (value) setOpen('edit')
     else close()
   }, [close, setOpen])
 
   const onDeleteOpenChange = useCallback((value: boolean) => {
-    console.log('onDeleteOpenChange', value)
     if (value) setOpen('delete')
     else close()
   }, [close, setOpen])
