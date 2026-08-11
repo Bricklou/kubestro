@@ -523,7 +523,7 @@ checksum = "1a511e5838ad53035fa63dff6a3ba8ae0edb5eb398df0ef0880d27221b4636a8"
 dependencies = [
  "async-trait",
  "axum_session",
- "redis",
+ "redis 0.28.2",
  "redis_pool",
 ]
 
@@ -739,7 +739,7 @@ dependencies = [
  "num-traits",
  "serde",
  "wasm-bindgen",
- "windows-link",
+ "windows-link 0.1.0",
 ]
 
 [[package]]
@@ -1846,7 +1846,7 @@ dependencies = [
  "http-body",
  "hyper",
  "pin-project-lite",
- "socket2",
+ "socket2 0.5.8",
  "tokio",
  "tower-service",
  "tracing",
@@ -2285,7 +2285,7 @@ dependencies = [
  "mockall",
  "openidconnect",
  "pin-project",
- "redis",
+ "redis 0.32.7",
  "redis_pool",
  "serde",
  "serde_json",
@@ -2332,7 +2332,7 @@ dependencies = [
  "kubestro-core-domain",
  "openidconnect",
  "passwords",
- "redis",
+ "redis 0.32.7",
  "redis_pool",
  "reqwest",
  "sea-orm",
@@ -2372,9 +2372,9 @@ dependencies = [
 
 [[package]]
 name = "libc"
-version = "0.2.170"
+version = "0.2.189"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "875b3680cb2f8f71bdcf9a30f38d48282f5d3c95cbf9b3fa57269bb5d5c06828"
+checksum = "3eaf3ede3fee6db1a4c2ee091bf8a8b4dccdc6d17f656fb07896ee72867612f2"
 
 [[package]]
 name = "libm"
@@ -3113,7 +3113,7 @@ dependencies = [
  "quinn-udp",
  "rustc-hash",
  "rustls",
- "socket2",
+ "socket2 0.5.8",
  "thiserror 2.0.12",
  "tokio",
  "tracing",
@@ -3148,7 +3148,7 @@ dependencies = [
  "cfg_aliases",
  "libc",
  "once_cell",
- "socket2",
+ "socket2 0.5.8",
  "tracing",
  "windows-sys 0.59.0",
 ]
@@ -3275,9 +3275,25 @@ dependencies = [
  "pin-project-lite",
  "ryu",
  "sha1_smol",
- "socket2",
+ "socket2 0.5.8",
  "tokio",
  "tokio-util",
+ "url",
+]
+
+[[package]]
+name = "redis"
+version = "0.32.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "014cc767fefab6a3e798ca45112bccad9c6e0e218fbd49720042716c73cfef44"
+dependencies = [
+ "combine",
+ "itoa",
+ "num-bigint",
+ "percent-encoding",
+ "ryu",
+ "sha1_smol",
+ "socket2 0.6.5",
  "url",
 ]
 
@@ -3290,7 +3306,7 @@ dependencies = [
  "async-trait",
  "crossbeam-queue",
  "parking_lot",
- "redis",
+ "redis 0.28.2",
  "thiserror 2.0.12",
  "tokio",
  "tracing",
@@ -4122,6 +4138,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "socket2"
+version = "0.6.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c3d1e2c7f27f8d4cb10542a02c49005dbd6e93095799d6f3be745fae9f8fedd4"
+dependencies = [
+ "libc",
+ "windows-sys 0.61.2",
+]
+
+[[package]]
 name = "spin"
 version = "0.9.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4577,7 +4603,7 @@ dependencies = [
  "parking_lot",
  "pin-project-lite",
  "signal-hook-registry",
- "socket2",
+ "socket2 0.5.8",
  "tokio-macros",
  "windows-sys 0.52.0",
 ]
@@ -5173,6 +5199,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6dccfd733ce2b1753b03b6d3c65edf020262ea35e20ccdf3e288043e6dd620e3"
 
 [[package]]
+name = "windows-link"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f0805222e57f7521d6a62e36fa9163bc891acd422f971defe97d64e70d0a4fe5"
+
+[[package]]
 name = "windows-registry"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5227,6 +5259,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1e38bc4d79ed67fd075bcc251a1c39b32a1776bbe92e5bef1f0bf1f8c531853b"
 dependencies = [
  "windows-targets 0.52.6",
+]
+
+[[package]]
+name = "windows-sys"
+version = "0.61.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ae137229bcbd6cdf0f7b80a31df61766145077ddf49416a728b02cb3921ff3fc"
+dependencies = [
+ "windows-link 0.2.1",
 ]
 
 [[package]]
